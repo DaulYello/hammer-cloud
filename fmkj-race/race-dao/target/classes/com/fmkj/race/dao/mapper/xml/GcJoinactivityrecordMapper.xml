@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.race.dao.mapper.GcJoinactivityrecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.race.dao.dto.JoinActivityDto">
+        <id column="Id" property="Id"/>
+        <result column="uid" property="uid"/>
+        <result column="aid" property="aid"/>
+        <result column="ischain" property="ischain"/>
+        <result column="time" property="time"/>
+        <result column="logo" property="logo"/>
+        <result column="nickname" property="nickname"/>
+        <result column="score" property="score"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap1" type="java.util.HashMap"></resultMap>
+
+    <select id="queryJoinActivityByAid" parameterType="com.fmkj.race.dao.queryVo.JoinActivityPage" resultMap="BaseResultMap">
+       SELECT
+          jr.time,
+          ac.nickname,
+          ac.logo,
+          ac.score,
+          ac.id
+        FROM
+          gc_joinactivityrecord jr
+          INNER JOIN hc_account ac
+            ON jr.uid = ac.id
+        WHERE jr.aid = #{gap.aid}
+        ORDER BY jr.time DESC
+    </select>
+
+</mapper>

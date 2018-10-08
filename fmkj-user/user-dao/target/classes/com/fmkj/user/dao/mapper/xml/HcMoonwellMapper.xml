@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.HcMoonwellMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.HcMoonwell">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="get_p" property="getP" />
+        <result column="lose_p" property="loseP" />
+        <result column="current_p" property="currentP" />
+        <result column="a_h_c_p" property="aHCP" />
+        <result column="rocknum" property="rocknum" />
+        <result column="moonnum" property="moonnum" />
+        <result column="friend_can_steal_current_p" property="friendCanStealCurrentP" />
+    </resultMap>
+
+</mapper>

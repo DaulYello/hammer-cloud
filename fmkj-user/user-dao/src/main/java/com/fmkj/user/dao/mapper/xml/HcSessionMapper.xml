@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.HcSessionMapper">
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.HcSession">
+        <!--&lt;!&ndash; WARNING - @mbg.generated &ndash;&gt;-->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="token" jdbcType="VARCHAR" property="token" />
+        <result column="uid" jdbcType="INTEGER" property="uid" />
+        <result column="btime" jdbcType="TIMESTAMP" property="btime" />
+        <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+        <result column="ltime" jdbcType="TIMESTAMP" property="ltime" />
+    </resultMap>
+
+
+    <!--根据uid查询用户session状态-->
+  <!--  <select id="queryHcSessionByUid" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select * from hc_session where uid=#{uid}
+    </select>-->
+
+    <!--更新session表-->
+    <update id="updateHcSession"  parameterType="com.fmkj.user.dao.domain.HcSession">
+        update hc_session set
+                token = #{token},
+                btime = #{btime},
+                etime = #{etime},
+                ltime = #{ltime}
+        where uid = #{uid}
+    </update>
+
+
+
+</mapper>

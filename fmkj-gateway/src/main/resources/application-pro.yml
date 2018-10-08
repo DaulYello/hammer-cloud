@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: fmkj-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+zuul:
+  #sensitive-headers为空则全部服务都可以传递Cookie信息
+  sensitive-headers:
+  routes:
+    #自定义路由配置
+    race:
+      path: /api-race/**
+      serviceId: fmkj-race
+    order:
+      path: /api-order/**
+      serviceId: fmkj-order
+    user:
+      path: /api-user/**
+      serviceId: fmkj-user
+  #排除某些路由 写法  - /**/myRace/**
+  ignored-patterns:
+
+server:
+  port: 9090
+feign:
+  hystrix:
+    enabled: true
+
+
+

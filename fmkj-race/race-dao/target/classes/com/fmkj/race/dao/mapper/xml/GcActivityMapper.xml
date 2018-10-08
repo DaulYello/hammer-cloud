@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.race.dao.mapper.GcActivityMapper">
+    <resultMap id="BaseResultMap" type="com.fmkj.race.dao.dto.GcActivityDto">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="startid" jdbcType="INTEGER" property="startid" />
+        <result column="getid" jdbcType="INTEGER" property="getid" />
+        <result column="typeid" jdbcType="INTEGER" property="typeid" />
+        <result column="contract" jdbcType="VARCHAR" property="contract" />
+        <result column="isbond" jdbcType="INTEGER" property="isbond" />
+        <result column="place" jdbcType="VARCHAR" property="place" />
+        <result column="pname" jdbcType="VARCHAR" property="pname" />
+        <result column="pnumber" jdbcType="INTEGER" property="pnumber" />
+        <result column="price" jdbcType="DOUBLE" property="price" />
+        <result column="premium" jdbcType="DOUBLE" property="premium" />
+        <result column="pdescribe" jdbcType="VARCHAR" property="pdescribe" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="delivergoodstatus" jdbcType="INTEGER" property="delivergoodstatus" />
+        <result column="collectgoodstatus" jdbcType="INTEGER" property="collectgoodstatus" />
+        <result column="time" jdbcType="TIMESTAMP" property="time" />
+        <result column="begintime" jdbcType="TIMESTAMP" property="begintime" />
+        <result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="num" jdbcType="INTEGER" property="num" />
+        <result column="par"  property="par" />
+        <result column="type" property="type" />
+        <result column="imageurl" property="imageurl" />
+
+    </resultMap>
+
+
+    <resultMap id="BaseResultMap1" type="java.util.HashMap"></resultMap>
+
+
+    <!-- 活动广场分页查询所有活动,只查询活动中(status=2) -->
+    <select id="queryAllActivityByPage"  resultMap="BaseResultMap">
+        SELECT ga.id,ga.startid,ga.typeid,ga.contract,ga.isbond,ga.pname,ga.pnumber,ga.price,ga.premium,ga.time,ga.num,ga.par,
+        ga.pdescribe,ga.status,ga.delivergoodstatus,ga.collectgoodstatus,ga.endtime,ga.name,gp.imageurl,gat.type
+        FROM gc_activity ga
+        LEFT JOIN gc_pimage gp ON gp.aid=ga.id
+        LEFT JOIN gc_activitytype gat ON ga.typeid=gat.id
+        WHERE ga.status = 2
+        GROUP BY ga.id
+        ORDER BY ga.id DESC
+    </select>
+
+
+
+    <!-- 传入id查询活动详情 -->
+    <select id="queryActivityById" parameterType="com.fmkj.race.dao.queryVo.GcBaseModel" resultType="java.util.HashMap">
+        SELECT ga.id,ga.contract,ga.pname,ga.pnumber,ga.price,ga.typeid,ga.time,ga.begintime,ga.endtime,ga.num,ga.par,
+        ga.startid,ga.getid,gat.type AS atype,gat.days,
+        ha1.nickname AS starter,ha2.nickname AS winner,ga.status AS status
+        FROM gc_activity ga
+        LEFT JOIN gc_activitytype gat ON ga.typeid=gat.id
+        LEFT JOIN hc_account ha1 ON ha1.id=ga.startid
+        LEFT JOIN hc_account ha2 ON ha2.id=ga.getid
+        WHERE ga.id=#{id}
+    </select>
+
+
+
+    <!--  传入uid查询用户参与的活动   status：1进行中  2已锤到的  3.已结束 -->
+    <select id="queryMyJoinActivityByUid" parameterType="com.fmkj.race.dao.queryVo.GcBaseModel" resultMap="BaseResultMap">
+        SELECT
+        ga.id,
+        ga.startid,
+        ga.typeid,
+        ga.contract,
+        ga.isbond,
+        ga.pname,
+        ga.pnumber,
+        ga.price,
+        ga.premium,
+        ga.time,
+        ga.num,
+        ga.par,
+        ga.pdescribe,
+        ga.status,
+        ga.delivergoodstatus,
+        ga.collectgoodstatus,
+        ga.endtime,
+        ga.name,
+        gp.imageurl,
+        gat.type AS atype
+        FROM
+        gc_joinactivityrecord gj
+        LEFT JOIN gc_activity ga
+        ON ga.id = gj.aid
+        LEFT JOIN gc_activitytype gat
+        ON ga.typeid = gat.id
+        LEFT JOIN gc_pimage gp
+        ON gp.aid = ga.id
+        WHERE 1 = 1
+        AND gj.uid=#{gbm.uid}
+        <if test="gbm.status==1">
+            AND ga.status=2
+        </if>
+        <if test="gbm.status==2">
+            AND ga.getid=#{gbm.uid}
+        </if>
+        <if test="gbm.status==3">
+            AND ga.status IN (3,4,5)
+        </if>
+        group by ga.id
+        order by gj.time desc
+    </select>
+
+
+
+    <!-- 传入uid分页查询用户发起的活动 -->
+    <select id="queryMyStartActivityByUid" parameterType="com.fmkj.race.dao.queryVo.GcBaseModel" resultMap="BaseResultMap">
+        SELECT
+        ga.id,
+        ga.startid,
+        ga.typeid,
+        ga.contract,
+        ga.isbond,
+        ga.pname,
+        ga.pnumber,
+        ga.price,
+        ga.premium,
+        ga.time,
+        ga.num,
+        ga.par,
+        ga.pdescribe,
+        ga.status,
+        ga.delivergoodstatus,
+        ga.collectgoodstatus,
+        ga.endtime,
+        ga.name,
+        gp.imageurl,
+        gat.type AS atype
+        FROM
+        gc_activity ga
+        LEFT JOIN gc_activitytype gat
+        ON ga.typeid = gat.id
+        LEFT JOIN gc_pimage gp
+        ON gp.aid = ga.id
+        WHERE 1 = 1
+        AND ga.startid = #{gbm.uid}
+        <if test="gbm.status==1">
+            AND ga.status=2
+            GROUP BY ga.id
+            ORDER BY ga.endtime DESC
+        </if>
+        <if test="gbm.status==2">
+            AND ga.status IN(0,1)
+            GROUP BY ga.id
+            ORDER BY ga.time DESC
+        </if>
+        <if test="gbm.status==3">
+            AND ga.status=3 AND getid IS NOT NULL
+            GROUP BY ga.id
+            ORDER BY ga.endtime DESC
+        </if>
+    </select>
+
+
+    <!-- 传入id查询活动详情 -->
+    <select id="queryActivityByUserId" parameterType="com.fmkj.race.dao.domain.GcActivity" resultType="java.util.HashMap">
+        SELECT
+          ha.*,ga.name AS gname,ga.telephone AS telephone,ga.province AS province,ga.city AS city,ga.county AS county,ga.lock AS glock,ga.address AS address
+        FROM
+          gc_activity gc
+          LEFT JOIN hc_account ha
+            ON ha.id = gc.getid
+          LEFT JOIN gc_address ga
+            ON ga.uid = gc.getid
+        WHERE gc.getid IS NOT NULL
+          AND gc.status = 3
+          AND ga.status = 1
+          AND gc.Id = #{id}
+    </select>
+
+
+    <!--  传入uid查询用户参与的活动   status：1进行中  2已锤到的  3.已结束 -->
+    <select id="queryMyUntreatedActivityByUid" parameterType="com.fmkj.race.dao.queryVo.GcBaseModel" resultMap="BaseResultMap">
+        SELECT
+          gc.*,
+          gp.imageurl
+        FROM
+          gc_activity gc
+          LEFT JOIN gc_joinactivityrecord jr
+            ON jr.`aid` = gc.id
+          LEFT JOIN gc_pimage gp
+            ON gp.aid = gc.id
+        WHERE 1 = 1
+          AND jr.ischain = 0
+          AND jr.`uid` = #{gbm.uid}
+          ORDER BY gc.id DESC
+    </select>
+
+
+
+
+
+</mapper>

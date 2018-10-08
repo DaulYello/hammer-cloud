@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.order.dao.mapper.ProductMapper">
+	<resultMap id="BaseResultMap" type="com.fmkj.order.dao.dto.ProductDto">
+		<id column="id" property="id" />
+		<result column="product_no" property="productNo" />
+		<result column="product_name" property="productName" />
+		<result column="product_price" property="productPrice" />
+		<result column="product_sum" property="productSum" />
+		<result column="product_stock" property="productStock" />
+		<result column="product_icon" property="productIcon" />
+		<result column="status" property="status" />
+		<result column="category_type" property="categoryType" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="product_detail" property="productDetail" />
+		<result column="product_type" property="productType" />
+		<result column="currency" property="currency" />
+		<result column="max_price" property="maxPrice" />
+		<result column="min_limit" property="minLimit" />
+		<result column="max_limit" property="maxLimit" />
+		<result column="payment_term" property="paymentTerm" />
+		<result column="successNum" property="successNum"/>
+		<association column="hcAccount" property="hcAccount" javaType="com.fmkj.order.dao.domain.HcAccount">
+			<id column="id" property="id" />
+			<result column="nation" property="nation" />
+			<result column="telephone" property="telephone" />
+			<result column="dycode" property="dycode" />
+			<result column="dycodetime" property="dycodetime" />
+			<result column="logo" property="logo" />
+			<result column="nickname" property="nickname" />
+			<result column="email" property="email" />
+			<result column="password" property="password" />
+			<result column="name" property="name" />
+			<result column="cardnum" property="cardnum" />
+			<result column="authlock" property="authlock" />
+			<result column="rid" property="rid" />
+			<result column="make_weight" property="makeWeight" />
+			<result column="my_p" property="myP" />
+			<result column="score" property="score" />
+			<result column="grade_id" property="gradeId" />
+			<result column="card_status" property="cardStatus" />
+			<result column="isboong" property="isboong" />
+			<result column="cdbid" property="cdbid" />
+		</association>
+	</resultMap>
+
+
+	<select id="queryProductPage" parameterType="com.fmkj.order.dao.queryVo.ProductQueryVo" resultMap="BaseResultMap">
+		SELECT
+		  fm.id,
+		  fm.product_no,
+		  fm.product_name,
+		  fm.product_sum,
+		  fm.product_price,
+		  fm.product_stock,
+		  fm.product_icon,
+		  fm.status,
+		  fm.category_type,
+		  fm.user_id,
+		  fm.create_time,
+		  fm.update_time,
+		  fm.product_detail,
+		  fm.product_type,
+		  fm.currency,
+		  fm.max_price,
+		  fm.min_limit,
+		  fm.max_limit,
+		  fm.payment_term,
+		 (SELECT COUNT(1) FROM fm_order_info t WHERE t.product_id = fm.id AND order_status = 3) AS successNum,
+		  hc.*
+		FROM
+		  fm_product_info fm LEFT JOIN hc_account hc on fm.user_id = hc.id
+		WHERE 1 = 1
+		<if test="product.productName != null">
+			and fm.product_name = #{product.productName}
+		</if>
+
+		<if test="product.productNo != null">
+			and fm.product_no = #{product.productNo}
+		</if>
+
+		<if test="product.status != null">
+			and fm.status = #{product.status}
+		</if>
+
+		<if test="product.categoryType != null">
+			and fm.category_type = #{product.categoryType}
+		</if>
+
+		<if test="product.userId != null">
+			and fm.user_id = #{product.userId}
+		</if>
+
+		<if test="product.productType != null">
+			and fm.product_type = #{product.productType}
+		</if>
+
+		<if test="product.id != null">
+			and fm.id = #{product.id}
+		</if>
+
+	</select>
+
+</mapper>

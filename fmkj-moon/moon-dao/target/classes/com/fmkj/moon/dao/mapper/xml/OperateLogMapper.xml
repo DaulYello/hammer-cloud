@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.moon.dao.mapper.OperateLogMapper">
+	<resultMap id="BaseResultMap" type="com.fmkj.moon.dao.domain.MoonOperateLog">
+		<!-- WARNING - @mbg.generated -->
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="module" jdbcType="VARCHAR" property="module" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="operate_desc" jdbcType="INTEGER" property="operateDesc" />
+		<result column="exception_msg" jdbcType="VARCHAR" property="exceptionMsg" />
+		<result column="operate_status" jdbcType="INTEGER" property="operateStatus" />
+		<result column="request_method" jdbcType="VARCHAR" property="requestMethod" />
+		<result column="request_params" jdbcType="VARCHAR" property="requestParams" />
+		<result column="request_host" jdbcType="VARCHAR" property="requestHost" />
+		<result column="request_class" jdbcType="VARCHAR" property="requestClass" />
+	</resultMap>
+
+</mapper>

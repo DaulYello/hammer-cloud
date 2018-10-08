@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.HcUserimageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.HcUserimage">
+        <id column="Id" property="Id" />
+        <result column="uid" property="uid" />
+        <result column="url" property="url" />
+        <result column="full_photo" property="fullPhoto" />
+        <result column="reverse_photo" property="reversePhoto" />
+        <result column="time" property="time" />
+        <result column="status" property="status" />
+        <result column="alipay_account" property="alipayAccount" />
+        <result column="alipay_photo" property="alipayPhoto" />
+        <result column="wechat_account" property="wechatAccount" />
+        <result column="wechat_photo" property="wechatPhoto" />
+        <result column="pay_cert_time" property="payCertTime" />
+    </resultMap>
+
+</mapper>

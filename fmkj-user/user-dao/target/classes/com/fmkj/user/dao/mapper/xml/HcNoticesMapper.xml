@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.HcNoticesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.HcNotices">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="contents" property="contents" />
+        <result column="time" property="time" />
+        <result column="pass" property="pass" />
+    </resultMap>
+
+</mapper>
