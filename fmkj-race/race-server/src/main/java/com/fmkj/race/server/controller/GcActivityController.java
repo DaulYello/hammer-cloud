@@ -152,10 +152,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空", false);
             }
             Page<GcActivityDto> tPage = buildPage(gcBaseModel);
-            List<GcActivityDto> list = gcActivityService.queryAllActivityByPage(gcBaseModel);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
+            List<GcActivityDto> list = gcActivityService.queryAllActivityByPage(tPage, gcBaseModel);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {
@@ -201,10 +198,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空", false);
             }
             Page<GcActivityDto> tPage = buildPage(gcBaseModel);
-            List<GcActivityDto> list = gcActivityService.queryMyJoinActivityByUid(gcBaseModel);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
+            List<GcActivityDto> list = gcActivityService.queryMyJoinActivityByUid(tPage, gcBaseModel);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {
@@ -228,10 +222,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空", false);
             }
             Page<GcActivityDto> tPage = buildPage(gcBaseModel);
-            List<GcActivityDto> list = gcActivityService.queryMyStartActivityByUid(gcBaseModel);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
+            List<GcActivityDto> list = gcActivityService.queryMyStartActivityByUid(tPage, gcBaseModel);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {
@@ -264,10 +255,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空", false);
             }
             Page<GcActivityDto> tPage = buildPage(gcBaseModel);
-            List<GcActivityDto> list = gcActivityService.queryMyUntreatedActivityByUid(gcBaseModel);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
+            List<GcActivityDto> list = gcActivityService.queryMyUntreatedActivityByUid(tPage, gcBaseModel);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {

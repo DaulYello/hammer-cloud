@@ -76,10 +76,7 @@ public class GcNoticeController extends BaseController<GcNotice,GcNoticeService>
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空", false);
             }
             Page<NoticeQueryDto> tPage = buildPage(noticeQueryPage);
-            List<NoticeQueryDto> list = gcNoticeService.queryGcNoticeByUid(noticeQueryPage);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
+            List<NoticeQueryDto> list = gcNoticeService.queryGcNoticeByUid(tPage, noticeQueryPage);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {

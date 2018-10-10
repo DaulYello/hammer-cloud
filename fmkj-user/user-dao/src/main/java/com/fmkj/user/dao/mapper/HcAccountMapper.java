@@ -2,6 +2,7 @@ package com.fmkj.user.dao.mapper;
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.dto.GradeDto;
 import com.fmkj.user.dao.dto.HcAccountDto;
@@ -25,7 +26,7 @@ public interface HcAccountMapper extends BaseMapper<HcAccount> {
 
     HcAccount queryUserTaskMessage(@Param("uid") Integer uid);
 
-    List<HcAccount> selectAllFriends(@Param("uid") Integer accountId);
+    List<HcAccount> selectAllFriends(Pagination pagination, @Param("uid") Integer accountId);
 
     HcAccountDto selectAccountById(@Param("uid") Integer id);
 

@@ -1,5 +1,6 @@
 package com.fmkj.race.server.service.impl;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseServiceImpl;
 import com.fmkj.common.util.PropertiesUtil;
 import com.fmkj.common.util.StringUtils;
@@ -51,8 +52,8 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
      * @param gcBaseModel
      * @return java.util.List<java.util.HashMap<java.lang.String,java.lang.Object>>
     */
-    public List<GcActivityDto> queryAllActivityByPage(GcBaseModel gcBaseModel) {
-        return gcActivityMapper.queryAllActivityByPage(gcBaseModel);
+    public List<GcActivityDto> queryAllActivityByPage(Pagination pagination, GcBaseModel gcBaseModel) {
+        return gcActivityMapper.queryAllActivityByPage(pagination, gcBaseModel);
     }
 
     /**
@@ -75,8 +76,8 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
      * @param gcBaseModel
      * @return java.util.List<java.util.HashMap<java.lang.String,java.lang.Object>>
     */
-    public  List<GcActivityDto> queryMyJoinActivityByUid(GcBaseModel gcBaseModel) {
-        return gcActivityMapper.queryMyJoinActivityByUid(gcBaseModel);
+    public  List<GcActivityDto> queryMyJoinActivityByUid(Pagination pagination,GcBaseModel gcBaseModel) {
+        return gcActivityMapper.queryMyJoinActivityByUid(pagination, gcBaseModel);
     }
 
 
@@ -89,8 +90,8 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
      * @param gcBaseModel
      * @return java.util.List<java.util.HashMap<java.lang.String,java.lang.Object>>
     */
-    public List<GcActivityDto> queryMyStartActivityByUid(GcBaseModel gcBaseModel) {
-        return gcActivityMapper.queryMyStartActivityByUid(gcBaseModel);
+    public List<GcActivityDto> queryMyStartActivityByUid(Pagination pagination, GcBaseModel gcBaseModel) {
+        return gcActivityMapper.queryMyStartActivityByUid(pagination, gcBaseModel);
     }
 
 
@@ -177,7 +178,7 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
      * @return
      */
     @Override
-    public List<GcActivityDto> queryMyUntreatedActivityByUid(GcBaseModel gcBaseModel) {
-        return gcActivityMapper.queryMyUntreatedActivityByUid(gcBaseModel);
+    public List<GcActivityDto> queryMyUntreatedActivityByUid(Pagination pagination, GcBaseModel gcBaseModel) {
+        return gcActivityMapper.queryMyUntreatedActivityByUid(pagination, gcBaseModel);
     }
 }

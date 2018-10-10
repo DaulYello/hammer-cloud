@@ -114,9 +114,6 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
             }
             Page<JoinActivityDto> tPage = buildPage(joinActivityPage);
             List<JoinActivityDto> list =  gcJoinactivityrecordService.queryJoinActivityByAid(tPage, joinActivityPage);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {

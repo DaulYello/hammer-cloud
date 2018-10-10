@@ -1,6 +1,7 @@
 package com.fmkj.race.dao.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.race.dao.domain.GcNotice;
 import com.fmkj.race.dao.dto.NoticeQueryDto;
 import com.fmkj.race.dao.queryVo.NoticeQueryPage;
@@ -25,7 +26,7 @@ public interface GcNoticeMapper extends BaseMapper<GcNotice> {
      * @param
      * @return List
     */
-    List<NoticeQueryDto> queryGcNoticeByUid(NoticeQueryPage  noticeQueryPage);
+    List<NoticeQueryDto> queryGcNoticeByUid(Pagination pagination, NoticeQueryPage  noticeQueryPage);
 
 
 

@@ -168,10 +168,7 @@ public class FriendController {
             return new BaseResult(BaseResultEnum.BLANK.status,"accountId不能为空!",false);
         }
         Page<HcAccount> tPage = buildPage(queryVo);
-        List<HcAccount> hcAccountList = hcAccountService.queryAllFriends(queryVo.getAccountId());
-        if(StringUtils.isNotEmpty(hcAccountList)){
-            tPage.setTotal(hcAccountList.size());
-        }
+        List<HcAccount> hcAccountList = hcAccountService.queryAllFriends(tPage, queryVo.getAccountId());
         tPage.setRecords(hcAccountList);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
     }

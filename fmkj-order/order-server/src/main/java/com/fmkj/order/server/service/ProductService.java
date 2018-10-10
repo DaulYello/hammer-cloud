@@ -1,5 +1,6 @@
 package com.fmkj.order.server.service;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseService;
 import com.fmkj.order.dao.domain.ProductInfo;
 import com.fmkj.order.dao.dto.ProductDto;
@@ -14,7 +15,7 @@ import java.util.List;
 **/
 public interface ProductService extends BaseService<ProductInfo> {
 
-    List<ProductDto> getProductPage(ProductQueryVo productQueryVo);
+    List<ProductDto> getProductPage(Pagination page, ProductQueryVo productQueryVo);
 
     boolean publishProduct(ProductInfo productInfo);
 

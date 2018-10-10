@@ -47,10 +47,7 @@ public class ProductController extends BaseController<ProductInfo, ProductServic
     public BaseResult<Page<ProductDto>> getProductPage(@RequestBody ProductQueryVo productQueryVo){
         try {
             Page<ProductDto> tPage = buildPage(productQueryVo);
-            List<ProductDto> list = productService.getProductPage(productQueryVo);
-            if(StringUtils.isNotEmpty(list)){
-                tPage.setTotal(list.size());
-            }
+            List<ProductDto> list = productService.getProductPage(tPage, productQueryVo);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {

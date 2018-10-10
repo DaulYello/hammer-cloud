@@ -1,5 +1,6 @@
 package com.fmkj.race.server.service;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseService;
 import com.fmkj.race.dao.domain.GcActivity;
 import com.fmkj.race.dao.dto.GcActivityDto;
@@ -24,7 +25,7 @@ public interface GcActivityService extends BaseService<GcActivity>{
      * @param gcBaseModel
      * @return
     */
-    List<GcActivityDto> queryAllActivityByPage(GcBaseModel gcBaseModel);
+    List<GcActivityDto> queryAllActivityByPage(Pagination pagination, GcBaseModel gcBaseModel);
 
     
     
@@ -47,7 +48,7 @@ public interface GcActivityService extends BaseService<GcActivity>{
      * @param gcBaseModel
      * @return
     */
-    List<GcActivityDto> queryMyJoinActivityByUid(GcBaseModel gcBaseModel);
+    List<GcActivityDto> queryMyJoinActivityByUid(Pagination pagination, GcBaseModel gcBaseModel);
 
     
     /**
@@ -57,7 +58,7 @@ public interface GcActivityService extends BaseService<GcActivity>{
      * @param gcBaseModel
      * @return 
     */
-    List<GcActivityDto> queryMyStartActivityByUid(GcBaseModel gcBaseModel);
+    List<GcActivityDto> queryMyStartActivityByUid(Pagination pagination, GcBaseModel gcBaseModel);
 
 
     /**
@@ -83,5 +84,5 @@ public interface GcActivityService extends BaseService<GcActivity>{
      * @param gcBaseModel
      * @return
      */
-    List<GcActivityDto> queryMyUntreatedActivityByUid(GcBaseModel gcBaseModel);
+    List<GcActivityDto> queryMyUntreatedActivityByUid(Pagination pagination, GcBaseModel gcBaseModel);
 }

@@ -1,5 +1,6 @@
 package com.fmkj.race.server.service;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseService;
 import com.fmkj.race.dao.domain.GcNotice;
 import com.fmkj.race.dao.dto.NoticeQueryDto;
@@ -24,7 +25,7 @@ public interface GcNoticeService extends BaseService<GcNotice> {
      * @param
      * @return
     */
-    List<NoticeQueryDto> queryGcNoticeByUid(NoticeQueryPage noticeQueryPage);
+    List<NoticeQueryDto> queryGcNoticeByUid(Pagination pagination, NoticeQueryPage noticeQueryPage);
 
 
 

@@ -2,6 +2,7 @@ package com.fmkj.user.server.service.impl;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseServiceImpl;
 import com.fmkj.common.comenum.PointEnum;
 import com.fmkj.common.util.DateUtil;
@@ -82,8 +83,8 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
     }
 
     @Override
-    public List<HcAccount> queryAllFriends(Integer accountId) {
-        return hcAccountMapper.selectAllFriends(accountId);
+    public List<HcAccount> queryAllFriends(Pagination pagination, Integer accountId) {
+        return hcAccountMapper.selectAllFriends(pagination, accountId);
     }
 
     @Override
