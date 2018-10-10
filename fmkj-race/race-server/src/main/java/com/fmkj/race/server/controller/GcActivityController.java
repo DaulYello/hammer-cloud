@@ -80,7 +80,15 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
                   @PathParam(value = "type") String type,
                   @PathParam(value = "par") Double par,
                   @RequestParam MultipartFile[] file){
-
+        if(StringUtils.isEmpty(name)){
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "name不能为空", false);
+        }
+        if(StringUtils.isNull(startid)){
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "startid不能为空", false);
+        }
+        if(StringUtils.isNull(typeid)){
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "typeid不能为空", false);
+        }
         //判断用户是否黑名单
         HashMap<String, Object> params = new HashMap<>();
         params.put("uid", startid);
@@ -91,7 +99,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         }
 
         //判断活动名称是否包含敏感词汇
-        if(StringUtils.isEmpty(name)) {
+        if(StringUtils.isNotEmpty(name)) {
             String wordIsOk= SensitiveWordUtil.replaceBadWord(name.trim(),2,"*");
             if(!name.trim().equals(wordIsOk.trim())) {
                 return new BaseResult(BaseResultEnum.ERROR.status, "活动名称含有敏感词汇，请重新写一个吧!",false);
@@ -99,7 +107,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         }
 
         //判断产品的描述详情是否包含敏感词汇
-        if(StringUtils.isEmpty(pdescribe)) {
+        if(StringUtils.isNotEmpty(pdescribe)) {
             String wordIsOk= SensitiveWordUtil.replaceBadWord(pdescribe.trim(),2,"*");
             if(!pdescribe.equals(wordIsOk.trim())) {
                 return new BaseResult(BaseResultEnum.ERROR.status, "产品的描述详情含有敏感词汇，请重新写一个吧!",false);
@@ -107,7 +115,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         }
 
         //判断产品名称是否包含敏感词汇
-        if(StringUtils.isEmpty(pname)) {
+        if(StringUtils.isNotEmpty(pname)) {
             String wordIsOk= SensitiveWordUtil.replaceBadWord(pname.trim(),2,"*");
             if(!pname.equals(wordIsOk.trim())) {
                 return new BaseResult(BaseResultEnum.ERROR.status, "产品名称含有敏感词汇，请重新写一个吧!",false);

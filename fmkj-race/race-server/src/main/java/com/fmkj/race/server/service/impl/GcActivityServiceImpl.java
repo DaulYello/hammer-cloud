@@ -110,8 +110,6 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
             if(result){
                 //上传活动的文件
                 if(StringUtils.isNotNull(file)&&file.length>0) {
-                    GcActivity activity = gcActivityMapper.selectOne(ga);
-                    Integer aid = activity.getId();
                     int i = 1;
                     for (MultipartFile multipartFile : file) {
                         String fileName = null;
@@ -121,7 +119,7 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
                             throw new RuntimeException("上传活动图片异常：" + e.getMessage());
                         }
                         GcPimage gp = new GcPimage();
-                        gp.setAid(aid);
+                        gp.setAid(ga.getId());
                         gp.setFlag(i++);
                         gp.setImageurl(activityImageIpPath + fileName);
                         gcPimageMapper.insert(gp);
@@ -149,11 +147,10 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
         gcMessage.setType(0);
         int row = gcMessageMapper.insert(gcMessage);
         if(row > 0){
-            GcMessage message = gcMessageMapper.selectOne(gcMessage);
             GcNotice gn = new GcNotice();
             gn.setFlag(1);
             gn.setUid(startid);
-            gn.setMid(message.getId());
+            gn.setMid(gcMessage.getId());
             gcNoticeMapper.insert(gn);
             return true;
         }
