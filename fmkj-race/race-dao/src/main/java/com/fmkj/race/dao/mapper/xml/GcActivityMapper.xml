@@ -82,7 +82,7 @@
         ga.endtime,
         ga.name,
         gp.imageurl,
-        gat.type AS atype
+        gat.type
         FROM
         gc_joinactivityrecord gj
         LEFT JOIN gc_activity ga
@@ -130,7 +130,7 @@
         ga.endtime,
         ga.name,
         gp.imageurl,
-        gat.type AS atype
+        gat.type
         FROM
         gc_activity ga
         LEFT JOIN gc_activitytype gat

@@ -8,9 +8,6 @@ public class GcActivityDto extends GcActivity {
 
     private String imageurl;
 
-
-
-
     public String getType() {
         return type;
     }
