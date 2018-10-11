@@ -51,7 +51,7 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     private String userCodeImageIpPath;
 
 
-    @ApiOperation(value="实名认证" ,notes="参数：id,cardnum,name,url,fullPhoto,reversePhoto")
+    @ApiOperation(value="实名认证" ,notes="参数：id,cardnum,name")
     @UserLog(module= LogConstant.HC_CERT, actionDesc = "保存用户的实名信息")
     @PostMapping("/saveUserRealInfo")
     public BaseResult saveUserRealInfo(@PathParam(value = "id") Integer id,
@@ -71,7 +71,7 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     }
 
 
-    @ApiOperation(value="上传照片身份证" ,notes="参数：uid,file")
+    @ApiOperation(value="上传照片身份证" ,notes="参数：uid,file,status 1.正面2.反面")
     @UserLog(module= LogConstant.HC_CERT, actionDesc = "上传身份证照片的正反面")
     @PostMapping("/uploadCardImage")
     public BaseResult uploadCardImage(@PathParam(value = "uid") Integer uid,
@@ -115,7 +115,7 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
         }
     }
 
-    @ApiOperation(value="上传支付照片" ,notes="参数：uid,file")
+    @ApiOperation(value="上传支付照片" ,notes="参数：uid,file,status：3.绑定微信4.绑定支付宝")
     @UserLog(module= LogConstant.HC_CERT, actionDesc = "上传微信和支付宝的支付二维码")
     @PostMapping("/uploadPayImage")
     public BaseResult uploadPayImage(@PathParam(value = "uid") Integer uid,
@@ -165,28 +165,30 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     }
 
 
-    @ApiOperation(value="支付认证" ,notes="参数：uid,")
+    @ApiOperation(value="支付认证" ,notes="参数：uid,alipayAccount,wechatAccount")
     @UserLog(module= LogConstant.HC_CERT, actionDesc = "保存用户的实名信息")
     @PostMapping("/saveUserAccountInfo")
     public BaseResult saveUserAccountInfo(@PathParam(value = "uid") Integer uid,
-                                          @PathParam(value = "type") Integer type,
                                           @PathParam(value = "alipayAccount") String alipayAccount,
                                           @PathParam(value = "wechatAccount") String wechatAccount) {
+
+        Integer status = 0;
+
         if(StringUtils.isNull(uid)){
             return  new BaseResult(BaseResultEnum.BLANK.status, "用户ID不能为空", false);
         }
-        if(StringUtils.isNull(type)){
-            return  new BaseResult(BaseResultEnum.BLANK.status, "绑定的支付类型不能为空", false);
+        if((StringUtils.isNull(alipayAccount) && StringUtils.isNull(wechatAccount))){
+            return  new BaseResult(BaseResultEnum.BLANK.status, "账号不能为空！", false);
         }
-        if(type == ImageEnum.TYPE_ALIPAY.status && StringUtils.isNull(alipayAccount)){
-            return  new BaseResult(BaseResultEnum.BLANK.status, "支付宝账号不能为空", false);
+        if((StringUtils.isNotNull(alipayAccount) && StringUtils.isNotNull(wechatAccount))){
+            status=ImageEnum.TYPE_ALIPAYANDWECHAT.status;
         }
-        if(type == ImageEnum.TYPE_WECHAT.status && StringUtils.isNull(wechatAccount)){
-            return  new BaseResult(BaseResultEnum.BLANK.status, "微信账号不能为空", false);
+        if(StringUtils.isNotNull(alipayAccount)){
+            status=ImageEnum.TYPE_ALIPAY.status;
         }
-        if(type == ImageEnum.TYPE_ALIPAYANDWECHAT.status && (StringUtils.isNull(alipayAccount) || StringUtils.isNull(wechatAccount))){
-            return  new BaseResult(BaseResultEnum.BLANK.status, "支付宝账号和微信账号都不能为空", false);
+        if(StringUtils.isNotNull(wechatAccount)){
+            status=ImageEnum.TYPE_WECHAT.status;
         }
-        return hcUserimageService.saveUserAccountInfo(uid,alipayAccount,wechatAccount,type);
+        return hcUserimageService.saveUserAccountInfo(uid,alipayAccount,wechatAccount,status);
     }
 }
