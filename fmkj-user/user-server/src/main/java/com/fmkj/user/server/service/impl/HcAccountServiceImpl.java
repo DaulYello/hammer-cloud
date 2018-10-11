@@ -83,8 +83,8 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
     }
 
     @Override
-    public List<HcAccount> queryAllFriends(Pagination pagination, Integer accountId) {
-        return hcAccountMapper.selectAllFriends(pagination, accountId);
+    public List<HcAccount> queryAllFriends(Pagination pagination, Integer uid) {
+        return hcAccountMapper.queryAllFriends(pagination, uid);
     }
 
     @Override

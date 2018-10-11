@@ -16,6 +16,7 @@ import org.springframework.util.StreamUtils;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -115,7 +116,7 @@ public class AccessTokenFilter extends ZuulFilter{
                 }
             }
             boolean isPass = hcPermissApi.queryToken(token);
-            /*if(!isPass){
+            if(!isPass){
                 context.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                 BaseResult<Boolean> result = new BaseResult<Boolean>(BaseResultEnum.TOKEN_INVALID, isPass);
                 context.setResponseBody(JSON.toJSONString(result));// 返回错误内容
@@ -125,7 +126,7 @@ public class AccessTokenFilter extends ZuulFilter{
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("text/html;charset=UTF-8");
                 response.setLocale(new java.util.Locale("zh","CN"));
-            }*/
+            }
         } catch (IOException e) {
             rethrowRuntimeException(e);
         }

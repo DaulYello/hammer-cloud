@@ -27,14 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/apkNoticeFeeback")
 @DependsOn("springContextUtil")
-@Api(tags = {"公告和版本信息"},description = "公告和版本信息-网关路径/api-noticeFeeback")
+@Api(tags = {"公告和版本信息"},description = "公告和版本信息-网关路径/api-user")
 public class ApkNoticeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApkNoticeController.class);
