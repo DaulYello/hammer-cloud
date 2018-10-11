@@ -25,7 +25,7 @@ public interface HcAccountMapper extends BaseMapper<HcAccount> {
 
     HcAccount queryUserTaskMessage(@Param("uid") Integer uid);
 
-    List<HcAccount> queryAllFriends(Pagination pagination, @Param("uid") Integer uid);
+    List<HcAccount> selectAllFriends(Pagination pagination, @Param("uid") Integer uid);
 
     HcAccountDto selectAccountById(@Param("uid") Integer id);
 
