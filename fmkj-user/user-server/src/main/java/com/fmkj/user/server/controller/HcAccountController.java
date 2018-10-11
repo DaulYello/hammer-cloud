@@ -77,12 +77,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     private String userHeadImagePath;
 
 
-    /**
-     * @author yangshengbin
-     * @Description：用户通过电话号码和密码进行登录
-     * @date 2018/8/29 0029 15:39
-     * @return com.fmkj.common.base.BaseResult<java.util.Map<java.lang.String,java.lang.Object>>
-     */
+    @ApiOperation(value="用户通过电话号码和密码进行登录", notes="参数：telephone, password")
     @PostMapping(value = "/loginByPassword")
     public BaseResult<Map<String,Object>> loginByPassword(@RequestBody HcAccount hcAccount){
         String pwd = hcAccount.getPassword();
@@ -210,7 +205,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         return false;
     }
 
-    @ApiOperation(value="根据ID获取用户-App调用", notes="根据ID获取用户")
+    @ApiOperation(value="根据ID获取用户-App调用", notes="参数： id")
     @PutMapping("/selectAccountById")
     public BaseResult selectAccountById(@RequestBody HcAccount hcAccount){
         if(StringUtils.isNull(hcAccount.getId())){
@@ -250,13 +245,8 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "验证码发送成功!", true);
     }
 
-    /**
-     * 用户通过电话号码和短信动态码进行登录
-     *
-     * @param
-     * @return
-     */
-    @ApiOperation(value="用户通过电话号码和短信动态码进行登录", notes="参数：telephone， dycode")
+
+    @ApiOperation(value="用户通过电话号码和短信动态码进行登录", notes="参数：telephone，dycode")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "用户通过电话号码和短信动态码进行登录")
     @PostMapping("/loginByTelephone")
     public BaseResult loginByTelephone(@RequestBody HcAccount ha) {
@@ -297,7 +287,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     /**
      * 获取用户填写的邀请码并注册登录,需传入手机号
      */
-    @ApiOperation(value="用户通过电话号码和短信动态码进行登录", notes="参数：telephone， dycode")
+    @ApiOperation(value="用户通过邀请码登录", notes="参数：telephone， dycode")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "用户通过电话号码和短信动态码进行登录")
     @PostMapping("/loginByRcodeAndPhone")
     public BaseResult loginByRcodeAndPhone(@RequestBody Recode recode) {
