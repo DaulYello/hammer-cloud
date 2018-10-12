@@ -72,7 +72,7 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     @PostMapping("/uploadCardImage")
     public BaseResult uploadCardImage(@PathParam(value = "uid") Integer uid,
                                       @PathParam(value="status") Integer status,
-                                      @RequestParam MultipartFile file) {
+                                      @RequestParam("file") MultipartFile file) {
         try{
             if(StringUtils.isNull(uid)){
                 return  new BaseResult(BaseResultEnum.BLANK.status, "用户ID不能为空", false);
@@ -116,7 +116,7 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     @PostMapping("/uploadPayImage")
     public BaseResult uploadPayImage(@PathParam(value = "uid") Integer uid,
                                       @PathParam(value="status") Integer status,
-                                      @RequestParam MultipartFile file) {
+                                      @RequestParam("file") MultipartFile file) {
         try{
             if(StringUtils.isNull(uid)){
                 return  new BaseResult(BaseResultEnum.BLANK.status, "用户ID不能为空", false);

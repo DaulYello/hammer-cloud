@@ -31,11 +31,11 @@ public interface HcAccountService extends BaseService<HcAccount> {
 
     List<HcAccount> queryAllFriends(Pagination pagination, Integer accountId);
 
-    void uploadUserHead(HcAccount hcAccount, String fileName, String path);
+    boolean uploadUserHead(HcAccount hcAccount, String fileName, String path);
 
     HcAccountDto selectAccountById(Integer id);
 
-    boolean loginByRcodeAndPhone(HcAccount ha, Integer uid);
+    int loginByRcodeAndPhone(HcAccount ha, Integer uid, String token);
 
-    boolean loginByTelephone(Integer id);
+    boolean loginByTelephone(Integer id, String token);
 }

@@ -69,6 +69,11 @@ public class AccessTokenFilter extends ZuulFilter{
             // 1、限流拦截器、使用令牌桶算法，限流优先级最高
             RequestContext requestContext = RequestContext.getCurrentContext();
             HttpServletRequest request = requestContext.getRequest();
+            String servletPath = request.getServletPath();
+            //过滤掉登陆方法
+            if(servletPath.contains("loginByTelephone") || servletPath.contains("loginByRcodeAndPhone")
+                    || servletPath.contains("loginByPassword"))
+                return null;
             // 没有拿到令牌处理方法
             if(!RATE_LIMITER.tryAcquire()){
                 return new BaseResult<Boolean>(BaseResultEnum.NOACCESS, false);

@@ -88,7 +88,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
     }
 
     @Override
-    public void uploadUserHead(HcAccount hcAccount, String fileName, String path) {
+    public boolean uploadUserHead(HcAccount hcAccount, String fileName, String path) {
         int update = hcAccountMapper.updateById(hcAccount);
         if(update > 0){
             HcUserhead hcUserhead = new HcUserhead();
@@ -104,8 +104,11 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                 record.setUid(hcAccount.getId());
                 record.setTime(DateUtil.getNowInMillis(0L));
                 hcPointsRecordMapper.insert(record);
-            }
+                return true;
+            }else
+                return false;
         }
+        return false;
     }
 
     @Override
@@ -114,14 +117,13 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
     }
 
     @Override
-    public boolean loginByRcodeAndPhone(HcAccount ha, Integer uid) {
+    public int loginByRcodeAndPhone(HcAccount ha, Integer uid, String token) {
         int row = hcAccountMapper.insert(ha);
         if(row > 0){
             HcAccount where = new HcAccount();
             where.setTelephone(ha.getTelephone());
             HcAccount resultHc =  hcAccountMapper.selectOne(where);
             // 插入hcSession表
-            String token = UUID.randomUUID().toString().replace("-", "").toLowerCase();
             Timestamp btime = DateUtil.getNowInMillis(0L);// 获取当前时间戳
             Timestamp etime = DateUtil.getNowInMillis(24L * 3600L * 1000L * 30L);// 获取30天后的时间戳
             Timestamp ltime = DateUtil.getNowInMillis(0L);//
@@ -172,7 +174,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                                     GradeDto gradeDto = hcPointsRecordMapper.selectGrandByUid(hcAccount.getId());
                                     boolean change = changeGrade(gradeDto, ha.getId());
                                     if (change)
-                                        return true;
+                                        return ha.getId();
                                     else
                                         throw new RuntimeException("用户等级更新失败！");
                                 }
@@ -190,13 +192,12 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             }else
                 throw new RuntimeException("插入hcSession表出现失败！");
         }
-        return false;
+        return -1;
     }
 
     @Override
-    public boolean loginByTelephone(Integer id) {
+    public boolean loginByTelephone(Integer id, String token) {
 
-        String token = UUID.randomUUID().toString().replace("-", "").toLowerCase();
         Timestamp btime = DateUtil.getNowInMillis(0L);// 获取当前时间戳
         Timestamp etime = DateUtil.getNowInMillis(24L * 3600L * 1000L * 30L);// 获取30天后的时间戳
         Timestamp ltime = DateUtil.getNowInMillis(0L);//

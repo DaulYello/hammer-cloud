@@ -271,15 +271,20 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         HashMap<String, Object> params = new HashMap<>();
         params.put("telephone", telephone);
         List<HcAccount> list = hcAccountService.selectByMap(params);
-        if (list == null || list.size() == 0) {
+        if (StringUtils.isEmpty(list)) {
             return new BaseResult(BaseResultEnum.LOGIN_STATUS.getStatus(), "验证码正确，用户首次登陆，需要邀请码登陆！", true);
         }
-
-        boolean result = hcAccountService.loginByTelephone(ha.getId());
+        HcAccount account = list.get(0);
+        String token = UUID.randomUUID().toString().replace("-", "").toLowerCase();
+        boolean result = hcAccountService.loginByTelephone(account.getId(), token);
         if (!result) {
-            return new BaseResult(BaseResultEnum.ERROR.getStatus(), "系统错误，请重新登录!", false);
+            return new BaseResult(BaseResultEnum.ERROR.getStatus(), "系统错误，请重新登录!登陆ID：" + account.getId(), false);
         }
-        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "登录成功!", true);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("telephone",telephone);
+        resultMap.put("token", token);
+        resultMap.put("uid", account.getId());
+        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "登录成功!", resultMap);
     }
 
 
@@ -287,7 +292,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     /**
      * 获取用户填写的邀请码并注册登录,需传入手机号
      */
-    @ApiOperation(value="用户通过邀请码登录", notes="参数：telephone， dycode")
+    @ApiOperation(value="用户通过邀请码登录", notes="参数：telephone， rcode")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "用户通过电话号码和短信动态码进行登录")
     @PostMapping("/loginByRcodeAndPhone")
     public BaseResult loginByRcodeAndPhone(@RequestBody Recode recode) {
@@ -327,11 +332,16 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         Long cdbid = createRandom();
         ha.setCdbid(cdbid);
         ha.setNickname(cdbid + "");
-        boolean result =  hcAccountService.loginByRcodeAndPhone(ha, hc.getUid());
-        if (result){
-            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "邀请码比对成功,用户注册并登录!", result);
+        String token = UUID.randomUUID().toString().replace("-", "").toLowerCase();
+        int result =  hcAccountService.loginByRcodeAndPhone(ha, hc.getUid(), token);
+        if (result > 0){
+            Map<String, Object> resultMap = new HashMap<String, Object>();
+            resultMap.put("telephone",recode.getTelephone());
+            resultMap.put("token", token);
+            resultMap.put("uid", result);
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "邀请码比对成功,用户注册并登录!", resultMap);
         }
-        return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户注册登陆失败!", result);
+        return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户注册登陆失败!", false);
     }
 
 
@@ -369,7 +379,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "用户头像上传")
     @PostMapping("/uploadUserHead")
     public BaseResult uploadUserHead(@PathParam(value = "id") Integer id,
-                                     @RequestParam MultipartFile file){
+                                     @RequestParam("file") MultipartFile file){
         try {
             if(StringUtils.isNull(id)){
                 return new BaseResult(BaseResultEnum.BLANK.status, "用户ID不能为空!", false);
@@ -377,12 +387,18 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
             String fileName =PropertiesUtil.uploadImage(file,userHeadImagePath);
             HcAccount hcAccount = new HcAccount();
             hcAccount.setId(id);
-            hcAccount.setLogo(userHeadImageIpPath);
-            hcAccountService.uploadUserHead(hcAccount, fileName, userHeadImagePath);
+            hcAccount.setLogo(userHeadImageIpPath + fileName);
+            boolean result = hcAccountService.uploadUserHead(hcAccount, fileName, userHeadImagePath);
+            if(result){
+                HashMap<String, Object> resultMap = new HashMap<>();
+                resultMap.put("url", userHeadImageIpPath + fileName);
+                return new BaseResult(BaseResultEnum.SUCCESS.status, "头像上传成功!", resultMap);
+            }
+            return new BaseResult(BaseResultEnum.ERROR.status, "头像上传失败!", result);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new BaseResult(BaseResultEnum.SUCCESS.status, "头像上传成功!", true);
+        return new BaseResult(BaseResultEnum.ERROR.status, "头像上传失败!", false);
     }
 
 
@@ -436,7 +452,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     /**
      * 用户签到
      *
-     * @param ha
+     * @param
      */
     @ApiOperation(value="用户签到", notes="参数：id")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "用户签到、成功签到、用户得到1飞羽（成长值）")
