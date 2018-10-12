@@ -12,6 +12,8 @@ import com.fmkj.user.dao.domain.*;
 import com.fmkj.user.dao.dto.HcAccountDto;
 import com.fmkj.user.dao.dto.Recode;
 import com.fmkj.user.server.annotation.UserLog;
+import com.fmkj.user.server.async.AsyncFactory;
+import com.fmkj.user.server.async.AsyncManager;
 import com.fmkj.user.server.service.HcAccountService;
 import com.fmkj.user.server.service.HcPointsRecordService;
 import com.fmkj.user.server.service.HcRcodeService;
@@ -546,7 +548,6 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "邮箱绑定")
     @PostMapping("/bindEmail")
     public BaseResult bindEmail(@RequestBody HcAccount ha) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isNull(ha.getId())) {
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空!", false);
         }
@@ -556,8 +557,11 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         }
         //绑定邮箱给予积分奖励
         boolean isUpdate = hcAccountService.bindEmail(ha);
-        Sendmail.sendMail(email);
-        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "邮箱绑定成功!", true);
+        if(isUpdate){
+            AsyncManager.me().execute(AsyncFactory.sendEmail(email));
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "邮箱绑定成功!", true);
+        }
+        return new BaseResult(BaseResultEnum.ERROR.getStatus(), "邮箱绑定失败!", true);
     }
 
     /**

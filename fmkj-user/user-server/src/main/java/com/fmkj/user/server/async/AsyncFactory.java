@@ -1,5 +1,6 @@
 package com.fmkj.user.server.async;
 
+import com.fmkj.common.util.Sendmail;
 import com.fmkj.user.dao.domain.UserOperateLog;
 import com.fmkj.user.server.service.UserLogService;
 import com.fmkj.user.server.util.SpringContextUtil;
@@ -25,6 +26,19 @@ public class AsyncFactory {
                 try {
                     UserLogService raceLogService = SpringContextUtil.getBean(UserLogService.class);
                     raceLogService.insert(operLog);
+                } catch (BeansException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    public static TimerTask sendEmail(String email) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Sendmail.sendMail(email);
                 } catch (BeansException e) {
                     e.printStackTrace();
                 }
