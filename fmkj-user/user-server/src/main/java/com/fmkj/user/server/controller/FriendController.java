@@ -101,9 +101,8 @@ public class FriendController {
         for (HcFriend h : hcFriendList) {
             HashMap<String, Object> friendReqInfo = new HashMap<String, Object>();
             HcAccount hcAccount = hcAccountService.selectById(h.getAccountId());
-            friendReqInfo.put("accountId", hcFriend.getAccountId());
-            friendReqInfo.put("friendId", hcFriend.getFriendId());
-            friendReqInfo.put("msg", hcFriend.getMsg());
+            friendReqInfo.put("accountId", hcAccount.getId());
+            friendReqInfo.put("msg", h.getMsg());
             friendReqInfo.put("logo", hcAccount.getLogo());
             friendReqInfo.put("nickname", hcAccount.getNickname());
             friendReqInfo.put("gradeId", hcAccount.getGradeId());
