@@ -8,6 +8,7 @@ import com.fmkj.common.base.BaseResultEnum;
 import com.fmkj.common.constant.LogConstant;
 import com.fmkj.common.util.PropertiesUtil;
 import com.fmkj.common.util.StringUtils;
+import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.domain.HcUserimage;
 import com.fmkj.user.server.annotation.UserLog;
 import com.fmkj.user.server.enmu.ImageEnum;
@@ -19,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
@@ -54,20 +52,18 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     @ApiOperation(value="实名认证" ,notes="参数：id,cardnum,name")
     @UserLog(module= LogConstant.HC_CERT, actionDesc = "保存用户的实名信息")
     @PostMapping("/saveUserRealInfo")
-    public BaseResult saveUserRealInfo(@PathParam(value = "id") Integer id,
-                                       @PathParam(value = "name") String name,
-                                       @PathParam(value = "cardnum") String cardnum) {
-        if(StringUtils.isNull(id)){
+    public BaseResult saveUserRealInfo(@RequestBody HcAccount account) {
+        if(StringUtils.isNull(account.getId())){
             return  new BaseResult(BaseResultEnum.BLANK.status, "用户ID不能为空", false);
         }
-        if(StringUtils.isNull(name)){
+        if(StringUtils.isNull(account.getName())){
             return  new BaseResult(BaseResultEnum.BLANK.status, "用户姓名不能为空", false);
         }
-        if(StringUtils.isNull(cardnum)){
+        if(StringUtils.isNull(account.getCardnum())){
             return  new BaseResult(BaseResultEnum.BLANK.status, "用户证件号码不能为空", false);
         }
 
-        return hcUserimageService.saveUserRealInfo(id,name,cardnum);
+        return hcUserimageService.saveUserRealInfo(account);
     }
 
 
@@ -168,27 +164,25 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
     @ApiOperation(value="支付认证" ,notes="参数：uid,alipayAccount,wechatAccount")
     @UserLog(module= LogConstant.HC_CERT, actionDesc = "保存用户的实名信息")
     @PostMapping("/saveUserAccountInfo")
-    public BaseResult saveUserAccountInfo(@PathParam(value = "uid") Integer uid,
-                                          @PathParam(value = "alipayAccount") String alipayAccount,
-                                          @PathParam(value = "wechatAccount") String wechatAccount) {
+    public BaseResult saveUserAccountInfo(@RequestBody HcUserimage userimage) {
 
         Integer status = 0;
 
-        if(StringUtils.isNull(uid)){
+        if(StringUtils.isNull(userimage.getUid())){
             return  new BaseResult(BaseResultEnum.BLANK.status, "用户ID不能为空", false);
         }
-        if((StringUtils.isNull(alipayAccount) && StringUtils.isNull(wechatAccount))){
+        if((StringUtils.isNull(userimage.getAlipayAccount()) && StringUtils.isNull(userimage.getWechatAccount()))){
             return  new BaseResult(BaseResultEnum.BLANK.status, "账号不能为空！", false);
         }
-        if((StringUtils.isNotNull(alipayAccount) && StringUtils.isNotNull(wechatAccount))){
+        if((StringUtils.isNotNull(userimage.getAlipayAccount()) && StringUtils.isNotNull(userimage.getWechatAccount()))){
             status=ImageEnum.TYPE_ALIPAYANDWECHAT.status;
         }
-        if(StringUtils.isNotNull(alipayAccount)){
+        if(StringUtils.isNotNull(userimage.getAlipayAccount())){
             status=ImageEnum.TYPE_ALIPAY.status;
         }
-        if(StringUtils.isNotNull(wechatAccount)){
+        if(StringUtils.isNotNull(userimage.getWechatAccount())){
             status=ImageEnum.TYPE_WECHAT.status;
         }
-        return hcUserimageService.saveUserAccountInfo(uid,alipayAccount,wechatAccount,status);
+        return hcUserimageService.saveUserAccountInfo(userimage,status);
     }
 }

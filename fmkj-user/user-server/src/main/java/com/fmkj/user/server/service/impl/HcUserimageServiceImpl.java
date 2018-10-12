@@ -50,21 +50,15 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
     @Autowired
     private JDWXUtil jdwxUtil;
 
-    public BaseResult saveUserRealInfo(Integer id, String name, String cardnum){
+    public BaseResult saveUserRealInfo(HcAccount account){
         //1.更新hc_account
         try {
-            HcAccount account = new HcAccount();
-            account.setId(id);
-            account.setCardnum(cardnum);
-            account.setName(name);
             account.setCardStatus(1);
             //1.1 验证用户名和省份证号码是否正确
             boolean result = jdwxUtil.cardRealName(account);
             LOGGER.debug("验证用户名和省份证号码是否正确:"+result);
             if(result) {
                 boolean updateResult =hcAccountMapper.updateById(account)>0?true:false;
-                LOGGER.debug("更新用户名和省份证号码是否正确:"+updateResult);
-
                 if(updateResult){
                     return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "保存用户的实名信息成功!", true);
                 }else{
@@ -78,25 +72,25 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
         }
     }
 
-    public BaseResult saveUserAccountInfo(Integer uid, String alipayAccount, String wechatAccount,Integer type){
+    public BaseResult saveUserAccountInfo(HcUserimage userimage,Integer type){
 
         try{
             HcUserimage imagePay = new HcUserimage();
-            imagePay.setUid(uid);
+            imagePay.setUid(userimage.getUid());
             HcUserimage hcUserimage = hcUserimageMapper.selectOne(imagePay);
             boolean result = false;
             if(StringUtils.isNull(hcUserimage)){
                 return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户还没有实名认证，请先实名认证！", false);
             }else{
-                hcUserimage.setAlipayAccount(alipayAccount);
-                hcUserimage.setWechatAccount(wechatAccount);
+                hcUserimage.setAlipayAccount(userimage.getAlipayAccount());
+                hcUserimage.setWechatAccount(userimage.getAlipayAccount());
                 hcUserimage.setPayCertTime(new Date());
                 hcUserimage.setStatus(1);
                 result = hcUserimageMapper.updateById(hcUserimage) >0 ?true:false;
             }
             if(result){
                 HcPointsRecord pointsRecord = new HcPointsRecord();
-                pointsRecord.setUid(uid);
+                pointsRecord.setUid(userimage.getUid());
                 pointsRecord.setTime(new Date());
                 switch(type){
                     case 3:

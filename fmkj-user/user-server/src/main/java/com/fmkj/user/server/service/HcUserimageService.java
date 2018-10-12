@@ -2,6 +2,7 @@ package com.fmkj.user.server.service;
 
 import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseService;
+import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.domain.HcUserimage;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,21 +17,16 @@ public interface HcUserimageService extends BaseService<HcUserimage> {
 
     /**
      *
-     * @param id
-     * @param name
-     * @param cardnum
+     * @param account
      * @return
      */
-    BaseResult saveUserRealInfo(Integer id, String name, String cardnum);
+    BaseResult saveUserRealInfo(HcAccount account);
 
     /**
-     *
-     * @param uid
-     * @param alipayAccount
-     * @param wechatAccount
+     * @param userimage
      * @param type
      * @return
      */
-    BaseResult saveUserAccountInfo(Integer uid, String alipayAccount, String wechatAccount,Integer type);
+    BaseResult saveUserAccountInfo(HcUserimage userimage,Integer type);
 
 }
