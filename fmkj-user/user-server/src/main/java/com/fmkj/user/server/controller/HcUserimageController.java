@@ -85,9 +85,9 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
             userimage.setUrl(userCodeImagePath);
             String newFileName=PropertiesUtil.uploadImage(file,userCodeImagePath);
             if(status == ImageEnum.TYPE_FULL.status){
-                userimage.setFullPhoto(userCodeImageIpPath + newFileName);
+                userimage.setFullPhoto(newFileName);
             }else if(status == ImageEnum.TYPE_REVERSE.status){
-                userimage.setReversePhoto(userCodeImageIpPath + newFileName);
+                userimage.setReversePhoto(newFileName);
             }
 
             HcUserimage hm = new HcUserimage();
@@ -133,9 +133,9 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
 
             String newFileName=PropertiesUtil.uploadImage(file,userPayImagePath);
             if(status == ImageEnum.TYPE_WECHAT.status){
-                userimage.setWechatPhoto(userPayImageIpPath + newFileName);
+                userimage.setWechatPhoto(newFileName);
             }else if(status == ImageEnum.TYPE_ALIPAY.status){
-                userimage.setAlipayPhoto(userPayImageIpPath + newFileName);
+                userimage.setAlipayPhoto(newFileName);
             }
 
             HcUserimage imagePay = new HcUserimage();

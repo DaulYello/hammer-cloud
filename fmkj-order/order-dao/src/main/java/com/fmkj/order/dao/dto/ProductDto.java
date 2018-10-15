@@ -15,6 +15,12 @@ public class ProductDto extends ProductInfo{
     // 交易成功订单数量
     private Integer successNum;
 
+    //支付宝账号
+    private Integer alipayStatus;
+    //微信账号
+    private Integer wechatStatus;
+
+
     public Integer getSuccessNum() {
         return successNum;
     }
@@ -29,5 +35,21 @@ public class ProductDto extends ProductInfo{
 
     public void setHcAccount(HcAccount hcAccount) {
         this.hcAccount = hcAccount;
+    }
+
+    public Integer getAlipayStatus() {
+        return alipayStatus;
+    }
+
+    public void setAlipayStatus(Integer alipayStatus) {
+        this.alipayStatus = alipayStatus;
+    }
+
+    public Integer getWechatStatus() {
+        return wechatStatus;
+    }
+
+    public void setWechatStatus(Integer wechatStatus) {
+        this.wechatStatus = wechatStatus;
     }
 }

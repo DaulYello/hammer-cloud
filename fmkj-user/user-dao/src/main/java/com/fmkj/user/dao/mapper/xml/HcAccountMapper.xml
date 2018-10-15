@@ -74,6 +74,7 @@
 		  ha.isboong,
 		  ha.cdbid,
 		  ha.password,
+		  ha.name,
 		  (SELECT
 			SUM(hp.points_num)
 		  FROM

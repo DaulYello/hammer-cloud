@@ -11,6 +11,9 @@ import com.fmkj.user.dao.dto.GradeDto;
 import com.fmkj.user.dao.dto.HcAccountDto;
 import com.fmkj.user.dao.mapper.*;
 import com.fmkj.user.server.service.HcAccountService;
+import com.fmkj.user.server.service.HcRcodeService;
+import com.fmkj.user.server.util.Rcode;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,9 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
 
     @Autowired
     private HcToolsMapper hcToolsMapper;
+
+    @Autowired
+    private HcRcodeService hcRcodeService;
 
     /**
      * @author yangshengbin
@@ -173,8 +179,11 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                                 if(update > 0){
                                     GradeDto gradeDto = hcPointsRecordMapper.selectGrandByUid(hcAccount.getId());
                                     boolean change = changeGrade(gradeDto, ha.getId());
-                                    if (change)
+                                    if (change){
+                                        LOGGER.debug("生成一个邀请码，并保存");
+                                        boolean ret = hcRcodeService.setRcode(uid, Rcode.getRcode(uid));
                                         return ha.getId();
+                                    }
                                     else
                                         throw new RuntimeException("用户等级更新失败！");
                                 }
@@ -302,5 +311,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         }
         return num;
     }
+
+
 
 }
