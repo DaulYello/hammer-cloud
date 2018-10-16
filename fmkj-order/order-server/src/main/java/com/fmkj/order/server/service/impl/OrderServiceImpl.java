@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -54,8 +56,20 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderInfo> im
     }
 
     @Override
-    public OrderDto selectDetailsById(OrderQueryVo orderQueryVo){
-        return orderMapper.selectDetailsById(orderQueryVo);
+    public List<OrderDto>  selectDetailsById(OrderQueryVo orderQueryVo){
+
+        HashMap<String, Object> param = new HashMap<>();
+        List<OrderDto> orderDtos = new LinkedList<>();
+        OrderDto orderDto = null;
+        LOGGER.debug("");
+        for(int i=0;i<2;i++){
+            param.put("id",orderQueryVo.getId());
+            param.put("identity",i);
+            orderDto =orderMapper.selectDetailsById(param);
+            orderDto.setIdentity(i);
+            orderDtos.add(orderDto);
+        }
+        return orderDtos;
     }
 
     @Override

@@ -83,7 +83,7 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
                 return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户还没有实名认证，请先实名认证！", false);
             }else{
                 hcUserimage.setAlipayAccount(userimage.getAlipayAccount());
-                hcUserimage.setWechatAccount(userimage.getAlipayAccount());
+                hcUserimage.setWechatAccount(userimage.getWechatAccount());
                 hcUserimage.setPayCertTime(new Date());
                 hcUserimage.setStatus(1);
                 result = hcUserimageMapper.updateById(hcUserimage) >0 ?true:false;

@@ -122,7 +122,7 @@
 
 	</select>
 
-	<select id="selectDetailsById" parameterType="com.fmkj.order.dao.queryVo.OrderQueryVo" resultMap="BaseResultMap">
+	<select id="selectDetailsById" parameterType="java.util.HashMap" resultMap="BaseResultMap">
 		SELECT
 		fm.id,
 		fm.order_no,
@@ -142,26 +142,38 @@
 		fm.product_id,
 		hc.*,
 		CASE
-		WHEN fm.payment_type = 0
-		THEN im.wechat_account
 		WHEN fm.payment_type = 1
+		THEN im.wechat_account
+		WHEN fm.payment_type = 2
 		THEN im.alipay_account
 		END AS payAccount,
 		CASE
-		WHEN fm.payment_type = 0
-		THEN im.wechat_photo
 		WHEN fm.payment_type = 1
+		THEN im.wechat_photo
+		WHEN fm.payment_type = 2
 		THEN im.alipay_photo
 		END AS payCode
 		FROM
 		fm_order_info fm
 		LEFT JOIN hc_account hc
-		ON fm.seller_id = hc.id
+		ON
+		<if test="identity == 0">
+			fm.seller_id = hc.id
+		</if>
+		<if test="identity == 1">
+			fm.user_id = hc.id
+		</if>
 		LEFT JOIN hc_userimage im
-		ON fm.seller_id = im.uid
+		ON
+		<if test="identity == 0">
+			fm.seller_id = im.uid
+		</if>
+		<if test="identity == 1">
+			fm.user_id = im.uid
+		</if>
 		WHERE 1 = 1
-		<if test="order.id != null">
-			and fm.id = #{order.id}
+		<if test="id != null">
+			and fm.id = #{id}
 		</if>
 	</select>
 </mapper>

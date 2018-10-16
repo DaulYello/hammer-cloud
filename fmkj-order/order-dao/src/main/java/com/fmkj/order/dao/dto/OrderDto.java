@@ -12,6 +12,8 @@ public class OrderDto extends OrderInfo{
 
     // 下单用户信息
     private HcAccount hcAccount;
+    // 该用户是卖家还是买家(用户相对于订单的身份)0,卖家用户，1下单用户
+    private Integer identity;
     // 用户下单时支付使用的账号
     private String payAccount;
     // 用户下单时支付使用的二维码
@@ -39,5 +41,13 @@ public class OrderDto extends OrderInfo{
 
     public void setPayCode(String payCode) {
         this.payCode = payCode;
+    }
+
+    public Integer getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(Integer identity) {
+        this.identity = identity;
     }
 }

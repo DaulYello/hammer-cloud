@@ -8,6 +8,7 @@ import com.fmkj.order.dao.dto.OrderDto;
 import com.fmkj.order.dao.queryVo.OrderQueryVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface OrderMapper extends BaseMapper<OrderInfo> {
@@ -16,5 +17,5 @@ public interface OrderMapper extends BaseMapper<OrderInfo> {
 
     List<OrderDto> getOrderPageBySeller(Pagination pagination, @Param("order") OrderQueryVo orderQueryVo);
 
-    OrderDto selectDetailsById(@Param("order") OrderQueryVo orderQueryVo);
+    OrderDto selectDetailsById(HashMap<String, Object> param);
 }

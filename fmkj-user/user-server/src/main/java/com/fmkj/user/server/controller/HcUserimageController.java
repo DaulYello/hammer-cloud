@@ -134,9 +134,9 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
 
             String newFileName=PropertiesUtil.uploadImage(file,userPayImagePath);
             if(status == ImageEnum.TYPE_WECHAT.status){
-                userimage.setWechatPhoto(newFileName);
+                userimage.setWechatPhoto(userPayImageIpPath+newFileName);
             }else if(status == ImageEnum.TYPE_ALIPAY.status){
-                userimage.setAlipayPhoto(newFileName);
+                userimage.setAlipayPhoto(userPayImageIpPath+newFileName);
             }
 
             HcUserimage imagePay = new HcUserimage();
@@ -204,5 +204,4 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
             throw new RuntimeException("根据ID查询订单异常：" + e.getMessage());
         }
     }
-
 }
