@@ -15,4 +15,6 @@ public interface OrderMapper extends BaseMapper<OrderInfo> {
     List<OrderDto> queryOrderPage(Pagination pagination, @Param("order") OrderQueryVo orderQueryVo);
 
     List<OrderDto> getOrderPageBySeller(Pagination pagination, @Param("order") OrderQueryVo orderQueryVo);
+
+    OrderDto selectDetailsById(@Param("order") OrderQueryVo orderQueryVo);
 }

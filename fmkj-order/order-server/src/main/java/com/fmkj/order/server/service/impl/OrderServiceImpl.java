@@ -54,6 +54,11 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderInfo> im
     }
 
     @Override
+    public OrderDto selectDetailsById(OrderQueryVo orderQueryVo){
+        return orderMapper.selectDetailsById(orderQueryVo);
+    }
+
+    @Override
     public boolean sellPToPublisher(OrderInfo orderInfo) {
         int result = orderMapper.updateById(orderInfo);
         if(result > 0){

@@ -121,4 +121,12 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
             return new BaseResult(BaseResultEnum.ERROR.getStatus(), e.getMessage(), false);
         }
     }
+
+
+    public HcUserimage getUserPayWay(HcUserimage userimage){
+        LOGGER.debug("业务层："+userimage.getUid());
+        HcUserimage imagePay = new HcUserimage();
+        imagePay.setUid(userimage.getUid());
+        return hcUserimageMapper.selectOne(imagePay);
+    }
 }

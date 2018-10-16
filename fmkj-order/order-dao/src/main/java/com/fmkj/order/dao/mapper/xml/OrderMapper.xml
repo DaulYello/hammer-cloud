@@ -18,6 +18,8 @@
 		<result column="trade_num"  property="tradeNum" />
 		<result column="product_id"  property="productId" />
 		<result column="order_type"  property="orderType" />
+		<result column="payAccount" property="payAccount" />
+		<result column="payCode" property="payCode" />
 		<association column="hc" property="hcAccount" javaType="com.fmkj.order.dao.domain.HcAccount">
 			<id column="id" property="id" />
 			<result column="nation" property="nation" />
@@ -120,4 +122,46 @@
 
 	</select>
 
+	<select id="selectDetailsById" parameterType="com.fmkj.order.dao.queryVo.OrderQueryVo" resultMap="BaseResultMap">
+		SELECT
+		fm.id,
+		fm.order_no,
+		fm.order_type,
+		fm.user_id,
+		fm.seller_id,
+		fm.payment,
+		fm.payment_type,
+		fm.order_status,
+		fm.payment_time,
+		fm.end_time,
+		fm.create_time,
+		fm.update_time,
+		fm.is_pay,
+		fm.leave_msg,
+		fm.trade_num,
+		fm.product_id,
+		hc.*,
+		CASE
+		WHEN fm.payment_type = 0
+		THEN im.wechat_account
+		WHEN fm.payment_type = 1
+		THEN im.alipay_account
+		END AS payAccount,
+		CASE
+		WHEN fm.payment_type = 0
+		THEN im.wechat_photo
+		WHEN fm.payment_type = 1
+		THEN im.alipay_photo
+		END AS payCode
+		FROM
+		fm_order_info fm
+		LEFT JOIN hc_account hc
+		ON fm.seller_id = hc.id
+		LEFT JOIN hc_userimage im
+		ON fm.seller_id = im.uid
+		WHERE 1 = 1
+		<if test="order.id != null">
+			and fm.id = #{order.id}
+		</if>
+	</select>
 </mapper>

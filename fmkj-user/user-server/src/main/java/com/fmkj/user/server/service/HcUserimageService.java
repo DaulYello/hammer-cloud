@@ -29,4 +29,7 @@ public interface HcUserimageService extends BaseService<HcUserimage> {
      */
     BaseResult saveUserAccountInfo(HcUserimage userimage,Integer type);
 
+
+    HcUserimage getUserPayWay(HcUserimage userimage);
+
 }

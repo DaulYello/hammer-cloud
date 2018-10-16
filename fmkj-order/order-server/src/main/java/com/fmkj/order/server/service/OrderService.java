@@ -19,6 +19,8 @@ public interface OrderService extends BaseService<OrderInfo> {
 
     boolean sellerPayConfirm(OrderInfo orderInfo);
 
+    OrderDto selectDetailsById(OrderQueryVo orderQueryVo);
+
     boolean addOrder(OrderInfo orderInfo);
 
     boolean updateOrder(OrderInfo orderInfo);

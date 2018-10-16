@@ -61,8 +61,8 @@ public class OrderController extends BaseController<OrderInfo, OrderService> imp
             if(StringUtils.isNull(orderQueryVo) || StringUtils.isNull(orderQueryVo.getId())){
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "ID不能为空", false);
             }
-            OrderInfo orderInfo = orderService.selectById(orderQueryVo.getId());
-            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", orderInfo);
+            OrderDto orderDto = orderService.selectDetailsById(orderQueryVo);
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", orderDto);
         } catch (Exception e) {
             throw new RuntimeException("根据ID查询订单异常：" + e.getMessage());
         }

@@ -15,6 +15,7 @@ import com.fmkj.user.server.enmu.ImageEnum;
 import com.fmkj.user.server.service.HcUserimageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,4 +186,23 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
         }
         return hcUserimageService.saveUserAccountInfo(userimage,status);
     }
+
+
+    @ApiOperation(value="支付方式" ,notes="参数：uid")
+    @UserLog(module= LogConstant.HC_CERT, actionDesc = "通过用户的id获取绑定支付方式")
+    @PutMapping("/getUserPayWay")
+    public BaseResult<HcUserimage> getUserPayWay(@RequestBody HcUserimage userimage) {
+
+        LOGGER.debug("通过用户的id获取绑定支付方式"+userimage.getUid());
+        try {
+            if(StringUtils.isNull(userimage) || StringUtils.isNull(userimage.getUid())){
+                return new BaseResult(BaseResultEnum.BLANK.getStatus(), "uid不能为空", false);
+            }
+            HcUserimage hcUserimage = hcUserimageService.getUserPayWay(userimage);
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", hcUserimage);
+        } catch (Exception e) {
+            throw new RuntimeException("根据ID查询订单异常：" + e.getMessage());
+        }
+    }
+
 }
