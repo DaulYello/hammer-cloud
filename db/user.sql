@@ -15,9 +15,6 @@ ADD COLUMN `realnam_info` VARCHAR (500) NULL COMMENT '实名认证未通过的�
 ALTER TABLE `hammerchain`.`hc_account`
 ADD COLUMN `cnt` DOUBLE (18, 10) DEFAULT 0 NULL COMMENT '用户拥有CNT';
 
-ALTER TABLE `hammerchain`.`hc_account`
-ADD COLUMN `user_level` TINYINT(4) DEFAULT 0 NULL COMMENT '用户级别0、普通用户;1、管理员用户;2、超级用户(公司账户);该字段可扩展';
-
 ALTER TABLE `hc_userimage` CHANGE `time` `time` TIMESTAMP NULL COMMENT '身份认证时间',
 CHANGE `status` `status` INT(2) DEFAULT 0 NULL COMMENT '0、未支付认证；1、已支付认证', ADD COLUMN `pay_cert_time`
 TIMESTAMP NULL COMMENT '支付认证时间' AFTER `wechat_photo`;
