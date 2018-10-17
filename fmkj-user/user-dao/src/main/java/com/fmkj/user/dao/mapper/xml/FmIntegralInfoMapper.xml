@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.FmIntegralInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.FmIntegralInfo">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="integral_num" property="integralNum" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+    </resultMap>
+
+    <select id="queryRList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+          SELECT
+              ID,
+              UID,
+              INTEGRAL_NUM,
+              STATUS,
+              CREATE_DATE
+            FROM
+              FM_INTEGRAL_INFO
+            WHERE UID = #{uid}
+              AND STATUS = #{status}
+              AND CREATE_DATE BETWEEN DATE_ADD(NOW(), INTERVAL - 2 DAY)
+              AND NOW()
+            ORDER BY CREATE_DATE DESC
+            LIMIT 0, 12
+    </select>
+
+</mapper>
