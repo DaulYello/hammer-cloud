@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.FmRecyleLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.FmRecyleLog">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="take_num" property="takeNum" />
+        <result column="take_date" property="takeDate" />
+        <result column="take_type" property="takeType" />
+        <result column="recyle_type" property="recyleType" />
+        <result column="take_msg" property="takeMsg" />
+        <result column="friend_id" property="friendId" />
+    </resultMap>
+
+    <select id="queryCntDynamic" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+       SELECT
+          f.id,
+          b.nickname,
+          f.take_num AS takeNum,
+          f.take_date AS takeDate,
+          f.recyle_type AS recyleType,
+          f.take_msg AS takeMsg
+        FROM
+          fm_recyle_log f
+          LEFT JOIN hc_account b
+            ON f.uid = b.id
+        WHERE TO_DAYS(f.take_date) = TO_DAYS(NOW())
+          AND f.take_type = 0
+          AND f.friend_id = #{uid}
+         ORDER BY f.take_date DESC
+    </select>
+
+    <select id="queryRankList" resultType="java.util.HashMap">
+
+        SELECT
+          c.nickname,
+          c.logo,
+          c.my_p AS myP,
+          t.id,
+          t.uid,
+          SUM(t.take_num) AS takeNum
+        FROM
+          fm_recyle_log t
+          LEFT JOIN hc_account c
+            ON t.uid = c.id
+        WHERE TO_DAYS(t.take_date) = TO_DAYS(NOW())
+          AND t.take_type = 0
+          AND t.recyle_type = 2
+        GROUP BY t.uid
+        ORDER BY takeNum DESC
+
+    </select>
+
+    <select id="queryCntNumDay" resultType="java.lang.Double" parameterType="java.lang.Integer">
+        SELECT
+          CASE
+            WHEN SUM(t.take_num) IS NULL
+            THEN 0
+            ELSE SUM(t.take_num)
+          END AS cntNum
+        FROM
+          fm_recyle_log t
+        WHERE TO_DAYS(t.take_date) = TO_DAYS(NOW())
+          AND t.take_type = 0
+          AND t.recyle_type = 1
+          AND t.uid = #{uid}
+    </select>
+
+    <select id="queryRNumDay" resultType="java.lang.Double" parameterType="java.lang.Integer">
+        SELECT
+          CASE
+            WHEN SUM(t.take_num) IS NULL
+            THEN 0
+            ELSE SUM(t.take_num)
+          END AS rNum
+        FROM
+          fm_recyle_log t
+        WHERE TO_DAYS(t.take_date) = TO_DAYS(NOW())
+          AND t.take_type = 0
+          AND t.recyle_type = 2
+          AND t.uid = #{uid}
+    </select>
+</mapper>
