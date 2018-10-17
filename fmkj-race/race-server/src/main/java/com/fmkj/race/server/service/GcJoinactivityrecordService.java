@@ -21,7 +21,7 @@ public interface GcJoinactivityrecordService extends BaseService<GcJoinactivityr
 
     /**
      * @author yangshengbin
-     * @Description：插入用户参与记录/更改用户p能量值/
+     * @Description：插入用户参与记录/更改用户cnt值/
      * @date 2018/9/6 0006 09:54
      * @param
      * @return

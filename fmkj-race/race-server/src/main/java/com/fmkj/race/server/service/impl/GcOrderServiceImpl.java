@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -56,6 +57,9 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
 
     @Autowired
     private HcAccountApi hcAccountApi;
+
+    @Autowired
+    private GcAssetsMapper gcAssetsMapper;
 
 
     /**
@@ -117,7 +121,7 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
             /************获取手续费***********/
 
             //发起者获得的奖励
-            Double starterP = (1+premium)*price*pnumber - poundage;
+            Double starterCnt = (1+premium)*price*pnumber - poundage;
 
             /*******根据活动类型id获取活动类型名称*******/
             Integer typeid = one.getTypeid();
@@ -127,55 +131,63 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
             String type = gat.getType();
             /*******根据活动类型id获取活动类型名称*******/
 
-
+            LOGGER.debug("向gc_assets资产表中插入资产记录");
+            GcAssets assets = new GcAssets();
+            assets.setAid(one.getId());
+            assets.setTotalAssets((1+premium)*price*pnumber);
+            assets.setPoundage(poundage);
+            assets.setCreateDate(new Date());
+            boolean addAssets=gcAssetsMapper.insert(assets)>0 ? true:false;
+            if(!addAssets){
+                LOGGER.debug("插入资产记录失败！");
+                return false;
+            }
             //调用户接口发放P能量
             HcAccount hc = new HcAccount();
             hc.setId(startid);
-            hc.setMyP(starterP);
-            hcAccountApi.grantUserP(hc);
+            hc.setCnt(starterCnt);
+            boolean cntReturn = hcAccountApi.grantUserP(hc);
+            String message = null;
+            if(cntReturn){
+                message = "您已发起的"+type+"溢价活动已经完成，该活动扣除手续费"+poundage+"，您已获得资产"+starterCnt+"，请注意查收。";
+                boolean addReturnByStartID = postMessage(message,startid);
+                LOGGER.debug("给发起活动的用户发送信息addReturnByStartID="+addReturnByStartID);
+                boolean addReturnByGetID =false;
+                if(addReturnByStartID){
+                    message = "您收到了"+type+"—"+one.getPname()+"， 锤多宝锤出不一样的美好！！！";
+                    addReturnByGetID=postMessage(message,one.getGetid());
+                    LOGGER.debug("发给重锤的用户信息是否成功："+addReturnByStartID);
+                }
+                return addReturnByGetID;
+            }else{
+                LOGGER.debug("确认收货后，将资产对应的CNT给发起活动的用户时报错！");
+                return false;
+            }
+        }
+        return false;
+    }
 
-            /*********给活动发起者发送通知*********/
-            CalendarTime clt = new CalendarTime();
-            Timestamp btime = clt.thisDate();//获取当前时间
-            //插入信息
-            GcMessage gcMessage = new GcMessage();
-            gcMessage.setTime(btime);
-            gcMessage.setMessage("您已发起的"+type+"溢价活动已经完成，该活动扣除手续费"+poundage+"，您已获得资产"+starterP+"，请注意查收。");
-            gcMessage.setType(0);
-            gcMessageMapper.insert(gcMessage);
+    public boolean postMessage(String message,int uid){
 
+        CalendarTime clt = new CalendarTime();
+        Timestamp btime = clt.thisDate();//获取当前时间
+        //插入信息
+        GcMessage gcMessage = new GcMessage();
+        gcMessage.setTime(btime);
+        gcMessage.setMessage(message);
+        gcMessage.setType(0);
+        boolean addReturn = gcMessageMapper.insert(gcMessage)>0?true:false;
+        if(addReturn){
+            LOGGER.debug("插入信息addReturn成功！");
             //插入通知表
             GcMessage gcMessage1 = gcMessageMapper.selectOne(gcMessage);
             GcNotice gn = new GcNotice();
             gn.setFlag(1);
-            gn.setUid(startid);
+            gn.setUid(uid);
             gn.setMid(gcMessage1.getId());
-            gcNoticeMapper.insert(gn);
-            /*********给活动发起者发送通知*********/
-
-
-
-            /*********给中锤者发送通知*********/
-            Integer getid = one.getGetid();//中锤者id
-            String pname = one.getPname();//产品名称
-
-            GcMessage gcMessage2 = new GcMessage();
-            gcMessage2.setTime(btime);
-            gcMessage2.setMessage("您收到了"+type+"—"+pname+"， 锤多宝锤出不一样的美好！！！");
-            gcMessage2.setType(0);
-            gcMessageMapper.insert(gcMessage2);
-
-            //插入通知表
-            GcMessage gcMessage3 = gcMessageMapper.selectOne(gcMessage2);
-            GcNotice gcNotice = new GcNotice();
-            gcNotice.setFlag(1);
-            gcNotice.setUid(getid);
-            gcNotice.setMid(gcMessage3.getId());
-            gcNoticeMapper.insert(gcNotice);
-            /*********给中锤者发送通知*********/
-
-            return true;
+            addReturn = gcNoticeMapper.insert(gn)>0?true:false;
         }
-        return false;
+        return addReturn;
     }
+
 }

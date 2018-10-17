@@ -167,40 +167,40 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
 
     //更改用户p能量
-    @ApiOperation(value = "更改用户p能量", notes = "更改用户p能量")
-    @UserLog(module = LogConstant.HC_ACCOUNT, actionDesc = "更改用户p能量")
+    @ApiOperation(value = "更改用户cnt", notes = "更改用户cnt")
+    @UserLog(module = LogConstant.HC_ACCOUNT, actionDesc = "更改用户cnt")
     @PostMapping("/updateUserP")
     public Boolean updateUserP(@RequestBody HcAccount hc) {
-        double par = hc.getMyP();
+        double par = hc.getCnt();
         HcAccount account = hcAccountService.selectById(hc.getId());
-       if (Double.doubleToLongBits(account.getMyP()) < Double.doubleToLongBits(par)) {
-           System.err.println("用户能量不足");
+       if (Double.doubleToLongBits(account.getCnt()) < Double.doubleToLongBits(par)) {
+           System.err.println("用户CNT不足");
             return false;
         }
-        double newMyp = account.getMyP() - par;//用户新的p能量
-        account.setMyP(newMyp);
+        double newCnt = account.getCnt() - par;//用户新的CNT
+        account.setCnt(newCnt);
         boolean result = false;
         try {
             result = hcAccountService.updateById(account);
         } catch (Exception e) {
-            throw new RuntimeException("更改用户p能量异常" + e.getMessage());
+            throw new RuntimeException("更改用户CNT异常" + e.getMessage());
         }
         return result;
     }
 
 
 
-    @ApiOperation(value="发放p能量", notes="发放p能量")
+    @ApiOperation(value="发放CNT", notes="确认收货后，将资产对应的CNT给发起活动的用户")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "发放p能量")
     @PostMapping("/grantUserP")
     public Boolean grantUserP(@RequestBody HcAccount hc) {
-        Double starterP = hc.getMyP();
+        Double starterCnt = hc.getCnt();
         HcAccount account = hcAccountService.selectById(hc.getId());
-        Double allP = null;
+        Double tocalCnt = null;
         if (account != null) {
-            Double myP = account.getMyP();
-            allP = myP + starterP;
-            account.setMyP(allP);
+            Double cnt = account.getCnt();
+            tocalCnt = cnt + starterCnt;
+            account.setCnt(tocalCnt);
             hcAccountService.updateById(account);
             return true;
         }

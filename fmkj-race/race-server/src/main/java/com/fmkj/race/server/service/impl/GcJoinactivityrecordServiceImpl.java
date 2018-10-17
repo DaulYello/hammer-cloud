@@ -69,10 +69,10 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         try {
             HcAccount hc = new HcAccount();
             hc.setId(joins.getUid());
-            hc.setMyP(par);
+            hc.setCnt(par);
             flag = hcAccountApi.updateUserP(hc);
         } catch (Exception e1) {
-            throw new RuntimeException("更改用户p能量异常，活动aid:"+aid+",用户:"+joins.getUid()+"," + e1.getMessage());
+            throw new RuntimeException("更改用户cnt异常，活动aid:"+aid+",用户:"+joins.getUid()+"," + e1.getMessage());
         }
         if (!flag){
             Integer row = 0;
