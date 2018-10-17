@@ -2,6 +2,10 @@ package com.fmkj.user.dao.mapper;
 
 import com.fmkj.user.dao.domain.FmCntInfo;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.fmkj.user.dao.domain.FmIntegralInfo;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface FmCntInfoMapper extends BaseMapper<FmCntInfo> {
 
+    List<FmIntegralInfo> queryCNTList(HashMap<String, Object> paramMap);
 }

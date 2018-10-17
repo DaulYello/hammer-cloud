@@ -70,14 +70,10 @@ public class CntRController {
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", rankList);
     }
 
-    /**
-     * 查询CNT动态
-     *
-     * @return
-     */
-    @ApiOperation(value="查询动态", notes="参数：uid")
-    @PutMapping("/queryCntDynamic")
-    public BaseResult queryCntDynamic(@RequestBody CntRVo cntRVo) {
+
+    @ApiOperation(value="查询R积分与CNT动态", notes="参数：uid")
+    @PutMapping("/queryDynamic")
+    public BaseResult queryDynamic(@RequestBody CntRVo cntRVo) {
         if (StringUtils.isNull(cntRVo.getUid())) {
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空!", false);
         }
@@ -85,7 +81,7 @@ public class CntRController {
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", dynamicList);
     }
 
-    @ApiOperation(value="收取CNT", notes="参数：uid, cntId")
+    @ApiOperation(value="用户收取CNT", notes="参数：uid, cntId")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "收取CNT")
     @PostMapping("/getCntByUid")
     public BaseResult getCntByUid(@RequestBody CntRVo cntRVo) {
@@ -104,7 +100,7 @@ public class CntRController {
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "成功收取CNT!", result);
     }
 
-    @ApiOperation(value="收取R积分", notes="参数：uid, rId")
+    @ApiOperation(value="用户收取R积分", notes="参数：uid, rId")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "收取R积分")
     @PostMapping("/getRIntegral")
     public BaseResult getRIntegral(@RequestBody CntRVo cntRVo) {
@@ -155,7 +151,7 @@ public class CntRController {
     }
 
 
-    @ApiOperation(value="查询用户可收取的R积分（2天之内）", notes="参数：uid")
+    @ApiOperation(value="查询用户可收取的R积分（当前时间起前2天之内）", notes="参数：uid")
     @PutMapping("/queryRList")
     public BaseResult queryRList(@RequestBody CntRVo cntRVo) {
         if (StringUtils.isNull(cntRVo.getUid())) {
@@ -165,6 +161,19 @@ public class CntRController {
         paramMap.put("status", 0); //未被收取过的
         paramMap.put("uid", cntRVo.getUid());
         List<FmIntegralInfo> list = fmIntegralInfoService.queryRList(paramMap);
+        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", list);
+    }
+
+    @ApiOperation(value="查询用户可收取的CNT（当前时间起前1天之内）", notes="参数：uid")
+    @PutMapping("/queryCNTList")
+    public BaseResult queryCNTList(@RequestBody CntRVo cntRVo) {
+        if (StringUtils.isNull(cntRVo.getUid())) {
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空!", false);
+        }
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("status", 0); //未被收取过的
+        paramMap.put("uid", cntRVo.getUid());
+        List<FmIntegralInfo> list = fmCntInfoService.queryCNTList(paramMap);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", list);
     }
 

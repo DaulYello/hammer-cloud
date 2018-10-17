@@ -5,6 +5,9 @@ import com.fmkj.user.dao.domain.FmCntInfo;
 import com.fmkj.user.dao.domain.FmIntegralInfo;
 import com.fmkj.user.dao.queryVo.CntRVo;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
 * @Description: FmCntInfo Service接口
 * @Author: youxun
@@ -14,4 +17,6 @@ import com.fmkj.user.dao.queryVo.CntRVo;
 public interface FmCntInfoService extends BaseService<FmCntInfo> {
 
     FmCntInfo getCntByUid(CntRVo cntRVo);
+
+    List<FmIntegralInfo> queryCNTList(HashMap<String, Object> paramMap);
 }

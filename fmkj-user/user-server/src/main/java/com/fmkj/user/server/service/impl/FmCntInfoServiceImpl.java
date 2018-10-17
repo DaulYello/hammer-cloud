@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
 * @Description: FmCntInfo Service实现
@@ -82,5 +84,10 @@ public class FmCntInfoServiceImpl extends BaseServiceImpl<FmCntInfoMapper, FmCnt
         }else{
             throw new RuntimeException("getCntByUid更新fmCntInfo失败！");
         }
+    }
+
+    @Override
+    public List<FmIntegralInfo> queryCNTList(HashMap<String, Object> paramMap) {
+        return fmCntInfoMapper.queryCNTList(paramMap);
     }
 }

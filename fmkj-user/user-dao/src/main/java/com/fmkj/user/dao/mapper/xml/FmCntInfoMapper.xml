@@ -12,4 +12,17 @@
         <result column="update_date" property="updateDate" />
     </resultMap>
 
+    <select id="queryCNTList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+          *
+        FROM
+          fm_cnt_info
+        WHERE UID = #{uid}
+          AND STATUS = #{status}
+          AND CREATE_DATE BETWEEN DATE_ADD(NOW(), INTERVAL - 1 DAY)
+          AND NOW()
+        ORDER BY CREATE_DATE DESC
+        LIMIT 0, 2
+    </select>
+
 </mapper>
