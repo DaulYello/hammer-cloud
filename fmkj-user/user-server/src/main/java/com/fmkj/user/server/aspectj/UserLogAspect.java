@@ -3,6 +3,7 @@ package com.fmkj.user.server.aspectj;
 import com.alibaba.fastjson.JSON;
 import com.fmkj.common.constant.LogConstant;
 import com.fmkj.common.util.ServletUtils;
+import com.fmkj.common.util.StringUtils;
 import com.fmkj.user.dao.domain.UserOperateLog;
 import com.fmkj.user.server.annotation.UserLog;
 import com.fmkj.user.server.async.AsyncFactory;
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
@@ -39,6 +41,8 @@ public class UserLogAspect {
     // 配置织入点
     @Pointcut("@annotation(com.fmkj.user.server.annotation.UserLog)")
     public void logPointCut() {
+
+        System.out.println("AAAAAAAAAAAA");
 
     }
 
@@ -78,7 +82,10 @@ public class UserLogAspect {
             if(e != null){
                 operateLog.setExceptionMsg(e.getMessage());
             }
-            //operateLog.setUserId();
+            String userId = ServletUtils.getRequest().getHeader("globalUserId");
+            if(StringUtils.isNull(userId)){
+                operateLog.setUserId(Integer.parseInt(userId));
+            }
             operateLog.setModule(controllerLog.module());
             operateLog.setOperateStatus(operateStatus);
             operateLog.setOperateDesc(controllerLog.actionDesc());

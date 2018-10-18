@@ -1,28 +1,17 @@
 package com.fmkj.gateway.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseResultEnum;
 import com.fmkj.gateway.api.HcPermissApi;
 import com.google.common.util.concurrent.RateLimiter;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import static com.netflix.zuul.context.RequestContext.getCurrentContext;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
@@ -78,48 +67,8 @@ public class AccessTokenFilter extends ZuulFilter{
             if(!RATE_LIMITER.tryAcquire()){
                 return new BaseResult<Boolean>(BaseResultEnum.NOACCESS, false);
             }
-            String contentType = request.getContentType();
             RequestContext context = getCurrentContext();
-
-            String token = null;
-            //Body方式传递
-            if(contentType.equals("application/json")){
-                InputStream in  = request.getInputStream();
-                String body = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
-                JSONObject jsonBody = JSON.parseObject(body);
-                token = (String) jsonBody.get("token");
-                final byte[] reqBodyBytes = body.getBytes("UTF-8");
-                context.setRequest(new HttpServletRequestWrapper(getCurrentContext().getRequest()) {
-                    @Override
-                    public ServletInputStream getInputStream() throws IOException {
-                        return new ServletInputStreamWrapper(reqBodyBytes);
-                    }
-
-                    @Override
-                    public int getContentLength() {
-                        return reqBodyBytes.length;
-                    }
-
-                    @Override
-                    public long getContentLengthLong() {
-                        return reqBodyBytes.length;
-                    }
-                });
-            }else if (contentType.startsWith("multipart/form-data")){//表单方式传递
-                //获得请求参数map
-                Map<String,String[]> map= request.getParameterMap();
-                //参数名称
-                Set<String> key=map.keySet();
-                //参数迭代器
-                Iterator<String> iterator = key.iterator();
-                while(iterator.hasNext()){
-                    String k=iterator.next();
-                    if(k.equals("token")){
-                        token = map.get(k)[0];
-                        break;
-                    }
-                }
-            }
+            String token = request.getHeader("token");
             boolean isPass = hcPermissApi.queryToken(token);
             if(!isPass){
                 context.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
@@ -132,7 +81,7 @@ public class AccessTokenFilter extends ZuulFilter{
                 response.setContentType("text/html;charset=UTF-8");
                 response.setLocale(new java.util.Locale("zh","CN"));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             rethrowRuntimeException(e);
         }
         return null;

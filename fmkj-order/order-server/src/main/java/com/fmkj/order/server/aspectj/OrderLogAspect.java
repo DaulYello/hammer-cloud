@@ -3,6 +3,7 @@ package com.fmkj.order.server.aspectj;
 import com.alibaba.fastjson.JSON;
 import com.fmkj.common.constant.LogConstant;
 import com.fmkj.common.util.ServletUtils;
+import com.fmkj.common.util.StringUtils;
 import com.fmkj.order.dao.domain.OperateLog;
 import com.fmkj.order.server.annotation.OrderLog;
 import com.fmkj.order.server.async.AsyncFactory;
@@ -78,7 +79,10 @@ public class OrderLogAspect {
             if(e != null){
                 operateLog.setExceptionMsg(e.getMessage());
             }
-            //operateLog.setUserId();
+            String userId = ServletUtils.getRequest().getHeader("globalUserId");
+            if(StringUtils.isNull(userId)){
+                operateLog.setUserId(Integer.parseInt(userId));
+            }
             operateLog.setModule(controllerLog.module());
             operateLog.setOperateStatus(operateStatus);
             operateLog.setOperateDesc(controllerLog.actionDesc());
