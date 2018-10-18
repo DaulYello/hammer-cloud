@@ -45,6 +45,7 @@
 			<result column="card_status" property="cardStatus" />
 			<result column="isboong" property="isboong" />
 			<result column="cdbid" property="cdbid" />
+			<result column="cnt" property="cnt" />
 		</association>
 	</resultMap>
 

@@ -18,6 +18,7 @@
        SELECT
           f.id,
           b.nickname,
+          a.nickname AS stealName,
           f.take_num AS takeNum,
           f.take_date AS takeDate,
           f.recyle_type AS recyleType,
@@ -26,6 +27,8 @@
           fm_recyle_log f
           LEFT JOIN hc_account b
             ON f.uid = b.id
+          LEFT JOIN hc_account a
+            ON f.uid = a.id
         WHERE TO_DAYS(f.take_date) = TO_DAYS(NOW())
           AND f.take_type = 0
           AND f.friend_id = #{uid}

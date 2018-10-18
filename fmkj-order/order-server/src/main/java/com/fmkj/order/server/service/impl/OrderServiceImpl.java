@@ -77,15 +77,15 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderInfo> im
         int result = orderMapper.updateById(orderInfo);
         if(result > 0){
             Double tradeNum = orderInfo.getTradeNum();
-            // 1、卖方扣除自己的P能量
+            // 1、卖方扣除自己的CNT
             HcAccount hcAccount = hcAccountMapper.selectById(orderInfo.getUserId());
-            Double myP = hcAccount.getMyP();
-            hcAccount.setMyP(myP - tradeNum);
+            Double cnt = hcAccount.getCnt();
+            hcAccount.setCnt(cnt - tradeNum);
             hcAccountMapper.updateById(hcAccount);
-            // 2、收方增加相应的P能量
+            // 2、收方增加相应的CNT
             HcAccount seller = hcAccountMapper.selectById(orderInfo.getSellerId());
-            Double sellerP = seller.getMyP();
-            seller.setMyP(sellerP + tradeNum);
+            Double sellerCnt = seller.getCnt();
+            seller.setCnt(sellerCnt + tradeNum);
             hcAccountMapper.updateById(seller);
             return true;
         }
@@ -97,9 +97,9 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderInfo> im
         int result = orderMapper.updateById(orderInfo);
         if(result > 0){
             HcAccount hcAccount = hcAccountMapper.selectById(orderInfo.getUserId());
-            Double myP = hcAccount.getMyP();
+            Double myCnt = hcAccount.getCnt();
             Double tradeNum = orderInfo.getTradeNum();
-            hcAccount.setMyP(myP + tradeNum);
+            hcAccount.setCnt(myCnt + tradeNum);
             hcAccountMapper.updateById(hcAccount);
             return true;
         }

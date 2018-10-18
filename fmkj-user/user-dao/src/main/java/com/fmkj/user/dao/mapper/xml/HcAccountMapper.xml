@@ -75,6 +75,7 @@
 		  ha.cdbid,
 		  ha.password,
 		  ha.name,
+		  ha.cnt,
 		  (SELECT
 			SUM(hp.points_num)
 		  FROM
@@ -86,8 +87,6 @@
 			hc_account ha
 			LEFT JOIN hc_friend hf
 			  ON hf.friend_id = ha.id
-			LEFT JOIN hc_points_record hp
-			  ON hp.uid = ha.id
 		  WHERE hf.pass = 1
 			AND hf.account_id = #{uid}) AS frirendNum
 		FROM

@@ -57,14 +57,14 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductIn
     public boolean publishProduct(ProductInfo productInfo) {
         int result = productMapper.updateById(productInfo);
         if (result > 0){
-            //买入不需要扣除能量
+            //买入不需要扣除CNT
             if(productInfo.getProductType() == ProductTypeEnum.BUY_TYPE.status){
                 return true;
             }
             HcAccount hcAccount = hcAccountMapper.selectById(productInfo.getUserId());
             Double productSum = productInfo.getProductSum();
-            Double myP = hcAccount.getMyP();
-            hcAccount.setMyP(myP - productSum);
+            Double myCnt = hcAccount.getCnt();
+            hcAccount.setCnt(myCnt - productSum);
             hcAccountMapper.updateById(hcAccount);
             return true;
         }
@@ -82,8 +82,8 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductIn
         if(result > 0){
             if (productInfo.getProductStock() > 0){
                 HcAccount hcAccount = hcAccountMapper.selectById(productInfo.getUserId());
-                Double myP = hcAccount.getMyP();
-                hcAccount.setMyP(myP + productInfo.getProductStock());
+                Double myCnt = hcAccount.getCnt();
+                hcAccount.setCnt(myCnt + productInfo.getProductStock());
                 hcAccountMapper.updateById(hcAccount);
             }
             return true;
