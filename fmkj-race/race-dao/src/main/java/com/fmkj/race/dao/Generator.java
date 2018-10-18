@@ -14,8 +14,8 @@ import java.util.Map;
 public class Generator {
     // 根据命名规范，只修改此常量值即可
     private static String MODULE = "fmkj-race";
-    private static String DATABASE = "hammerchain";
-    private static String TABLE_NAME = "sm_user";
+    private static String DATABASE = "temp";
+    private static String TABLE_NAME = "gc_assets";
     private static String PACKAGE_NAME = "com.fmkj.race";
     private static String DAO_NAME = "race-dao";
     private static String SERVICE_NAME = "race-server";
@@ -26,7 +26,7 @@ public class Generator {
     // 需要insert后返回主键的表配置，key:表名,value:主键名
     private static Map<String, String> LAST_INSERT_ID_TABLES = new HashMap<>();
     static {
-        LAST_INSERT_ID_TABLES.put("sm_user", "id");
+        LAST_INSERT_ID_TABLES.put("gc_assets", "id");
     }
 
     /**

@@ -62,14 +62,14 @@ public class DirectConsumerOne  {   //implements MessageListener{
 		//活动需要人数
 		int num = gcActivity1.getNum();
 
-		double par = gcActivity1.getPar();//活动需要的P能量
+		double par = gcActivity1.getPar();//活动需要的cnt能量
 
-		//插入用户参与记录/更改用户p能量值/
+		//插入用户参与记录/更改用户cnt值/
 		boolean flag1=false;
 		int count = -1;
 		synchronized (this.getClass()) {
 			flag1 = gcJoinactivityrecordService.addGcJoinactivityrecordAndUpAccount(aid, joins,par);
-			count =  gcJoinactivityrecordService.selectCount(entityWrapper);//当前参与人数
+			count = gcJoinactivityrecordService.selectCount(entityWrapper);//当前参与人数
 			if (count>=num){
 				System.err.println("活动人数已满");
 				return ;

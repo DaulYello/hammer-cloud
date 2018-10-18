@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.race.dao.mapper.GcAssetsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.race.dao.domain.GcAssets">
+        <id column="id" property="id" />
+        <result column="aid" property="aid" />
+        <result column="total_assets" property="totalAssets" />
+        <result column="poundage" property="poundage" />
+        <result column="create_date" property="createDate" />
+    </resultMap>
+
+</mapper>

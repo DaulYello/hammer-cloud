@@ -143,7 +143,7 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
         String type = gcActivitytype.getType();
         GcMessage gcMessage = new GcMessage();
         gcMessage.setTime(new Date());
-        gcMessage.setMessage("您已发起了"+type+"溢价活动，系统审核通过后，活动完成系统将扣除相应手续费后的资产包发送到您的账户，详情请查询活动发起规则。");
+        gcMessage.setMessage("您已发起了"+type+"溢价活动，系统审核通过后，活动完成系统将扣除相应后的资产包发送到您的账户，详情请查询活动发起规则。");
         gcMessage.setType(0);
         int row = gcMessageMapper.insert(gcMessage);
         if(row > 0){
