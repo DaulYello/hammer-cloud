@@ -9,9 +9,9 @@ import com.fmkj.race.dao.domain.*;
 import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.mapper.*;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
+import com.fmkj.race.server.api.HcAccountApi;
 import com.fmkj.race.server.service.GcActivityService;
 import com.fmkj.user.dao.domain.HcPointsRecord;
-import com.fmkj.user.dao.mapper.HcPointsRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +48,7 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
     private GcPimageMapper gcPimageMapper;
 
     @Autowired
-    private HcPointsRecordMapper hcPointsRecordMapper;
+    private HcAccountApi hcAccountApi;
 
     @Override
     /**
@@ -163,7 +163,7 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
             hcp.setUid(startid);
             hcp.setPointsId(PointEnum.PUBLISH_ACITIVITY.pointId);
             hcp.setPointsNum(PointEnum.PUBLISH_ACITIVITY.pointNum);
-            hcPointsRecordMapper.insert(hcp);
+            boolean result = hcAccountApi.addHcPointsRecord(hcp);
             return true;
         }
         return false;

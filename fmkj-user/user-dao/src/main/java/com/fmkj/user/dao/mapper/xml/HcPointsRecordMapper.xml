@@ -38,7 +38,7 @@
 		select Sum(points_num) from hc_points_record where uid=#{uid}
 	</select>
 
-    <!-- 差选用户邀请人数得周榜单(本周至当前得数据) -->
+    <!-- 查询用户邀请人数得周榜单(本周至当前得数据) -->
     <select id="queryInvitingFriendsRankWeek" resultMap="RankWeekMap">
 		select tab.uid,tab.nickname,tab.invitingNum,tab.points,tab.time,tab.logo
   		from (

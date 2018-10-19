@@ -1,5 +1,6 @@
 package com.fmkj.user.server.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.fmkj.common.base.BaseApiService;
 import com.fmkj.common.base.BaseController;
@@ -14,10 +15,7 @@ import com.fmkj.user.dao.dto.Recode;
 import com.fmkj.user.server.annotation.UserLog;
 import com.fmkj.user.server.async.AsyncFactory;
 import com.fmkj.user.server.async.AsyncManager;
-import com.fmkj.user.server.service.HcAccountService;
-import com.fmkj.user.server.service.HcPointsRecordService;
-import com.fmkj.user.server.service.HcRcodeService;
-import com.fmkj.user.server.service.HcSessionService;
+import com.fmkj.user.server.service.*;
 import com.fmkj.user.server.util.ALiSmsUtil;
 import com.fmkj.user.server.util.CalendarTime;
 import com.fmkj.user.server.util.JDWXUtil;
@@ -167,21 +165,20 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
 
     //更改用户p能量
-    @ApiOperation(value = "更改用户cnt", notes = "更改用户cnt")
+    @ApiOperation(value = "更改用户CNT", notes = "更改用户CNT--竞锤调用")
     @UserLog(module = LogConstant.HC_ACCOUNT, actionDesc = "更改用户cnt")
     @PostMapping("/updateUserP")
     public Boolean updateUserP(@RequestBody HcAccount hc) {
         double par = hc.getCnt();
         HcAccount account = hcAccountService.selectById(hc.getId());
        if (Double.doubleToLongBits(account.getCnt()) < Double.doubleToLongBits(par)) {
-           System.err.println("用户CNT不足");
             return false;
         }
         double newCnt = account.getCnt() - par;//用户新的CNT
         account.setCnt(newCnt);
         boolean result = false;
         try {
-            result = hcAccountService.updateById(account);
+            result = hcAccountService.updateUserP(account, par);
         } catch (Exception e) {
             throw new RuntimeException("更改用户CNT异常" + e.getMessage());
         }
@@ -189,6 +186,16 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     }
 
 
+    @ApiOperation(value="活动添加R积分", notes="活动添加R积分")
+    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "活动添加R积分")
+    @PostMapping("/addHcPointsRecord")
+    public Boolean addHcPointsRecord(@RequestBody HcPointsRecord hc) {
+        LOGGER.info("活动添加R积分参数:" + JSON.toJSONString(hc));
+        if(StringUtils.isNull(hc)){
+            return false;
+        }
+        return hcPointsRecordService.insert(hc);
+    }
 
     @ApiOperation(value="发放CNT", notes="确认收货后，将资产对应的CNT给发起活动的用户")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "确认收货后，将资产对应的CNT给发起活动的用户")
@@ -201,8 +208,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
             Double cnt = account.getCnt();
             tocalCnt = cnt + starterCnt;
             account.setCnt(tocalCnt);
-            hcAccountService.updateById(account);
-            return true;
+            return hcAccountService.grantUserP(account, starterCnt);
         }
         return false;
     }

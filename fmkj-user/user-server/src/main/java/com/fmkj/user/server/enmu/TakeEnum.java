@@ -11,6 +11,8 @@ package com.fmkj.user.server.enmu;
  **/
 public enum TakeEnum {
 
+    USER_LOST(-1,"用户扣除"),
+
     TYPE_USER(0, "用户收取");
 
     public int status;

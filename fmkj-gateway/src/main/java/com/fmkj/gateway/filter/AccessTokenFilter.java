@@ -61,7 +61,7 @@ public class AccessTokenFilter extends ZuulFilter{
             String servletPath = request.getServletPath();
             //过滤掉登陆方法
             if(servletPath.contains("loginByTelephone") || servletPath.contains("loginByRcodeAndPhone")
-                    || servletPath.contains("loginByPassword"))
+                    || servletPath.contains("loginByPassword") || servletPath.contains("sendDycode"))
                 return null;
             // 没有拿到令牌处理方法
             if(!RATE_LIMITER.tryAcquire()){

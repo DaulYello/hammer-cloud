@@ -38,4 +38,8 @@ public interface HcAccountService extends BaseService<HcAccount> {
     int loginByRcodeAndPhone(HcAccount ha, Integer uid, String token);
 
     boolean loginByTelephone(Integer id, String token);
+
+    boolean updateUserP(HcAccount account, double par);
+
+    Boolean grantUserP(HcAccount account, Double starterCnt);
 }

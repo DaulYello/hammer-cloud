@@ -22,7 +22,6 @@ import com.fmkj.race.server.service.GcJoinactivityrecordService;
 import com.fmkj.race.server.util.CalendarTime;
 import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.domain.HcPointsRecord;
-import com.fmkj.user.dao.mapper.HcPointsRecordMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +55,6 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     private HcAccountApi hcAccountApi;
 
     @Autowired
-    private HcPointsRecordMapper hcPointsRecordMapper;
-
-    @Autowired
     private MessageProducer messageProducer;
 
     /**
@@ -72,30 +68,24 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     */
     @Override
     public boolean addGcJoinactivityrecordAndUpAccount(Integer aid, GcJoinactivityrecord joins, double par) {
-
-        //更改用户p能量
-        boolean flag = false;
+        //更改用户CNT
         try {
             HcAccount hc = new HcAccount();
             hc.setId(joins.getUid());
             hc.setCnt(par);
-            flag = hcAccountApi.updateUserP(hc);
+            boolean flag = hcAccountApi.updateUserP(hc);
+            LOGGER.info("更改用户CNT返回结果：" + flag);
+            if (flag){
+                GcJoinactivityrecord gjr = new GcJoinactivityrecord();
+                gjr.setId(joins.getId());
+                gjr.setIschain(2);
+                int row = gcJoinactivityrecordMapper.updateById(gjr);
+                return true;
+            }
+            return false;
         } catch (Exception e1) {
             throw new RuntimeException("更改用户cnt异常，活动aid:"+aid+",用户:"+joins.getUid()+"," + e1.getMessage());
         }
-        if (!flag){
-            Integer row = 0;
-            GcJoinactivityrecord gjr = new GcJoinactivityrecord();
-            gjr.setId(joins.getId());
-            gjr.setIschain(2);
-            try {
-                row = gcJoinactivityrecordMapper.updateById(gjr);
-            } catch (Exception e) {
-                throw new RuntimeException("用户参与记录失败" + e.getMessage());
-            }
-            return false;
-        }
-        return true;
     }
 
 
@@ -269,7 +259,8 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             hcp.setUid(gcJoin.getUid());
             hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
             hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
-            hcPointsRecordMapper.insert(hcp);
+            boolean result = hcAccountApi.addHcPointsRecord(hcp);
+            LOGGER.info("addHcPointsRecord返回结果：" + result);
             messageProducer.send(JSON.toJSONString(gcJoin));//生产消息
             return true;
         }
