@@ -72,30 +72,24 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     */
     @Override
     public boolean addGcJoinactivityrecordAndUpAccount(Integer aid, GcJoinactivityrecord joins, double par) {
-
-        //更改用户p能量
-        boolean flag = false;
+        //更改用户CNT
         try {
             HcAccount hc = new HcAccount();
             hc.setId(joins.getUid());
             hc.setCnt(par);
-            flag = hcAccountApi.updateUserP(hc);
+            boolean flag = hcAccountApi.updateUserP(hc);
+            LOGGER.info("更改用户CNT返回结果：" + flag);
+            if (flag){
+                GcJoinactivityrecord gjr = new GcJoinactivityrecord();
+                gjr.setId(joins.getId());
+                gjr.setIschain(2);
+                int row = gcJoinactivityrecordMapper.updateById(gjr);
+                return true;
+            }
+            return false;
         } catch (Exception e1) {
             throw new RuntimeException("更改用户cnt异常，活动aid:"+aid+",用户:"+joins.getUid()+"," + e1.getMessage());
         }
-        if (!flag){
-            Integer row = 0;
-            GcJoinactivityrecord gjr = new GcJoinactivityrecord();
-            gjr.setId(joins.getId());
-            gjr.setIschain(2);
-            try {
-                row = gcJoinactivityrecordMapper.updateById(gjr);
-            } catch (Exception e) {
-                throw new RuntimeException("用户参与记录失败" + e.getMessage());
-            }
-            return false;
-        }
-        return true;
     }
 
 

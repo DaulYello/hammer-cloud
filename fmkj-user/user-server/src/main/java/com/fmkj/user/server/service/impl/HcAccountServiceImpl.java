@@ -231,6 +231,42 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         return false;
     }
 
+    @Override
+    public boolean updateUserP(HcAccount account, double cnt) {
+        int row = hcAccountMapper.updateById(account);
+        if(row > 0){
+            FmRecyleLog fmRecyleLog = new FmRecyleLog();
+            fmRecyleLog.setUid(account.getId());
+            fmRecyleLog.setFriendId(account.getId());
+            fmRecyleLog.setTakeDate(new Date());
+            fmRecyleLog.setTakeNum(cnt);
+            fmRecyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
+            fmRecyleLog.setTakeType(TakeEnum.USER_LOST.status);
+            fmRecyleLog.setTakeMsg("参加活动扣除"+cnt+"CNT");
+            fmRecyleLogMapper.insert(fmRecyleLog);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean grantUserP(HcAccount account, Double starterCnt) {
+        int row = hcAccountMapper.updateById(account);
+        if(row > 0){
+            FmRecyleLog fmRecyleLog = new FmRecyleLog();
+            fmRecyleLog.setUid(account.getId());
+            fmRecyleLog.setFriendId(account.getId());
+            fmRecyleLog.setTakeDate(new Date());
+            fmRecyleLog.setTakeNum(starterCnt);
+            fmRecyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
+            fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+            fmRecyleLog.setTakeMsg("用户确认收货后获得"+starterCnt+"CNT");
+            fmRecyleLogMapper.insert(fmRecyleLog);
+            return true;
+        }
+        return false;
+    }
+
     public boolean changeGrade(GradeDto gb, Integer uid) {
         Integer num1 = paseInteger(gb.getNum1());//签到次数
         Integer num2 = paseInteger(gb.getNum2());//参与竞拍次数
