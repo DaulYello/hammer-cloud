@@ -85,4 +85,19 @@
           AND t.recyle_type = 2
           AND t.uid = #{uid}
     </select>
+
+    <insert id="batchAddRecyleLog" parameterType="java.util.List">
+        INSERT INTO fm_recyle_log(uid, take_num, take_date, take_type, recyle_type, take_msg, friend_id) VALUES
+        <foreach collection ="list" item="fmRecyleLog" index= "index" separator =",">
+            (
+            #{fmRecyleLog.uid},
+            #{fmRecyleLog.takeNum},
+            #{fmRecyleLog.takeDate},
+            #{fmRecyleLog.takeType},
+            #{fmRecyleLog.recyleType},
+            #{fmRecyleLog.takeMsg},
+            #{fmRecyleLog.friendId}
+            )
+        </foreach >
+    </insert>
 </mapper>

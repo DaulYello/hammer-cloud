@@ -23,5 +23,7 @@ public interface FmRecyleLogMapper extends BaseMapper<FmRecyleLog> {
 
     Double queryCntNumDay(Integer uid);
 
+    void batchAddRecyleLog(List<FmRecyleLog> recyleLogs);
+
 
 }

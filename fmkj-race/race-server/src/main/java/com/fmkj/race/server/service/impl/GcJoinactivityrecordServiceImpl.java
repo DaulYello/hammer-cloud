@@ -1,10 +1,12 @@
 package com.fmkj.race.server.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.annotation.BaseService;
 import com.fmkj.common.base.BaseServiceImpl;
+import com.fmkj.common.comenum.PointEnum;
 import com.fmkj.race.dao.domain.GcActivity;
 import com.fmkj.race.dao.domain.GcJoinactivityrecord;
 import com.fmkj.race.dao.dto.JoinActivityDto;
@@ -15,9 +17,12 @@ import com.fmkj.race.server.api.HcAccountApi;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.Helper;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.Person;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.State;
+import com.fmkj.race.server.rabbitmq.MessageProducer;
 import com.fmkj.race.server.service.GcJoinactivityrecordService;
 import com.fmkj.race.server.util.CalendarTime;
 import com.fmkj.user.dao.domain.HcAccount;
+import com.fmkj.user.dao.domain.HcPointsRecord;
+import com.fmkj.user.dao.mapper.HcPointsRecordMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +55,11 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     @Autowired
     private HcAccountApi hcAccountApi;
 
+    @Autowired
+    private HcPointsRecordMapper hcPointsRecordMapper;
 
+    @Autowired
+    private MessageProducer messageProducer;
 
     /**
      * @author yangshengbin
@@ -250,6 +259,22 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
      */
     public  List<JoinActivityDto>  queryJoinActivityByAid(Pagination page, JoinActivityPage joinActivityPage) {
         return gcJoinactivityrecordMapper.queryJoinActivityByAid(page,joinActivityPage);
+    }
+
+    @Override
+    public boolean addGcJoinactivityRecord(GcJoinactivityrecord gcJoin) {
+        int row = gcJoinactivityrecordMapper.insert(gcJoin);
+        if(row > 0){
+            //参与活动添加2飞羽
+            HcPointsRecord hcp = new HcPointsRecord();
+            hcp.setUid(gcJoin.getUid());
+            hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
+            hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
+            hcPointsRecordMapper.insert(hcp);
+            messageProducer.send(JSON.toJSONString(gcJoin));//生产消息
+            return true;
+        }
+        return false;
     }
 
 }

@@ -10,6 +10,8 @@ import com.fmkj.user.dao.domain.*;
 import com.fmkj.user.dao.dto.GradeDto;
 import com.fmkj.user.dao.dto.HcAccountDto;
 import com.fmkj.user.dao.mapper.*;
+import com.fmkj.user.server.enmu.RecyleEnum;
+import com.fmkj.user.server.enmu.TakeEnum;
 import com.fmkj.user.server.service.HcAccountService;
 import com.fmkj.user.server.util.Rcode;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,9 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
 
     @Autowired
     private HcRcodeMapper hcRcodeMapper;
+
+    @Autowired
+    private FmRecyleLogMapper fmRecyleLogMapper;
 
     /**
      * @author yangshengbin
@@ -162,6 +168,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                                 rc.setCode(Rcode.getRcode(uid));
                                 int recodeRow = hcRcodeMapper.insert(rc);
                                 if(recodeRow > 0){
+                                    addRecyleLog(resultHc.getId(), uid);//插入日志表
                                     return ha.getId();
                                 }else
                                     throw new RuntimeException("生成邀请码失败！");
@@ -181,6 +188,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         }
         return -1;
     }
+
 
     @Override
     public boolean loginByTelephone(Integer id, String token) {
@@ -289,6 +297,32 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         }
         return num;
     }
+
+    private void addRecyleLog(Integer userId, Integer uid) {
+        List<FmRecyleLog> logList = new ArrayList<>();
+        Date now = new Date();
+        FmRecyleLog fmRecyleLog = new FmRecyleLog();
+        fmRecyleLog.setUid(uid);
+        fmRecyleLog.setFriendId(uid);
+        fmRecyleLog.setTakeDate(now);
+        fmRecyleLog.setTakeNum(5D);
+        fmRecyleLog.setRecyleType(RecyleEnum.TYPE_R.status);
+        fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+        fmRecyleLog.setTakeMsg("邀请用户【"+userId+"】完成注册，获得5R积分奖励");
+        logList.add(fmRecyleLog);
+
+        FmRecyleLog recyleLog = new FmRecyleLog();
+        recyleLog.setUid(uid);
+        recyleLog.setFriendId(uid);
+        recyleLog.setTakeDate(now);
+        recyleLog.setTakeNum(1D);
+        recyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
+        recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+        recyleLog.setTakeMsg("邀请用户【"+userId+"】完成注册，获得1CNT奖励");
+        logList.add(recyleLog);
+        fmRecyleLogMapper.batchAddRecyleLog(logList);
+    }
+
 
 
 

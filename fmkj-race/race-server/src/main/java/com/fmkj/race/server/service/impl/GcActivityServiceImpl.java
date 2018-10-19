@@ -2,6 +2,7 @@ package com.fmkj.race.server.service.impl;
 
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseServiceImpl;
+import com.fmkj.common.comenum.PointEnum;
 import com.fmkj.common.util.PropertiesUtil;
 import com.fmkj.common.util.StringUtils;
 import com.fmkj.race.dao.domain.*;
@@ -9,6 +10,8 @@ import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.mapper.*;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
 import com.fmkj.race.server.service.GcActivityService;
+import com.fmkj.user.dao.domain.HcPointsRecord;
+import com.fmkj.user.dao.mapper.HcPointsRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +46,9 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
 
     @Autowired
     private GcPimageMapper gcPimageMapper;
+
+    @Autowired
+    private HcPointsRecordMapper hcPointsRecordMapper;
 
     @Override
     /**
@@ -152,6 +158,12 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
             gn.setUid(startid);
             gn.setMid(gcMessage.getId());
             gcNoticeMapper.insert(gn);
+            //参与活动添加2飞羽
+            HcPointsRecord hcp = new HcPointsRecord();
+            hcp.setUid(startid);
+            hcp.setPointsId(PointEnum.PUBLISH_ACITIVITY.pointId);
+            hcp.setPointsNum(PointEnum.PUBLISH_ACITIVITY.pointNum);
+            hcPointsRecordMapper.insert(hcp);
             return true;
         }
         return false;

@@ -67,4 +67,6 @@ public interface GcJoinactivityrecordService extends BaseService<GcJoinactivityr
      * @Description:获得活动参与记录
      */
     List<JoinActivityDto>  queryJoinActivityByAid(Pagination page, JoinActivityPage joinActivityPage);
+
+    boolean addGcJoinactivityRecord(GcJoinactivityrecord gcJoinactivityrecord);
 }
