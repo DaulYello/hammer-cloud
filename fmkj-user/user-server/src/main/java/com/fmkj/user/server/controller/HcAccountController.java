@@ -1,5 +1,6 @@
 package com.fmkj.user.server.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.fmkj.common.base.BaseApiService;
 import com.fmkj.common.base.BaseController;
@@ -185,6 +186,16 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     }
 
 
+    @ApiOperation(value="活动添加R积分", notes="活动添加R积分")
+    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "活动添加R积分")
+    @PostMapping("/addHcPointsRecord")
+    public Boolean addHcPointsRecord(@RequestBody HcPointsRecord hc) {
+        LOGGER.info("活动添加R积分参数:" + JSON.toJSONString(hc));
+        if(StringUtils.isNull(hc)){
+            return false;
+        }
+        return hcPointsRecordService.insert(hc);
+    }
 
     @ApiOperation(value="发放CNT", notes="确认收货后，将资产对应的CNT给发起活动的用户")
     @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "发放p能量")

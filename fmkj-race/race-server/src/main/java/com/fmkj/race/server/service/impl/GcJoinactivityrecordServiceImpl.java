@@ -22,7 +22,6 @@ import com.fmkj.race.server.service.GcJoinactivityrecordService;
 import com.fmkj.race.server.util.CalendarTime;
 import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.domain.HcPointsRecord;
-import com.fmkj.user.dao.mapper.HcPointsRecordMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +53,6 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
 
     @Autowired
     private HcAccountApi hcAccountApi;
-
-    @Autowired
-    private HcPointsRecordMapper hcPointsRecordMapper;
 
     @Autowired
     private MessageProducer messageProducer;
@@ -263,7 +259,8 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             hcp.setUid(gcJoin.getUid());
             hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
             hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
-            hcPointsRecordMapper.insert(hcp);
+            boolean result = hcAccountApi.addHcPointsRecord(hcp);
+            LOGGER.info("addHcPointsRecord返回结果：" + result);
             messageProducer.send(JSON.toJSONString(gcJoin));//生产消息
             return true;
         }
