@@ -141,12 +141,12 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             Helper helper = new Helper();
             boolean init = helper.init();// 合约实例初始化
             if (!init) {
-                System.err.println("合约初始化失败");
+                LOGGER.error("合约初始化失败");
                 return false;
             }
             boolean loadContract = helper.loadContract(contract);//加载合约
             if (!loadContract) {
-                System.err.println("合约地址加载失败");
+                LOGGER.error("合约地址加载失败");
                 return false;
             }
 
@@ -172,7 +172,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
                 Integer res = gcJoinactivityrecordMapper.update(gcJoinactivityrecord,entityWrapper);
             } catch (Exception e) {
                 gcJoinactivityrecordMapper.updateById(gjr);
-                throw new RuntimeException("更改用户上链记录为1异常" + e.getMessage());
+                throw new RuntimeException("更改用户上链记录异常" + e.getMessage());
             }
             helper.release();
         }
@@ -197,28 +197,28 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         // 合约实例初始化
         boolean init = helper.init();
         if (!init) {
-            System.err.println("合约初始化失败");
+            LOGGER.error("合约初始化失败");
             return false;
         }
 
         //加载合约
         boolean loadContract = helper.loadContract(contract);
         if (!loadContract) {
-            System.err.println("合约地址加载失败");
+            LOGGER.error("合约地址加载失败");
             return false;
         }
 
         //更新活动状态
         int res = updateGcJoinacTivityByStatus(aid);
         if (res<=0) {
-            System.err.println("更新活动状态失败");
+            LOGGER.error("更新活动状态失败");
             return false;
         }
 
         //通知活动关闭
         boolean stage = helper.changeStage(State.closed);
         if(!stage) {
-            System.err.println("合约关闭失败");
+            LOGGER.error("合约关闭失败");
             return false;
         }
         return true;
@@ -243,7 +243,6 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         try {
             res = gcActivityMapper.updateById(gat);
         } catch (Exception e) {
-            System.err.println("更新活动状态异常");
             throw new RuntimeException("更新活动状态异常" + e.getMessage());
         }
         return res;
