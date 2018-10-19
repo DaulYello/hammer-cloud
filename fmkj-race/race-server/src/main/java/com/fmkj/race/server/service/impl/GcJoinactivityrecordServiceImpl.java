@@ -265,7 +265,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     public boolean addGcJoinactivityRecord(GcJoinactivityrecord gcJoin) {
         int row = gcJoinactivityrecordMapper.insert(gcJoin);
         if(row > 0){
-            //参与活动添加2飞羽
+            //参与活动添加10飞羽
             HcPointsRecord hcp = new HcPointsRecord();
             hcp.setUid(gcJoin.getUid());
             hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
