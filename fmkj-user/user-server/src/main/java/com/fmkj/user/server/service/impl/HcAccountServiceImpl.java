@@ -164,8 +164,8 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                             boolean change = changeGrade(gradeDto, ha.getId());
                             if (change){
                                 HcRcode rc = new HcRcode();
-                                rc.setUid(uid);
-                                rc.setCode(Rcode.getRcode(uid));
+                                rc.setUid(resultHc.getId());
+                                rc.setCode(Rcode.getRcode(resultHc.getId()));
                                 int recodeRow = hcRcodeMapper.insert(rc);
                                 if(recodeRow > 0){
                                     addRecyleLog(resultHc.getId(), uid);//插入日志表

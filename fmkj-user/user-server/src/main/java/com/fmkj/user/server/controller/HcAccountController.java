@@ -191,7 +191,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
 
     @ApiOperation(value="发放CNT", notes="确认收货后，将资产对应的CNT给发起活动的用户")
-    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "发放p能量")
+    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "确认收货后，将资产对应的CNT给发起活动的用户")
     @PostMapping("/grantUserP")
     public Boolean grantUserP(@RequestBody HcAccount hc) {
         Double starterCnt = hc.getCnt();
