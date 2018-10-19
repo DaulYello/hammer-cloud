@@ -11,9 +11,7 @@ import com.fmkj.user.dao.dto.GradeDto;
 import com.fmkj.user.dao.dto.HcAccountDto;
 import com.fmkj.user.dao.mapper.*;
 import com.fmkj.user.server.service.HcAccountService;
-import com.fmkj.user.server.service.HcRcodeService;
 import com.fmkj.user.server.util.Rcode;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @Description:
@@ -50,13 +47,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
     private HcSessionMapper hcSessionMapper;
 
     @Autowired
-    private HcMoonwellMapper hcMoonwellMapper;
-
-    @Autowired
-    private HcToolsMapper hcToolsMapper;
-
-    @Autowired
-    private HcRcodeService hcRcodeService;
+    private HcRcodeMapper hcRcodeMapper;
 
     /**
      * @author yangshengbin
@@ -141,63 +132,50 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             hcSession.setUid(resultHc.getId());
             int insert = hcSessionMapper.insert(hcSession);
             if(insert > 0){
-                // 插入月亮井表
-                HcMoonwell hm = new HcMoonwell();
-                hm.setUid(resultHc.getId());
-                hm.setCurrentP(0D);
-                hm.setMoonnum(0);
-                hm.setRocknum(0);
-                int moon = hcMoonwellMapper.insert(hm);
-                if(moon > 0){
-                    // 插入道具表
-                    HcTools ht = new HcTools();
-                    ht.setUid(resultHc.getId());
-                    ht.setTotalrock(3);
-                    ht.setTotalmoon(1);
-                    int tool = hcToolsMapper.insert(ht);
-                    if(tool > 0){
-                        // 插入被邀请的人的积分记录(注册的积分记录)
-                        HcPointsRecord record = new HcPointsRecord();
-                        record.setPointsId(PointEnum.SELF_REGISTER.pointId);
-                        record.setPointsNum(PointEnum.SELF_REGISTER.pointNum);
-                        record.setUid(resultHc.getId());
-                        record.setTime(DateUtil.getNowInMillis(0L));
-                        int point = hcPointsRecordMapper.insert(record);
-                        if(point > 0){
-                            //插入邀请人注册的积分奖励记录
-                            HcPointsRecord hcPointsRecord = new HcPointsRecord();
-                            hcPointsRecord.setPointsId(PointEnum.INVIT_REGISTER.pointId);
-                            hcPointsRecord.setPointsNum(PointEnum.INVIT_REGISTER.pointNum);
-                            hcPointsRecord.setUid(uid);
-                            hcPointsRecord.setTime(DateUtil.getNowInMillis(0L));
-                            int invit = hcPointsRecordMapper.insert(hcPointsRecord);
-                            if(invit > 0){
-                                //给邀请人1P奖励
-                                HcAccount hcAccount = hcAccountMapper.selectById(uid);
-                                hcAccount.setMyP(hcAccount.getMyP() + 1);
-                                int update = hcAccountMapper.updateById(hcAccount);
-                                if(update > 0){
-                                    GradeDto gradeDto = hcPointsRecordMapper.selectGrandByUid(hcAccount.getId());
-                                    boolean change = changeGrade(gradeDto, ha.getId());
-                                    if (change){
-                                        LOGGER.debug("生成一个邀请码，并保存");
-                                        boolean ret = hcRcodeService.setRcode(uid, Rcode.getRcode(uid));
-                                        return ha.getId();
-                                    }
-                                    else
-                                        throw new RuntimeException("用户等级更新失败！");
-                                }
-                                else
-                                    throw new RuntimeException("给邀请人1P失败！");
+                // 插入被邀请的人的积分记录(注册的积分记录)
+                HcPointsRecord record = new HcPointsRecord();
+                record.setPointsId(PointEnum.SELF_REGISTER.pointId);
+                record.setPointsNum(PointEnum.SELF_REGISTER.pointNum);
+                record.setUid(resultHc.getId());
+                record.setTime(DateUtil.getNowInMillis(0L));
+                int point = hcPointsRecordMapper.insert(record);
+                if(point > 0){
+                    //插入邀请人注册的积分奖励记录
+                    HcPointsRecord hcPointsRecord = new HcPointsRecord();
+                    hcPointsRecord.setPointsId(PointEnum.INVIT_REGISTER.pointId);
+                    hcPointsRecord.setPointsNum(PointEnum.INVIT_REGISTER.pointNum);
+                    hcPointsRecord.setUid(uid);
+                    hcPointsRecord.setTime(DateUtil.getNowInMillis(0L));
+                    int invit = hcPointsRecordMapper.insert(hcPointsRecord);
+                    if(invit > 0){
+                        //每邀请1个伙伴完成注册，分配获得1CNT、5R奖励
+                        HcAccount hcAccount = hcAccountMapper.selectById(uid);
+                        hcAccount.setMyP(hcAccount.getMyP() + 5);
+                        hcAccount.setCnt(hcAccount.getCnt() + 1);
+                        int update = hcAccountMapper.updateById(hcAccount);
+                        if(update > 0){
+                            GradeDto gradeDto = hcPointsRecordMapper.selectGrandByUid(hcAccount.getId());
+                            boolean change = changeGrade(gradeDto, ha.getId());
+                            if (change){
+                                HcRcode rc = new HcRcode();
+                                rc.setUid(uid);
+                                rc.setCode(Rcode.getRcode(uid));
+                                int recodeRow = hcRcodeMapper.insert(rc);
+                                if(recodeRow > 0){
+                                    return ha.getId();
+                                }else
+                                    throw new RuntimeException("生成邀请码失败！");
                             }
                             else
-                                throw new RuntimeException("插入邀请人注册的积分奖励记录失败！");
-                        }else
-                            throw new RuntimeException("插入被邀请的人的积分记录(注册的积分记录)失败！");
-                    }else
-                        throw new RuntimeException("插入道具表出现失败！");
+                                throw new RuntimeException("用户等级更新失败！");
+                        }
+                        else
+                            throw new RuntimeException("给邀请人1P失败！");
+                    }
+                    else
+                        throw new RuntimeException("插入邀请人注册的积分奖励记录失败！");
                 }else
-                    throw new RuntimeException("插入月亮井表出现失败！");
+                    throw new RuntimeException("插入被邀请的人的积分记录(注册的积分记录)失败！");
             }else
                 throw new RuntimeException("插入hcSession表出现失败！");
         }

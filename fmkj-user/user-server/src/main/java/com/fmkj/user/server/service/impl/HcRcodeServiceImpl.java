@@ -27,14 +27,4 @@ public class HcRcodeServiceImpl extends BaseServiceImpl<HcRcodeMapper, HcRcode> 
     @Autowired
     private HcRcodeMapper hcrcodeMapper;
 
-    public boolean setRcode(Integer uid, String recode){
-        HcRcode rc = new HcRcode();
-        rc.setUid(uid);
-        rc.setCode(recode);
-        int row = hcrcodeMapper.insert(rc);
-        if (row > 0)
-            return true;
-        else
-            return false;
-    }
 }

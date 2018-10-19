@@ -11,5 +11,4 @@ import com.fmkj.user.dao.domain.HcRcode;
 **/
 public interface HcRcodeService extends BaseService<HcRcode> {
 
-    boolean setRcode(Integer uid, String recode);
 }
