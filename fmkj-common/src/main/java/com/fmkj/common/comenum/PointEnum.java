@@ -29,28 +29,38 @@ public enum PointEnum {
     PUBLISH_ACITIVITY(3,10D),
     //购买CNT
     BUY_CTN(4,2D),
-    //邀请人注册
-    INVIT_REGISTER(5,5D),
-    //上传头像
-    UPLOAD_HEAD(6,5D),
-    //绑定邮箱
-    BIND_EMAIL(7,10D),
-    //自己注册
-    SELF_REGISTER(8,10D),
-    //绑定支付宝
-    BIND_ALIPAY(9,15D),
-    //绑定微信支付
-    BIND_WEBCHAT_PAY(10,15D),
-    //实名认证
-    REAL_AUTHENT(11,20D),
-    //完成任务
-    FINISH_TASK(12,1D),
-    //充值虚拟货币
-    CHARGE_VIRT_CURRENCY(13,5D),
-    //任务中心发布任务
-    PUBLISH_TASK(14,10D),
+
     //兑换飞羽
-    EXCHANGE_POINT(15,1D);
+    EXCHANGE_POINT(5,1D),
+
+    //邀请人注册
+    INVIT_REGISTER(6,5D),
+
+    /**
+     * 7 实名认证在后台管理系统操作
+     */
+
+    //上传头像
+    UPLOAD_HEAD(8,5D),
+
+    //绑定邮箱
+    BIND_EMAIL(9,10D),
+
+    //充值
+    CHARGE(10,5D),
+
+    //自己注册
+    SELF_REGISTER(11,10D),
+
+    //绑定支付宝
+    BIND_ALIPAY(12,15D),
+    //绑定微信支付
+    BIND_WEBCHAT_PAY(13,15D),
+    //完成任务
+    FINISH_TASK(14,1D),
+    //任务中心发布任务
+    PUBLISH_TASK(15,10D);
+
 
 
     public int pointId;
