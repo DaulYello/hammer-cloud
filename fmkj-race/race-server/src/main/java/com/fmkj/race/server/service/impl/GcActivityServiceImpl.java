@@ -161,6 +161,7 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
             //参与活动添加2飞羽
             HcPointsRecord hcp = new HcPointsRecord();
             hcp.setUid(startid);
+            hcp.setTime(new Date());
             hcp.setPointsId(PointEnum.PUBLISH_ACITIVITY.pointId);
             hcp.setPointsNum(PointEnum.PUBLISH_ACITIVITY.pointNum);
             boolean result = hcAccountApi.addHcPointsRecord(hcp);

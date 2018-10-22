@@ -1,3 +1,4 @@
+/*
 package com.fmkj.race.server.rabbitmq;
  
 import java.util.HashMap;
@@ -9,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+*/
 /**
  * @author 杨胜彬
  * @comments 生产者类
  * @time 2018年9月5日
  * @developers 费马科技
- */
+ *//*
+
 @Component
 public class MessageProducer {
 
@@ -25,4 +28,4 @@ public class MessageProducer {
 		this.amqpTemplate.convertAndSend("workqueue", message);
 	}
  
-}
+}*/

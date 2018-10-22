@@ -54,7 +54,12 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
     @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "用户参加活动")
     @PostMapping("/ActivityRabbitMQ")
     public BaseResult ActivityRabbitMQ(@RequestBody GcJoinactivityrecord gcJoinactivityrecord){
-
+        if (StringUtils.isNull(gcJoinactivityrecord.getAid())) {
+            return new BaseResult(BaseResultEnum.ERROR, "活动ID不能为空");
+        }
+        if (StringUtils.isNull(gcJoinactivityrecord.getUid())) {
+            return new BaseResult(BaseResultEnum.ERROR, "用户ID不能为空");
+        }
         //是否存在该活动或活动已经结束
         GcActivity gcActivity = gcActivityService.selectById(gcJoinactivityrecord.getAid());
         LOGGER.info("用户参加活动:" + JSON.toJSONString(gcActivity));
@@ -67,9 +72,9 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
         /*********插入参与记录**********/
         gcJoinactivityrecord.setTime(new Date());
         gcJoinactivityrecord.setIschain(0);
-        boolean flag  = gcJoinactivityrecordService.addGcJoinactivityRecord(gcJoinactivityrecord);
+        boolean flag  = gcJoinactivityrecordService.addGcJoinactivityRecord(gcJoinactivityrecord, gcActivity);
         if (!flag){
-            return new BaseResult(BaseResultEnum.ERROR, "插入参与记录异常,"+"活动aid:"+gcJoinactivityrecord.getAid()+",用户:"+gcJoinactivityrecord.getUid());
+            return new BaseResult(BaseResultEnum.ERROR, "参与活动人数已满");
         }
         return new BaseResult(BaseResultEnum.SUCCESS, gcJoinactivityrecord);
 

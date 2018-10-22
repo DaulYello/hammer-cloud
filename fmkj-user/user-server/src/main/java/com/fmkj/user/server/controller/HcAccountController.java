@@ -227,6 +227,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     @ApiOperation(value="根据ID获取用户-竞锤服务调用", notes="根据ID获取用户")
     @GetMapping("/getAccountById")
     public HcAccount getAccountById(Integer id){
+        LOGGER.info("根据ID获取用户参数：" + id);
         HcAccount hc = hcAccountService.selectById(id);
         return hc;
 

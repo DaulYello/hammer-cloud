@@ -27,11 +27,6 @@ spring:
     maxOpenPreparedStatements: 20
   jpa:
     show-sql: true
-  rabbitmq:
-     host: 127.0.0.1
-     port: 5672
-     username: guest
-     password: guest
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

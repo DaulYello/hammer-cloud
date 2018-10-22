@@ -3,6 +3,7 @@ package com.fmkj.race.server.service;
 
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseService;
+import com.fmkj.race.dao.domain.GcActivity;
 import com.fmkj.race.dao.domain.GcJoinactivityrecord;
 import com.fmkj.race.dao.dto.JoinActivityDto;
 import com.fmkj.race.dao.queryVo.JoinActivityPage;
@@ -27,18 +28,6 @@ public interface GcJoinactivityrecordService extends BaseService<GcJoinactivityr
      * @return
     */
     boolean addGcJoinactivityrecordAndUpAccount(Integer aid, GcJoinactivityrecord joins,double par);
-
-
-
-    /**
-     * @author yangshengbin
-     * @Description：获取用户合约地址
-     * @date 2018/9/6 0006 10:57
-     * @param aid
-     * @return
-    */
-    String queryGcActivityByContract(Integer aid);
-
 
 
     /**
@@ -68,5 +57,5 @@ public interface GcJoinactivityrecordService extends BaseService<GcJoinactivityr
      */
     List<JoinActivityDto>  queryJoinActivityByAid(Pagination page, JoinActivityPage joinActivityPage);
 
-    boolean addGcJoinactivityRecord(GcJoinactivityrecord gcJoinactivityrecord);
+    boolean addGcJoinactivityRecord(GcJoinactivityrecord gcJoinactivityrecord, GcActivity num);
 }

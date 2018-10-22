@@ -80,7 +80,7 @@ public class RaceLogAspect {
                 operateLog.setExceptionMsg(e.getMessage());
             }
             String userId = ServletUtils.getRequest().getHeader("globalUserId");
-            if(StringUtils.isNull(userId)){
+            if(StringUtils.isEmpty(userId)){
                 operateLog.setUserId(Integer.parseInt(userId));
             }
             operateLog.setModule(controllerLog.module());

@@ -59,9 +59,8 @@ public class Helper {
      */
     public Helper() {
         this.password = "11111111";
-        this.walletfile = "C:\\Users\\Administrator\\AppData\\Roaming\\Ethereum\\keystore\\"
-        		+ "UTC--2018-07-23T03-44-51.918293788Z--f8d93f2ece81270841e9c8056dd737fb58c00a23";
-        this.ip = "127.0.0.1";
+        this.walletfile = "F:\\SwanChain\\data\\00\\keystore\\UTC--2018-10-19T10-02-14.891008500Z--0cf95994875cfed5b633d24877ea3cc1beab9bd7";
+        this.ip = "192.168.10.218";
         this.port = "9797";
     }
 
@@ -89,19 +88,19 @@ public class Helper {
         boolean bl = false;
         this.web3j = Web3j.build(new HttpService("http://" + this.ip + ":" + this.port));
         try {
-            log.info("Connected to Ethereum client version: "
+            log.info("版本号Connected to Ethereum client version: "
                     + this.web3j.web3ClientVersion().send().getWeb3ClientVersion());
-
             this.credentials = WalletUtils.loadCredentials(this.password, this.walletfile);
-            log.info("Credentials loaded. ");
             bl = true;
         } catch (IOException e) {
-            log.info("Credentials failed to load. ");
+            log.error("IO异常Credentials failed to load. ");
+            e.printStackTrace();
         } catch (CipherException e) {
             log.error("Credentials failed to load. ");
+            e.printStackTrace();
         } catch (Exception e) {
-            log.error("Failed to get Ethereum client version.\n"
-                    + e);
+            log.error("Failed to get Ethereum client version.");
+            e.printStackTrace();
         } finally {
             return bl;
         }

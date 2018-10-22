@@ -98,7 +98,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
             return new BaseResult(BaseResultEnum.ERROR.status, "您已被拉入黑名单,黑名单用户不可发起活动!",false);
         }
 
-        //判断活动名称是否包含敏感词汇
+        /*//判断活动名称是否包含敏感词汇
         if(StringUtils.isNotEmpty(name)) {
             String wordIsOk= SensitiveWordUtil.replaceBadWord(name.trim(),2,"*");
             if(!name.trim().equals(wordIsOk.trim())) {
@@ -120,7 +120,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
             if(!pname.equals(wordIsOk.trim())) {
                 return new BaseResult(BaseResultEnum.ERROR.status, "产品名称含有敏感词汇，请重新写一个吧!",false);
             }
-        }
+        }*/
 
         GcActivity ga = new GcActivity();
         ga.setStartid(startid);
@@ -285,6 +285,7 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         }
         return tPage;
     }
+
 
 
 
