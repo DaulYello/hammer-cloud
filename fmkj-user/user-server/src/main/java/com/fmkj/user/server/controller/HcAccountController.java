@@ -198,7 +198,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     }
 
     @ApiOperation(value="发放CNT", notes="确认收货后，将资产对应的CNT给发起活动的用户")
-    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "发放p能量")
+    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "确认收货后，将资产对应的CNT给发起活动的用户")
     @PostMapping("/grantUserP")
     public Boolean grantUserP(@RequestBody HcAccount hc) {
         Double starterCnt = hc.getCnt();
@@ -292,7 +292,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("telephone",telephone);
         resultMap.put("token", token);
-        resultMap.put("uid", account.getId());
+        resultMap.put("uid", account.getId() + "");
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "登录成功!", resultMap);
     }
 
@@ -347,7 +347,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
             Map<String, Object> resultMap = new HashMap<String, Object>();
             resultMap.put("telephone",recode.getTelephone());
             resultMap.put("token", token);
-            resultMap.put("uid", result);
+            resultMap.put("uid", result + "");
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "邀请码比对成功,用户注册并登录!", resultMap);
         }
         return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户注册登陆失败!", false);
