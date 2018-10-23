@@ -50,18 +50,22 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
     /**
      *  用户参加活动
      */
-    @ApiOperation(value="用户参加活动，参数：aid,uid ", notes="用户参加活动")
+    @ApiOperation(value="用户参加活动，参数：aid,uid, nickname ", notes="用户参加活动")
     @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "用户参加活动")
     @PostMapping("/ActivityRabbitMQ")
-    public BaseResult ActivityRabbitMQ(@RequestBody GcJoinactivityrecord gcJoinactivityrecord){
-        if (StringUtils.isNull(gcJoinactivityrecord.getAid())) {
+    public BaseResult ActivityRabbitMQ(@RequestBody JoinActivityPage joinActivity){
+        long startTime = System.currentTimeMillis();
+        if (StringUtils.isNull(joinActivity.getAid())) {
             return new BaseResult(BaseResultEnum.ERROR, "活动ID不能为空");
         }
-        if (StringUtils.isNull(gcJoinactivityrecord.getUid())) {
+        if (StringUtils.isNull(joinActivity.getUid())) {
             return new BaseResult(BaseResultEnum.ERROR, "用户ID不能为空");
         }
+        if (StringUtils.isNull(joinActivity.getNickname())) {
+            joinActivity.setNickname("sysAdmin");
+        }
         //是否存在该活动或活动已经结束
-        GcActivity gcActivity = gcActivityService.selectById(gcJoinactivityrecord.getAid());
+        GcActivity gcActivity = gcActivityService.selectById(joinActivity.getAid());
         LOGGER.info("用户参加活动:" + JSON.toJSONString(gcActivity));
         if (StringUtils.isNull(gcActivity)) {
             return new BaseResult(BaseResultEnum.ERROR, "没有该活动");
@@ -70,9 +74,14 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
             return new BaseResult(BaseResultEnum.ERROR, "活动已结束");
         }
         /*********插入参与记录**********/
+        GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
         gcJoinactivityrecord.setTime(new Date());
         gcJoinactivityrecord.setIschain(0);
-        boolean flag  = gcJoinactivityrecordService.addGcJoinactivityRecord(gcJoinactivityrecord, gcActivity);
+        gcJoinactivityrecord.setAid(joinActivity.getAid());
+        gcJoinactivityrecord.setUid(joinActivity.getUid());
+        boolean flag  = gcJoinactivityrecordService.addGcJoinactivityRecord(gcJoinactivityrecord, gcActivity, joinActivity.getNickname());
+        long times = System.currentTimeMillis() - startTime;
+        LOGGER.info("参加活动一共耗费时长:" + times);
         if (!flag){
             return new BaseResult(BaseResultEnum.ERROR, "参与活动人数已满");
         }

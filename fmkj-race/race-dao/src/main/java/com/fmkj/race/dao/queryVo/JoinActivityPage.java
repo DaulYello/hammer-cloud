@@ -16,6 +16,8 @@ public class JoinActivityPage extends GcJoinactivityrecord {
     //当前用户uid
     private Integer uid;
 
+    private String nickname;
+
     //当前页码
     private int pageNo = 1;
     //每页条数
@@ -24,6 +26,14 @@ public class JoinActivityPage extends GcJoinactivityrecord {
     private String orderBy;
     // 升序字段
     private String orderByAsc;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public Integer getPage() {
         return page;

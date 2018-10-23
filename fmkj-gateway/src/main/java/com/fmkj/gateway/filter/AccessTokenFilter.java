@@ -3,6 +3,7 @@ package com.fmkj.gateway.filter;
 import com.alibaba.fastjson.JSON;
 import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseResultEnum;
+import com.fmkj.common.util.StringUtils;
 import com.fmkj.gateway.api.HcPermissApi;
 import com.google.common.util.concurrent.RateLimiter;
 import com.netflix.zuul.ZuulFilter;
@@ -69,7 +70,10 @@ public class AccessTokenFilter extends ZuulFilter{
             }
             RequestContext context = getCurrentContext();
             String token = request.getHeader("token");
-            boolean isPass = hcPermissApi.queryToken(token);
+            boolean isPass = false;
+            if(StringUtils.isNotEmpty(token)){
+                isPass = hcPermissApi.queryToken(token);
+            }
             if(!isPass){
                 context.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                 BaseResult<Boolean> result = new BaseResult<Boolean>(BaseResultEnum.TOKEN_INVALID, isPass);

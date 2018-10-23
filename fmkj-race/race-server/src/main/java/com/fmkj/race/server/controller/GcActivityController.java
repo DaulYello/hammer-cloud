@@ -7,7 +7,6 @@ import com.fmkj.common.base.BaseController;
 import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseResultEnum;
 import com.fmkj.common.constant.LogConstant;
-import com.fmkj.common.util.SensitiveWordUtil;
 import com.fmkj.common.util.StringUtils;
 import com.fmkj.race.dao.domain.GcActivity;
 import com.fmkj.race.dao.domain.GcPimage;
@@ -16,8 +15,6 @@ import com.fmkj.race.dao.queryVo.GcBaseModel;
 import com.fmkj.race.server.annotation.RaceLog;
 import com.fmkj.race.server.api.BmListApi;
 import com.fmkj.race.server.service.GcActivityService;
-import com.fmkj.race.server.service.GcMessageService;
-import com.fmkj.race.server.service.GcNoticeService;
 import com.fmkj.race.server.service.GcPimageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,12 +49,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
 
     @Autowired
     private GcPimageService gcPimageService;//活动图片接口
-
-    @Autowired
-    private GcMessageService gcMessageService;//信息接口
-
-    @Autowired
-    private GcNoticeService gcNoticeService;//通知接口  ,@RequestParam MultipartFile[] file   @RequestParam Map<String,Object> map,
 
     @Value("${activityImagePath}")
     private String activityImagePath;
