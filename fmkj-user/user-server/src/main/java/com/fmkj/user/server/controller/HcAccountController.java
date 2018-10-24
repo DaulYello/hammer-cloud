@@ -160,7 +160,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
      *
      * @return
      */
-    @ApiOperation(value="查询用户参与活动的次数", notes="参数：uid")
+    @ApiOperation(value="查询用户参与活动的次数", notes="参数：id")
     @PutMapping("/queryActivitNum")
     public BaseResult queryActivitNum(@RequestBody HcAccount hcAccount) {
         if (StringUtils.isNull(hcAccount.getId())) {
