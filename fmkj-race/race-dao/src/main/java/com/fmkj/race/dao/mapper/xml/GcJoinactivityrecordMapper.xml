@@ -52,6 +52,7 @@
         WHERE 1 = 1
           AND a.isChain = 0
           AND b.status = 2
+          ORDER BY b.time ASC
     </select>
 
 </mapper>

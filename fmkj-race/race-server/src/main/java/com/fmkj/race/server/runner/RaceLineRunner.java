@@ -46,6 +46,7 @@ public class RaceLineRunner implements ApplicationRunner {
                         LOGGER.info("恭喜==用户【" + dto.getNickname() +"】上链成功!");
                     }else{
                         LOGGER.info("很抱歉==用户【" + dto.getNickname() +"】上链失败, 请检查执行日志!");
+                        break;
                     }
                 }
             }
