@@ -8,13 +8,15 @@
         <result column="uid" property="uid"/>
         <result column="aid" property="aid"/>
         <result column="ischain" property="ischain"/>
+        <result column="islast" property="islast"/>
         <result column="time" property="time"/>
         <result column="logo" property="logo"/>
         <result column="nickname" property="nickname"/>
         <result column="score" property="score"/>
+        <result column="num" property="num"/>
+        <result column="par" property="par"/>
+        <result column="contract" property="contract"/>
     </resultMap>
-
-    <resultMap id="BaseResultMap1" type="java.util.HashMap"></resultMap>
 
     <select id="queryJoinActivityByAid" parameterType="com.fmkj.race.dao.queryVo.JoinActivityPage" resultMap="BaseResultMap">
        SELECT
@@ -29,6 +31,27 @@
             ON jr.uid = ac.id
         WHERE jr.aid = #{gap.aid}
         ORDER BY jr.time DESC
+    </select>
+
+    <select id="queryJoinActivityList" resultMap="BaseResultMap">
+
+        SELECT
+          a.*,
+          b.num,
+          b.par,
+          b.contract,
+          b.typeid,
+          b.pname,
+          c.nickname
+        FROM
+          gc_joinactivityrecord a
+          LEFT JOIN gc_activity b
+            ON a.aid = b.id
+          LEFT JOIN hc_account c
+            ON a.uid = c.id
+        WHERE 1 = 1
+          AND a.isChain = 0
+          AND b.status = 2
     </select>
 
 </mapper>

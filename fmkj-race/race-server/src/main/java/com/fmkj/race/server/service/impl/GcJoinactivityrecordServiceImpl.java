@@ -1,6 +1,5 @@
 package com.fmkj.race.server.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.annotation.BaseService;
 import com.fmkj.common.base.BaseServiceImpl;
@@ -11,7 +10,6 @@ import com.fmkj.race.dao.dto.JoinActivityDto;
 import com.fmkj.race.dao.mapper.*;
 import com.fmkj.race.dao.queryVo.JoinActivityPage;
 import com.fmkj.race.server.api.HcAccountApi;
-import com.fmkj.race.server.hammer.contracts.PuzzleHammer.PuzzleHammer;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.Helper;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.Person;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.State;
@@ -59,26 +57,24 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     @Autowired
     private GcMessageMapper gcMessageMapper;
 
+
     /**
      * @author yangshengbin
      * @Description：插入用户参与记录/更改用户p能量值/
      * @date 2018/9/6 0006 10:02
-     * @param aid
      * @param joins
-     * @param par
      * @return boolean
     */
-    public boolean addGcJoinactivityrecordAndUpAccount(Integer aid, GcJoinactivityrecord joins, double par) {
+    public boolean updateCntAndPiont(int uid, Double par) {
         //更改用户CNT
         HcAccount hc = new HcAccount();
-        hc.setId(joins.getUid());
+        hc.setId(uid);
         hc.setCnt(par);
         boolean flag = hcAccountApi.updateUserP(hc);
-        LOGGER.info("更改用户CNT返回结果：" + flag);
         if (flag){
             //参与活动添加10飞羽
             HcPointsRecord hcp = new HcPointsRecord();
-            hcp.setUid(joins.getUid());
+            hcp.setUid(uid);
             hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
             hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
             boolean result = hcAccountApi.addHcPointsRecord(hcp);
@@ -118,28 +114,25 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             LOGGER.info("【web3j-Failed】改变状态失败");
             return false;
         }*/
-        boolean part = helper.particiPuzzle(new Person(nickname, BigInteger.valueOf(uid)));// 实例出合约用户，参与活动
-        LOGGER.info("【web3j-Failed】改变状态失败part" + part);
 
-        /*if(!part){
-            LOGGER.info("【web3j】参与活动失败");
+        boolean part = helper.particiPuzzle(new Person(nickname, BigInteger.valueOf(uid)));// 实例出合约用户，参与活动
+        if(!part){
+            LOGGER.info("【web3j-Failed】参与活动加载失败");
             return false;
-        }*/
+        }
         return true;
     }
-
-
-
-
 
     /**
      * @author yangshengbin
      * @Description：最后一个用户参与活动
      * @date 2018/9/6 0006 14:12
-     * @param contract
      * @param aid
+     * @param contract
+     * @param gcActivity
      * @return boolean
     */
+    @Override
     public int lastChangeStage(String contract) {
         //加载合约
         Helper helper = new Helper();
@@ -150,44 +143,37 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         }
         //load contract
         boolean ifLoad = helper.loadContract(contract);
-        if(!ifLoad)
-        {
-            LOGGER.info("【contract-Failed】合约地址加载失败");
+        if(!ifLoad) {
+            LOGGER.info("【web3j-Failed】合约地址加载失败");
             return -1;
         }
 
         //通知活动关闭
-
         boolean stage = helper.changeStage(State.closed);
-
-        LOGGER.info("【web3j-Failed】合约关闭失败stage" + stage);
-
+        LOGGER.info("【web3j-Log】合约更改状态为close返回结果:" + stage);
         if(!stage) {
-            LOGGER.error("【web3j-Failed】合约关闭失败");
             return -1;
         }
 
         boolean result= helper.changeStage(State.notice);
-        LOGGER.info("【web3j-Failed】resultresultresultresult" + result);
+        LOGGER.info("【web3j-Log】合约更改状态为notice返回结果:" + result);
         if(!result){
-            LOGGER.info("【web3j-Failed】活动进入竟锤状态失败！");
             return -1;
         }
 
         boolean winnerResult= helper.puzzleWinner();
+        LOGGER.info("【web3j-Log】竞锤是否产生优胜者结果:" + winnerResult);
         if(!winnerResult){
-            LOGGER.info("【web3j-Failed】获取优胜者失败！");
             return -1;
         }
 
         boolean isEnd = helper.changeStage(State.end);
-        LOGGER.info("【web3j-Failed】获取优胜者失败isEnd！" + isEnd);
-
+        LOGGER.info("【web3j-Log】合约更改状态为end返回结果:" + isEnd);
         if(!isEnd){
-            LOGGER.info("【web3j-Failed】改变合约状态END失败！");
             return -1;
         }
         int hammerId = helper.getWinner().getID().intValue();
+        LOGGER.info("【web3j-Log】竞锤获取优胜者用户:" + hammerId);
         return hammerId;
     }
 
@@ -206,64 +192,55 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     }
 
     @Override
-    public boolean  addGcJoinactivityRecord(GcJoinactivityrecord gcJoin, GcActivity gcActivity, String nickname) {
+    public boolean onChain(JoinActivityDto joinActivityDto) {
         //查询活动信息获取合约地址参与合约
-        String contract = gcActivity.getContract();
+        String contract = joinActivityDto.getContract();
         LOGGER.info("活动获取到的合约地址：" + contract);
         if (StringUtils.isEmpty(contract)) {
             return false;
         }
-        LOGGER.info("总人数============lastChangeStage:" + gcActivity.getNum());
+        LOGGER.info("参与活动总人数:" + joinActivityDto.getNum());
         //活动需要人数
-        double par = gcActivity.getPar();//活动需要的cnt能量
-        boolean part = participateActivity(contract,gcJoin.getUid(), nickname);
-        if (part) {
-            //将用户上链记录改为1
-            int insertRow = gcJoinactivityrecordMapper.insert(gcJoin);
-            if(insertRow > 0){
-                //获取当前参与人数
-                GcJoinactivityrecord where = new GcJoinactivityrecord();
-                where.setAid(gcJoin.getAid());
-                EntityWrapper<GcJoinactivityrecord> entityWrapper = new EntityWrapper<>(where);
-                int count = gcJoinactivityrecordMapper.selectCount(entityWrapper);//当前参与人数
-                LOGGER.info("当前参与的人数============lastChangeStage:" + count);
-                if (count > gcActivity.getNum()) {
-                    return false;
+        double par = joinActivityDto.getPar();//活动需要的cnt能量
+        //插入用户参与记录/更改用户cnt值/
+        boolean flag = updateCntAndPiont(joinActivityDto.getUid(), par);
+        LOGGER.info("更改参加用户CNT值与添加飞羽返回结果:" + flag);
+        if (flag) {
+            //最后一个用户参与活动
+            if (joinActivityDto.getIslast() == 1) {
+                //初始化合约加载合约
+                int winId = lastChangeStage(contract);
+                if(winId == -1){
+                    throw new RuntimeException("最后一个用户参与活动上链更新合约状态失败");
                 }
-                //插入用户参与记录/更改用户cnt值/
-                boolean flag = addGcJoinactivityrecordAndUpAccount(gcJoin.getAid(), gcJoin, par);
-                LOGGER.info("插入用户参与记录/更改用户cnt值/============lastChangeStage:" + flag);
-                if (flag) {
-
-                    //最后一个用户参与活动
-                    if (count == gcActivity.getNum()) {
-                        //初始化合约加载合约
-                        long startTime = System.currentTimeMillis();
-                        int winId = lastChangeStage(contract);
-                        long times = System.currentTimeMillis() - startTime;
-                        LOGGER.info("============lastChangeStage:" + times);
-                        LOGGER.info("【web3j-success】获取到活动竟锤优胜者:" + winId);
-                        if (winId != -1) {
-                            boolean saveNotice = saveNoticeInfo(winId, gcActivity);
-                            if (saveNotice) {
-                                return true;
-                            } else
-                                throw new RuntimeException("最后一个参与用户节点更新活动参与状态失败");
-                        } else
-                            throw new RuntimeException("获取到优胜者失败");
+                boolean saveNotice = saveNoticeInfo(winId, joinActivityDto);
+                if(!saveNotice){
+                    throw new RuntimeException("插入通知表，保存优胜者的记录执行失败");
+                }
+                return true;
+            }else {
+                boolean part = participateActivity(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
+                if(!part){
+                    throw new RuntimeException("参加活动上链失败");
+                }else{
+                    GcJoinactivityrecord gcJoinactivityrecord = gcJoinactivityrecordMapper.selectById(joinActivityDto.getId());
+                    gcJoinactivityrecord.setIschain(1);
+                    int updateChain = gcJoinactivityrecordMapper.updateById(gcJoinactivityrecord);
+                    if(updateChain > 0){
+                        return true;
+                    }else{
+                        throw new RuntimeException("更改上链状态失败！");
                     }
-                    }
-                    return true;
-                } else
-                    throw new RuntimeException("插入记录表失败");
-            }else{
-              return false;
+                }
+            }
+        }else {
+            throw new RuntimeException("更改参加用户CNT值与添加飞羽失败");
         }
     }
 
-    private boolean saveNoticeInfo(int winId, GcActivity gcActivity) {
-        LOGGER.info("保存优胜者的记录输入参数winId={},typeId={}", winId, gcActivity.getTypeid());
-        GcActivitytype gcActivitytype = gcActivitytypeMapper.selectById(gcActivity.getTypeid());
+    private boolean saveNoticeInfo(int winId, JoinActivityDto joinActivityDto) {
+        LOGGER.info("保存优胜者的记录输入参数winId={},typeId={}", winId, joinActivityDto.getTypeid());
+        GcActivitytype gcActivitytype = gcActivitytypeMapper.selectById(joinActivityDto.getTypeid());
         GcNotice notice = new GcNotice();
         notice.setUid(winId);
         notice.setFlag(1);
@@ -272,29 +249,39 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         String message = new String(",请在48小时内及时联系客服QQ：2500702820办理资产转移。");
         sb.append(head);
         sb.append(gcActivitytype.getType());
-        sb.append("—" + gcActivity.getPname());
+        sb.append("—" + joinActivityDto.getPname());
         sb.append(message);
-        String messageStr =head+gcActivitytype.getType()+"—" + gcActivity.getPname() + message;
-        //notice.setMessage(sb.toString());
+        String messageStr =head+gcActivitytype.getType()+"—" + joinActivityDto.getPname() + message;
         GcMessage gcMessage = new GcMessage();
         gcMessage.setMessage(messageStr);
         gcMessage.setType(2);
         gcMessage.setTime(new Date());
         int mid = gcMessageMapper.insert(gcMessage);
-        if(mid>0){
+        if(mid > 0){
             notice.setMid(gcMessage.getId());
             notice.setUid(winId);
             notice.setFlag(1);
             int row = gcNoticeMapper.insert(notice);
             if(row > 0){
+                GcActivity gcActivity = gcActivityMapper.selectById(joinActivityDto.getAid());
                 gcActivity.setStatus(3);
                 gcActivity.setGetid(winId);
                 int updateRow = gcActivityMapper.updateById(gcActivity);
                 if(updateRow > 0){
-                    return true;
+                    GcJoinactivityrecord gcJoinactivityrecord = gcJoinactivityrecordMapper.selectById(joinActivityDto.getId());
+                    gcJoinactivityrecord.setIschain(1);
+                    int updateChain = gcJoinactivityrecordMapper.updateById(gcJoinactivityrecord);
+                    if(updateChain > 0){
+                        return true;
+                    }
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public List<JoinActivityDto> queryJoinActivityList() {
+        return gcJoinactivityrecordMapper.queryJoinActivityList();
     }
 }

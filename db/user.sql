@@ -23,3 +23,7 @@ TIMESTAMP NULL COMMENT '支付认证时间' AFTER `wechat_photo`;
 INSERT INTO `hc_points_class` (`name`, `describe`) VALUES ('微信绑定', '微信绑定（15积分）');
 INSERT INTO `hc_points_class` (`name`, `describe`) VALUES ('支付宝绑定', '支付宝绑定（15积分）');
 
+ALTER TABLE `gc_joinactivityrecord`
+ADD COLUMN `isLast` int(1) DEFAULT '0' COMMENT '是否最后一个参与活动';
+
+

@@ -24,4 +24,6 @@ public interface GcJoinactivityrecordMapper extends BaseMapper<GcJoinactivityrec
      * @return
      */
     List<JoinActivityDto>  queryJoinActivityByAid(Pagination page,@Param("gap") JoinActivityPage joinActivityPage);
+
+    List<JoinActivityDto> queryJoinActivityList();
 }

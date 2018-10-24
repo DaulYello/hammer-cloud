@@ -1,6 +1,7 @@
 package com.fmkj.race.server.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fmkj.common.base.BaseApiService;
 import com.fmkj.common.base.BaseController;
@@ -50,25 +51,30 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
     /**
      *  用户参加活动
      */
-    @ApiOperation(value="用户参加活动，参数：aid,uid, nickname ", notes="用户参加活动")
+    @ApiOperation(value="用户参加活动，参数：aid,uid", notes="用户参加活动")
     @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "用户参加活动")
     @PostMapping("/ActivityRabbitMQ")
     public BaseResult ActivityRabbitMQ(@RequestBody JoinActivityPage joinActivity){
-        long startTime = System.currentTimeMillis();
         if (StringUtils.isNull(joinActivity.getAid())) {
             return new BaseResult(BaseResultEnum.ERROR, "活动ID不能为空");
         }
         if (StringUtils.isNull(joinActivity.getUid())) {
             return new BaseResult(BaseResultEnum.ERROR, "用户ID不能为空");
         }
-        if (StringUtils.isNull(joinActivity.getNickname())) {
-            joinActivity.setNickname("sysAdmin");
-        }
         //是否存在该活动或活动已经结束
         GcActivity gcActivity = gcActivityService.selectById(joinActivity.getAid());
         LOGGER.info("用户参加活动:" + JSON.toJSONString(gcActivity));
+
         if (StringUtils.isNull(gcActivity)) {
             return new BaseResult(BaseResultEnum.ERROR, "没有该活动");
+        }
+
+        GcJoinactivityrecord where = new GcJoinactivityrecord();
+        where.setAid(joinActivity.getAid());
+        EntityWrapper<GcJoinactivityrecord> entityWrapper = new EntityWrapper<>(where);
+        int count = gcJoinactivityrecordService.selectCount(entityWrapper);//当前参与人数
+        if(count == gcActivity.getNum()){
+            return new BaseResult(BaseResultEnum.ERROR, "参与活动人数已满");
         }
         if (gcActivity.getStatus().equals(3)||gcActivity.getStatus().equals(4)||gcActivity.getStatus().equals(5)) {
             return new BaseResult(BaseResultEnum.ERROR, "活动已结束");
@@ -76,14 +82,17 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
         /*********插入参与记录**********/
         GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
         gcJoinactivityrecord.setTime(new Date());
-        gcJoinactivityrecord.setIschain(1);
+        gcJoinactivityrecord.setIschain(0);
         gcJoinactivityrecord.setAid(joinActivity.getAid());
         gcJoinactivityrecord.setUid(joinActivity.getUid());
-        boolean flag  = gcJoinactivityrecordService.addGcJoinactivityRecord(gcJoinactivityrecord, gcActivity, joinActivity.getNickname());
-        long times = System.currentTimeMillis() - startTime;
-        LOGGER.info("参加活动一共耗费时长:" + times);
-        if (!flag){
-            return new BaseResult(BaseResultEnum.ERROR, "参与活动人数已满");
+        boolean result = gcJoinactivityrecordService.insert(gcJoinactivityrecord);
+        int joinNum = gcJoinactivityrecordService.selectCount(entityWrapper);//当前参与人数
+        if(joinNum == gcActivity.getNum()){
+            gcJoinactivityrecord.setIslast(1);
+            gcJoinactivityrecordService.updateById(gcJoinactivityrecord);
+        }
+        if (!result){
+            return new BaseResult(BaseResultEnum.ERROR, "插入活动记录表失败");
         }
         return new BaseResult(BaseResultEnum.SUCCESS, gcJoinactivityrecord);
 

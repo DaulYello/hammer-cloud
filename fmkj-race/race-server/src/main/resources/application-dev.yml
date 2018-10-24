@@ -67,15 +67,30 @@ logging:
      com.fmkj.race.dao: debug
 server:
   port: 8089
-#请求处理的超时时间
-ribbon.ReadTimeout: 120000
-#请求连接的超时时间
-ribbon.ConnectTimeout: 30000
+zuul:
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
 feign:
   hystrix:
     enabled: true
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 60000
 
 #竞锤后台活动图片物理地址
 activityImagePath: E:\\apache-tomcat-8.5.32\\webapps\\newfmkj
 #竞锤后台活动图片ip地址
 activityImageIpPath: http://127.0.0.1:8080/activityImage/
+
+web-password: 11111111
+web-walletfile: D:\\UTC--2018-10-19T10-02-14.891008500Z--0cf95994875cfed5b633d24877ea3cc1beab9bd7
+web-ip: 192.168.10.218
+web-port: 9797

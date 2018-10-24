@@ -35,11 +35,22 @@ public class GcJoinactivityrecord extends Model<GcJoinactivityrecord> {
      * 是否上链
      */
     private Integer ischain;
+
+    //是否最后一个参与活动
+    private Integer islast;
+
     /**
      * 参与活动的时间
      */
     private Date time;
 
+    public Integer getIslast() {
+        return islast;
+    }
+
+    public void setIslast(Integer islast) {
+        this.islast = islast;
+    }
 
     public Integer getId() {
         return Id;
