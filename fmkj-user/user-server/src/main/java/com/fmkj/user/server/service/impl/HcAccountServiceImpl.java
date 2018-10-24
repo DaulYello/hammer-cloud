@@ -222,6 +222,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             HcAccount hcAccount = new HcAccount();
             hcAccount.setAuthlock(true);
             hcAccount.setId(id);
+            hcAccount.setUpdateDate(new Date());
             int hcRow = hcAccountMapper.updateById(hcAccount);
             if(hcRow > 0)
                 return true;
@@ -265,6 +266,32 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int queryActivitNum(Integer uid) {
+        return hcPointsRecordMapper.queryActivitNum(uid);
+    }
+
+    @Override
+    public boolean granCredites(Double par, List<Integer> uids) {
+        List<FmRecyleLog> recyleLogs = new ArrayList<>();
+        for (int i=0; i<uids.size(); i++){
+            HcAccount hcAccount = hcAccountMapper.selectById(uids.get(i));
+            LOGGER.info("发积分之后用户的R积分R=" + hcAccount.getMyP()+par);
+            hcAccount.setMyP(hcAccount.getMyP()+par);
+            int result = hcAccountMapper.updateById(hcAccount);
+            FmRecyleLog recyleLog = new FmRecyleLog();
+            recyleLog.setUid(hcAccount.getId());
+            recyleLog.setFriendId(hcAccount.getId());
+            recyleLog.setRecyleType(2);
+            recyleLog.setTakeDate(new Date());
+            recyleLog.setTakeNum(par);
+            recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+            recyleLogs.add(recyleLog);
+        }
+        fmRecyleLogMapper.batchAddRecyleLog(recyleLogs);
+        return true;
     }
 
     public boolean changeGrade(GradeDto gb, Integer uid) {

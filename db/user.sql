@@ -9,11 +9,21 @@ ALTER TABLE `hammerchain`.`hc_userimage`
   ADD COLUMN `wechat_photo` VARCHAR (255) NULL COMMENT '微信的收款码照片' AFTER `wechat_account`;
 
 --hc_account表变更
-ALTER TABLE `hammerchain`.`hc_account`
+ALTER TABLE `hc_account`
 ADD COLUMN `realnam_info` VARCHAR (500) NULL COMMENT '实名认证未通过的原因信息';
 
-ALTER TABLE `hammerchain`.`hc_account`
+ALTER TABLE hc_account`
 ADD COLUMN `cnt` DOUBLE (18, 10) DEFAULT 0 NULL COMMENT '用户拥有CNT';
+
+ALTER TABLE `hc_account`
+ADD COLUMN `invite_id` INT (11)  NULL COMMENT '邀请人Id';
+
+ALTER TABLE `hc_account`
+ADD COLUMN `create_date` TIMESTAMP NULL COMMENT '注册时间';
+
+ALTER TABLE `hc_account`
+ADD COLUMN `update_date` TIMESTAMP NULL COMMENT '更新时间';
+
 
 ALTER TABLE `hc_userimage` CHANGE `time` `time` TIMESTAMP NULL COMMENT '身份认证时间',
 CHANGE `status` `status` INT(2) DEFAULT 0 NULL COMMENT '0、未支付认证；1、已支付认证', ADD COLUMN `pay_cert_time`

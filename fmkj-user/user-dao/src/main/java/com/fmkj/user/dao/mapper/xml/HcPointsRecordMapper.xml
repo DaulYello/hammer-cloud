@@ -38,17 +38,41 @@
 		select Sum(points_num) from hc_points_record where uid=#{uid}
 	</select>
 
+	<select id="queryActivitNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT
+		  COUNT(DISTINCT (aid)) AS joinNum
+		FROM
+		  gc_joinactivityrecord
+		WHERE uid = #{uid}
+	</select>
+
     <!-- 查询用户邀请人数得周榜单(本周至当前得数据) -->
     <select id="queryInvitingFriendsRankWeek" resultMap="RankWeekMap">
-		select tab.uid,tab.nickname,tab.invitingNum,tab.points,tab.time,tab.logo
-  		from (
-           select hpr.uid as uid,hc.nickname as nickname, count(hpr.uid) as invitingNum,count(hpr.uid)*5 as points,hpr.time as time,hc.logo as logo
-      	 	      from  hc_points_record as hpr
-                  left join hc_account as  hc on hpr.uid=hc.id
-      		      where points_id=6 and YEARWEEK(date_format(time,'%Y-%m-%d')) = YEARWEEK(now()) and hpr.uid>1
-       		      group by hc.id
-        	      order by points desc,time asc) tab
-  		where tab.invitingNum>#{peopleNum} limit 0,#{dataNum}
+  		SELECT
+		  h.id AS uid,
+		  h.invite_id,
+		  h.nickname,
+		  h.create_date AS TIME,
+		  (SELECT
+			COUNT(1)
+		  FROM
+			hc_account
+		  WHERE invite_id = h.id) AS invitingNum,
+		  (SELECT
+			COUNT(1)
+		  FROM
+			hc_account
+		  WHERE invite_id = h.id) * 5 AS points,
+		  h.logo
+		FROM
+		  hc_account h
+		  WHERE (SELECT
+			COUNT(1)
+		  FROM
+			hc_account
+		  WHERE invite_id = h.id) > #{peopleNum}
+		  ORDER BY invitingNum DESC
+		  LIMIT 0, #{dataNum}
 	</select>
 
     <!-- 传入uid查询用户积分记录次数 -->

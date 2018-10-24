@@ -27,4 +27,6 @@ public interface HcPointsRecordMapper extends BaseMapper<HcPointsRecord> {
     Integer queryUserScoresByUid(Integer uid);
 
     GradeDto selectGrandByUid(@Param("uid") Integer id);
+
+    int queryActivitNum(@Param("uid") Integer uid);
 }

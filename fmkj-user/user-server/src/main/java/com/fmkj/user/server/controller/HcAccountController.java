@@ -8,15 +8,16 @@ import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseResultEnum;
 import com.fmkj.common.comenum.PointEnum;
 import com.fmkj.common.constant.LogConstant;
-import com.fmkj.common.util.*;
+import com.fmkj.common.util.DateUtil;
+import com.fmkj.common.util.PropertiesUtil;
+import com.fmkj.common.util.SensitiveWordUtil;
+import com.fmkj.common.util.StringUtils;
 import com.fmkj.user.dao.domain.*;
 import com.fmkj.user.dao.dto.HcAccountDto;
 import com.fmkj.user.dao.dto.Recode;
-import com.fmkj.user.dao.mapper.FmRecyleLogMapper;
 import com.fmkj.user.server.annotation.UserLog;
 import com.fmkj.user.server.async.AsyncFactory;
 import com.fmkj.user.server.async.AsyncManager;
-import com.fmkj.user.server.enmu.TakeEnum;
 import com.fmkj.user.server.service.*;
 import com.fmkj.user.server.util.ALiSmsUtil;
 import com.fmkj.user.server.util.CalendarTime;
@@ -60,6 +61,9 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
     @Autowired
     private HcPointsRecordService hcPointsRecordService;
+
+    @Autowired
+    private FmRecyleLogService fmRecyleLogService;
 
     @Autowired
     private HcRcodeService hcRcodeService;
@@ -139,6 +143,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
         // 登录成功把用户的登录状态字段改为authlock=1
         account.get(0).setAuthlock(true);
+        account.get(0).setUpdateDate(new Date());
         boolean flg = hcAccountService.updateBatchById(account);
         if (!flg) {
             LOGGER.error("error:hc_session表更新失败或用户状态更改失败");
@@ -150,6 +155,22 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         return new BaseResult(BaseResultEnum.SUCCESS.status,"用户名密码正确，登录成功!",map);
     }
 
+    /**
+     * 查询用户参与活动的次数
+     *
+     * @return
+     */
+    @ApiOperation(value="查询用户参与活动的次数", notes="参数：uid")
+    @PutMapping("/queryActivitNum")
+    public BaseResult queryActivitNum(@RequestBody HcAccount hcAccount) {
+        if (StringUtils.isNull(hcAccount.getId())) {
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空!", false);
+        }
+        int joinNum = hcAccountService.queryActivitNum(hcAccount.getId());
+        HashMap<String, Object> resultMap = new HashMap();
+        resultMap.put("joinNum", joinNum);
+        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", resultMap);
+    }
 
 
 
@@ -178,6 +199,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         }
         double newCnt = account.getCnt() - par;//用户新的CNT
         account.setCnt(newCnt);
+        account.setUpdateDate(new Date());
         boolean result = false;
         try {
             result = hcAccountService.updateUserP(account, par);
@@ -210,45 +232,21 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
             Double cnt = account.getCnt();
             tocalCnt = cnt + starterCnt;
             account.setCnt(tocalCnt);
+            account.setUpdateDate(new Date());
             return hcAccountService.grantUserP(account, starterCnt);
         }
         return false;
     }
 
-    @Autowired
-    private FmRecyleLogService fmRecyleLogService;
+
 
     @ApiOperation(value="发放R积分", notes="重锤成功后，给没有重锤的其他参与用户发放积分以示鼓励")
     @UserLog(module= LogConstant.Gc_Activity, actionDesc = "重锤成功后，给没有重锤的其他参与用户发放积分以示鼓励")
     @PostMapping("/grantCredits")
     public Boolean grantCredits(@RequestParam("par") Double par, @RequestParam("uids")List<Integer> uids) {
-        LOGGER.debug("给参与活动的用户发放R积分");
-        List<FmRecyleLog> recyleLogs = new ArrayList<>();
-        for (int i=0;i<uids.size();i++){
-            HcAccount hcAccount = hcAccountService.selectById(uids.get(i));
-            LOGGER.debug("发积分之前用户的R积分R="+hcAccount.getMyP());
-            //hcAccount.setId(joinactivityrecord.getUid());
-            hcAccount.setMyP(hcAccount.getMyP()+par);
-            LOGGER.debug("应发积分R="+par);
-            LOGGER.debug("发完积分后用户的总积分R="+hcAccount.getMyP());
-            boolean result = hcAccountService.updateById(hcAccount);
-            if(result){
-                LOGGER.info("message","更新用户的积分时报错,用户的id="+uids.get(i));
-                return false;
-            }
-            LOGGER.debug("记录用户反回的R积分，用户id="+hcAccount.getId());
-            FmRecyleLog recyleLog = new FmRecyleLog();
-            recyleLog.setUid(hcAccount.getId());
-            recyleLog.setFriendId(hcAccount.getId());
-            recyleLog.setRecyleType(2);
-            recyleLog.setTakeDate(new Date());
-            recyleLog.setTakeNum(par);
-            recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
-            recyleLogs.add(recyleLog);
-        }
-        fmRecyleLogService.batchAddRecyleLog(recyleLogs);
-        LOGGER.info("message","给参与活动的用户发放R积分成功！");
-        return true;
+        LOGGER.info("给参与活动的用户发放R积分入参par={}, uids={}", par, JSON.toJSON(uids));
+        boolean result = hcAccountService.granCredites(par, uids);
+        return result;
     }
 
 
@@ -382,6 +380,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         Long cdbid = createRandom();
         ha.setCdbid(cdbid);
         ha.setNickname(cdbid + "");
+        ha.setCreateDate(new Date());
         String token = UUID.randomUUID().toString().replace("-", "").toLowerCase();
         int result =  hcAccountService.loginByRcodeAndPhone(ha, hc.getUid(), token);
         if (result > 0){
@@ -415,7 +414,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         if(StringUtils.isNotEmpty(ha.getPassword())){
             ha.setPassword(DigestUtils.md5Hex(ha.getPassword()));
         }
-
+        ha.setUpdateDate(new Date());
         hcAccountService.updateById(ha);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "修改成功!", true);
     }
@@ -438,6 +437,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
             HcAccount hcAccount = new HcAccount();
             hcAccount.setId(id);
             hcAccount.setLogo(userHeadImageIpPath + fileName);
+            hcAccount.setUpdateDate(new Date());
             boolean result = hcAccountService.uploadUserHead(hcAccount, fileName, userHeadImagePath);
             if(result){
                 HashMap<String, Object> resultMap = new HashMap<>();
@@ -490,6 +490,8 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         if(!result) {
             return new BaseResult(BaseResultEnum.ERROR.getStatus(), "身份认证失败!", false);
         }
+
+        ha.setUpdateDate(new Date());
         boolean updateUser = hcAccountService.updateById(ha);
         //ha.setCardStatus(1);
         if (!updateUser) {
@@ -604,6 +606,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户传入邮箱信息错误!", false);
         }
         //绑定邮箱给予积分奖励
+        ha.setUpdateDate(new Date());
         boolean isUpdate = hcAccountService.bindEmail(ha);
         if(isUpdate){
             AsyncManager.me().execute(AsyncFactory.sendEmail(email));

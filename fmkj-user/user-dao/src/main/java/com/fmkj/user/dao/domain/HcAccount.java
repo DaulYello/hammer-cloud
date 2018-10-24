@@ -57,6 +57,42 @@ public class HcAccount extends Model<HcAccount> implements Serializable{
 
 	private Double cnt;
 
+	@TableField("invite_id")
+	private String inviteId;
+
+	//注册时间
+	@TableField("create_date")
+	private Date createDate;
+	/**
+	 * 更新时间
+	 */
+	@TableField("update_date")
+	private Date updateDate;
+
+	public String getInviteId() {
+		return inviteId;
+	}
+
+	public void setInviteId(String inviteId) {
+		this.inviteId = inviteId;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	public Double getCnt() {
 		return cnt;
 	}

@@ -42,4 +42,8 @@ public interface HcAccountService extends BaseService<HcAccount> {
     boolean updateUserP(HcAccount account, double par);
 
     Boolean grantUserP(HcAccount account, Double starterCnt);
+
+    int queryActivitNum(Integer id);
+
+    boolean granCredites(Double par, List<Integer> uids);
 }
