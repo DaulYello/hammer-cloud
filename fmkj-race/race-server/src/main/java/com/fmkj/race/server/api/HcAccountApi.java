@@ -6,6 +6,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @FeignClient(name="FMKJ-USER", fallback = HcAccountApi.HcAccountApiFallBack.class)
 public interface HcAccountApi {
 
@@ -14,6 +16,9 @@ public interface HcAccountApi {
 
     @PostMapping("/hcAccount/grantUserP")
     public Boolean grantUserP(@RequestBody HcAccount hc);
+
+    @PostMapping("/hcAccount/grantCredits")
+    Boolean grantCredits(@RequestParam("par") Double par, @RequestParam("uids")List<Integer> uids);
 
     @GetMapping("/hcAccount/getAccountById")
     public HcAccount selectHcAccountById(@RequestParam("id") Integer id);
@@ -30,6 +35,10 @@ public interface HcAccountApi {
 
         @Override
         public Boolean grantUserP(HcAccount hc) {
+            return false;
+        }
+        @Override
+        public Boolean grantCredits(Double par,List<Integer> uids) {
             return false;
         }
 

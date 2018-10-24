@@ -1,5 +1,6 @@
 package com.fmkj.race.server.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.annotation.BaseService;
 import com.fmkj.common.base.BaseServiceImpl;
@@ -13,9 +14,12 @@ import com.fmkj.race.server.api.HcAccountApi;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.Helper;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.Person;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.puzzle.State;
+import com.fmkj.race.server.service.GcActivityService;
 import com.fmkj.race.server.service.GcJoinactivityrecordService;
+import com.fmkj.user.dao.domain.FmRecyleLog;
 import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.domain.HcPointsRecord;
+import com.fmkj.user.dao.mapper.HcAccountMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -214,6 +220,19 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
                     throw new RuntimeException("最后一个用户参与活动上链更新合约状态失败");
                 }
                 boolean saveNotice = saveNoticeInfo(winId, joinActivityDto);
+                LOGGER.debug("获取活动的参与人");
+                GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
+                gcJoinactivityrecord.setAid(joinActivityDto.getAid());
+                EntityWrapper<GcJoinactivityrecord> wrapper = new EntityWrapper<>(gcJoinactivityrecord);
+                List<GcJoinactivityrecord> joinactivityrecords= gcJoinactivityrecordMapper.selectList(wrapper);
+                List<Integer> uids = new ArrayList<>();
+                for(GcJoinactivityrecord joinactivityrecord : joinactivityrecords){
+                    if(joinactivityrecord.getUid() != winId){
+                        uids.add(joinactivityrecord.getUid());
+                    }
+                }
+                boolean rusult = hcAccountApi.grantCredits(par,uids);
+
                 if(!saveNotice){
                     throw new RuntimeException("插入通知表，保存优胜者的记录执行失败");
                 }

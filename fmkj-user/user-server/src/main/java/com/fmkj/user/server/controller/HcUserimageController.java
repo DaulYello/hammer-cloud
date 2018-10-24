@@ -128,29 +128,27 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
             if(StringUtils.isNull(status)){
                 return  new BaseResult(BaseResultEnum.BLANK.getStatus(), "status不能为空", false);
             }
-
-            HcUserimage userimage = new HcUserimage();
-            userimage.setUid(uid);
-
-            String newFileName=PropertiesUtil.uploadImage(file,userPayImagePath);
-            if(status == ImageEnum.TYPE_WECHAT.status){
-                userimage.setWechatPhoto(userPayImageIpPath+newFileName);
-            }else if(status == ImageEnum.TYPE_ALIPAY.status){
-                userimage.setAlipayPhoto(userPayImageIpPath+newFileName);
-            }
-
+            LOGGER.debug("首先判断用户有没有实名认证-------------------------------------------start");
             HcUserimage imagePay = new HcUserimage();
             imagePay.setUid(uid);
             EntityWrapper<HcUserimage> wrapper = new EntityWrapper<>(imagePay);
             HcUserimage hcUserimage = hcUserimageService.selectOne(wrapper);
-            boolean result = false;
-
             if(StringUtils.isNull(hcUserimage)){
-                result = hcUserimageService.insert(userimage);
-            }else{
-                userimage.setId(hcUserimage.getId());
-                result = hcUserimageService.updateById(userimage);
+                return new BaseResult(BaseResultEnum.ERROR.getStatus(), "您还没有实名认证，请先实名认证！", false);
             }
+            LOGGER.debug("首先判断用户有没有实名认证-------------------------------------------end");
+
+            LOGGER.debug("开始上传照片-------------------------------------------start");
+            String newFileName=PropertiesUtil.uploadImage(file,userPayImagePath);
+            if(status == ImageEnum.TYPE_WECHAT.status){
+                hcUserimage.setWechatPhoto(userPayImageIpPath+newFileName);
+            }else if(status == ImageEnum.TYPE_ALIPAY.status){
+                hcUserimage.setAlipayPhoto(userPayImageIpPath+newFileName);
+            }
+            LOGGER.debug("开始上传照片-------------------------------------------end");
+
+            boolean result  = hcUserimageService.updateById(hcUserimage);
+
             if(result){
                 return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "上传成功!", true);
             }else {

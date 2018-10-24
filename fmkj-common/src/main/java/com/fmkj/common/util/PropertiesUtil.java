@@ -111,7 +111,7 @@ public class PropertiesUtil {
             try {
                 targetFile = new File(url,newFileName);
             } catch (Exception e) {
-                throw new RuntimeException("保存活动图片异常：" + e.getMessage());
+                throw new RuntimeException("保存图片异常：" + e.getMessage());
             }
             file.transferTo(targetFile);//把本地文件上传到 封装上传文件位置的全路径 下
             return newFileName;//返回新的文件路径名+文件名

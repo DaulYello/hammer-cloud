@@ -38,4 +38,10 @@ public class FmRecyleLogServiceImpl extends BaseServiceImpl<FmRecyleLogMapper, F
     public List queryRankList() {
         return fmRecyleLogMapper.queryRankList();
     }
+
+
+    @Override
+    public void batchAddRecyleLog(List<FmRecyleLog> recyleLogs){
+        fmRecyleLogMapper.batchAddRecyleLog(recyleLogs);
+    }
 }

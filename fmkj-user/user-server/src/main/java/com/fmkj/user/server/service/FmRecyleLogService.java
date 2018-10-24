@@ -16,4 +16,6 @@ public interface FmRecyleLogService extends BaseService<FmRecyleLog> {
     List queryCntDynamic(Integer uid);
 
     List queryRankList();
+
+    void batchAddRecyleLog(List<FmRecyleLog> recyleLogs);
 }

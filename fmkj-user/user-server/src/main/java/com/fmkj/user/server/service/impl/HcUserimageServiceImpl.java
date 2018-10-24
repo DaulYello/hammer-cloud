@@ -80,6 +80,7 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
             HcUserimage hcUserimage = hcUserimageMapper.selectOne(imagePay);
             boolean result = false;
             if(StringUtils.isNull(hcUserimage)){
+                LOGGER.debug("还没有实名认证就绑定支付认证");
                 return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户还没有实名认证，请先实名认证！", false);
             }else{
                 hcUserimage.setAlipayAccount(userimage.getAlipayAccount());
@@ -89,6 +90,13 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
                 result = hcUserimageMapper.updateById(hcUserimage) >0 ?true:false;
             }
             if(result){
+                if(type==3 && StringUtils.isEmpty(hcUserimage.getWechatAccount())){
+                    return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "绑定成功！", false);
+                }else if(type==4 && StringUtils.isEmpty(hcUserimage.getAlipayAccount())){
+                    return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "绑定成功！", false);
+                }else if(type==5 && StringUtils.isEmpty(hcUserimage.getAlipayAccount()) && StringUtils.isEmpty(hcUserimage.getWechatAccount())){
+                    return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "绑定成功！", false);
+                }
                 HcPointsRecord pointsRecord = new HcPointsRecord();
                 pointsRecord.setUid(userimage.getUid());
                 pointsRecord.setTime(new Date());

@@ -2,6 +2,8 @@ package com.fmkj.user.server.service.impl;
 
 import com.fmkj.common.annotation.BaseService;
 import com.fmkj.common.base.BaseServiceImpl;
+import com.fmkj.user.dao.domain.FmRecyleLog;
+import com.fmkj.user.dao.mapper.FmRecyleLogMapper;
 import com.fmkj.user.dao.mapper.HcFriendMapper;
 import com.fmkj.user.dao.domain.HcFriend;
 import com.fmkj.user.server.service.HcFriendService;
@@ -10,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
 * @Description: HcFriend Service实现
@@ -54,4 +58,6 @@ public class HcFriendServiceImpl extends BaseServiceImpl<HcFriendMapper, HcFrien
             hcFriendMapper.passFReq(hc);
         }
     }
+
+
 }

@@ -12,9 +12,11 @@ import com.fmkj.common.util.*;
 import com.fmkj.user.dao.domain.*;
 import com.fmkj.user.dao.dto.HcAccountDto;
 import com.fmkj.user.dao.dto.Recode;
+import com.fmkj.user.dao.mapper.FmRecyleLogMapper;
 import com.fmkj.user.server.annotation.UserLog;
 import com.fmkj.user.server.async.AsyncFactory;
 import com.fmkj.user.server.async.AsyncManager;
+import com.fmkj.user.server.enmu.TakeEnum;
 import com.fmkj.user.server.service.*;
 import com.fmkj.user.server.util.ALiSmsUtil;
 import com.fmkj.user.server.util.CalendarTime;
@@ -212,6 +214,45 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         }
         return false;
     }
+
+    @Autowired
+    private FmRecyleLogService fmRecyleLogService;
+
+    @ApiOperation(value="发放R积分", notes="重锤成功后，给没有重锤的其他参与用户发放积分以示鼓励")
+    @UserLog(module= LogConstant.Gc_Activity, actionDesc = "重锤成功后，给没有重锤的其他参与用户发放积分以示鼓励")
+    @PostMapping("/grantCredits")
+    public Boolean grantCredits(@RequestParam("par") Double par, @RequestParam("uids")List<Integer> uids) {
+        LOGGER.debug("给参与活动的用户发放R积分");
+        List<FmRecyleLog> recyleLogs = new ArrayList<>();
+        for (int i=0;i<uids.size();i++){
+            HcAccount hcAccount = hcAccountService.selectById(uids.get(i));
+            LOGGER.debug("发积分之前用户的R积分R="+hcAccount.getMyP());
+            //hcAccount.setId(joinactivityrecord.getUid());
+            hcAccount.setMyP(hcAccount.getMyP()+par);
+            LOGGER.debug("应发积分R="+par);
+            LOGGER.debug("发完积分后用户的总积分R="+hcAccount.getMyP());
+            boolean result = hcAccountService.updateById(hcAccount);
+            if(result){
+                LOGGER.info("message","更新用户的积分时报错,用户的id="+uids.get(i));
+                return false;
+            }
+            LOGGER.debug("记录用户反回的R积分，用户id="+hcAccount.getId());
+            FmRecyleLog recyleLog = new FmRecyleLog();
+            recyleLog.setUid(hcAccount.getId());
+            recyleLog.setFriendId(hcAccount.getId());
+            recyleLog.setRecyleType(2);
+            recyleLog.setTakeDate(new Date());
+            recyleLog.setTakeNum(par);
+            recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+            recyleLogs.add(recyleLog);
+        }
+        fmRecyleLogService.batchAddRecyleLog(recyleLogs);
+        LOGGER.info("message","给参与活动的用户发放R积分成功！");
+        return true;
+    }
+
+
+
 
     @ApiOperation(value="根据ID获取用户-App调用", notes="参数： id")
     @PutMapping("/selectAccountById")
