@@ -186,11 +186,11 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     }
 
 
-    @ApiOperation(value="活动添加R积分", notes="活动添加R积分")
-    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "活动添加R积分")
+    @ApiOperation(value="活动添加飞羽", notes="活动添加飞羽")
+    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "活动添加飞羽")
     @PostMapping("/addHcPointsRecord")
     public Boolean addHcPointsRecord(@RequestBody HcPointsRecord hc) {
-        LOGGER.info("活动添加R积分参数:" + JSON.toJSONString(hc));
+        LOGGER.info("活动添加飞羽参数:" + JSON.toJSONString(hc));
         if(StringUtils.isNull(hc)){
             return false;
         }
