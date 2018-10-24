@@ -76,7 +76,7 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
         /*********插入参与记录**********/
         GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
         gcJoinactivityrecord.setTime(new Date());
-        gcJoinactivityrecord.setIschain(0);
+        gcJoinactivityrecord.setIschain(1);
         gcJoinactivityrecord.setAid(joinActivity.getAid());
         gcJoinactivityrecord.setUid(joinActivity.getUid());
         boolean flag  = gcJoinactivityrecordService.addGcJoinactivityRecord(gcJoinactivityrecord, gcActivity, joinActivity.getNickname());

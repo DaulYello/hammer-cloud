@@ -88,18 +88,19 @@ public class Helper {
         boolean bl = false;
         this.web3j = Web3j.build(new HttpService("http://" + this.ip + ":" + this.port));
         try {
-            log.info("版本号Connected to Ethereum client version: "
+            log.info("【Web3j】版本号Connected to Ethereum client version: "
                     + this.web3j.web3ClientVersion().send().getWeb3ClientVersion());
             this.credentials = WalletUtils.loadCredentials(this.password, this.walletfile);
+            log.info("【Web3j】credentials to load success......");
             bl = true;
         } catch (IOException e) {
-            log.error("IO异常Credentials failed to load. ");
+            log.error("【Web3j-Failed】IO异常Credentials failed to load. ");
             e.printStackTrace();
         } catch (CipherException e) {
-            log.error("Credentials failed to load. ");
+            log.error("【Web3j-Failed】Credentials failed to load. ");
             e.printStackTrace();
         } catch (Exception e) {
-            log.error("Failed to get Ethereum client version.");
+            log.error("【Web3j-Failed】Failed to get Ethereum client version.");
             e.printStackTrace();
         } finally {
             return bl;
