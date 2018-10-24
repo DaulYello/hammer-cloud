@@ -241,7 +241,6 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
 
     @ApiOperation(value="发放R积分", notes="重锤成功后，给没有重锤的其他参与用户发放积分以示鼓励")
-    @UserLog(module= LogConstant.Gc_Activity, actionDesc = "重锤成功后，给没有重锤的其他参与用户发放积分以示鼓励")
     @PostMapping("/grantCredits")
     public Boolean grantCredits(@RequestParam("par") Double par, @RequestParam("uids")List<Integer> uids) {
         LOGGER.info("给参与活动的用户发放R积分入参par={}, uids={}", par, JSON.toJSON(uids));

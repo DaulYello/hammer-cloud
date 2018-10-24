@@ -90,11 +90,11 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
                 result = hcUserimageMapper.updateById(hcUserimage) >0 ?true:false;
             }
             if(result){
-                if(type==3 && StringUtils.isEmpty(hcUserimage.getWechatAccount())){
+                if(type==3 && StringUtils.isNotEmpty(hcUserimage.getWechatAccount())){
                     return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "绑定成功！", false);
-                }else if(type==4 && StringUtils.isEmpty(hcUserimage.getAlipayAccount())){
+                }else if(type==4 && StringUtils.isNotEmpty(hcUserimage.getAlipayAccount())){
                     return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "绑定成功！", false);
-                }else if(type==5 && StringUtils.isEmpty(hcUserimage.getAlipayAccount()) && StringUtils.isEmpty(hcUserimage.getWechatAccount())){
+                }else if(type==5 && StringUtils.isNotEmpty(hcUserimage.getAlipayAccount()) && StringUtils.isEmpty(hcUserimage.getWechatAccount())){
                     return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "绑定成功！", false);
                 }
                 HcPointsRecord pointsRecord = new HcPointsRecord();

@@ -288,6 +288,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             recyleLog.setTakeDate(new Date());
             recyleLog.setTakeNum(par);
             recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+            recyleLog.setTakeMsg("没有中锤返回"+par+"R积分！");
             recyleLogs.add(recyleLog);
         }
         fmRecyleLogMapper.batchAddRecyleLog(recyleLogs);
