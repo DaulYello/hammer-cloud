@@ -139,7 +139,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
      * @return boolean
     */
     @Override
-    public int lastChangeStage(String contract) {
+    public int lastChangeStage(String contract,int uid,String nickname) {
         //加载合约
         Helper helper = new Helper();
         boolean init = helper.init();
@@ -151,6 +151,12 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         boolean ifLoad = helper.loadContract(contract);
         if(!ifLoad) {
             LOGGER.info("【web3j-Failed】合约地址加载失败");
+            return -1;
+        }
+
+        boolean part = helper.particiPuzzle(new Person(nickname, BigInteger.valueOf(uid)));// 实例出合约用户，参与活动
+        if(!part){
+            LOGGER.info("【web3j-Failed】上链失载败");
             return -1;
         }
 
@@ -215,7 +221,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             //最后一个用户参与活动
             if (joinActivityDto.getIslast() == 1) {
                 //初始化合约加载合约
-                int winId = lastChangeStage(contract);
+                int winId = lastChangeStage(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
                 if(winId == -1){
                     throw new RuntimeException("最后一个用户参与活动上链更新合约状态失败");
                 }

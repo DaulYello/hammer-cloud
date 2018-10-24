@@ -26,7 +26,7 @@ public interface GcJoinactivityrecordService extends BaseService<GcJoinactivityr
 
     boolean onChain(JoinActivityDto joinActivityDto);
 
-    int lastChangeStage(String contract);
+    int lastChangeStage(String contract,int uid, String nickname);
 
     boolean participateActivity(String contract,Integer uid, String nickname);
 
