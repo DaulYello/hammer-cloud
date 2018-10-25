@@ -16,7 +16,7 @@ ALTER TABLE hc_account`
 ADD COLUMN `cnt` DOUBLE (18, 10) DEFAULT 0 NULL COMMENT '用户拥有CNT';
 
 ALTER TABLE `hc_account`
-ADD COLUMN `invite_id` INT (11)  NULL COMMENT '邀请人Id';
+ADD COLUMN `user_level` TINYINT (4)  DEFAULT 0 NULL COMMENT '账户级别';
 
 ALTER TABLE `hc_account`
 ADD COLUMN `create_date` TIMESTAMP NULL COMMENT '注册时间';

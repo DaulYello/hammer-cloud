@@ -278,8 +278,9 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         List<FmRecyleLog> recyleLogs = new ArrayList<>();
         for (int i=0; i<uids.size(); i++){
             HcAccount hcAccount = hcAccountMapper.selectById(uids.get(i));
-            LOGGER.info("发积分之后用户的R积分R=" + hcAccount.getMyP()+par);
+            LOGGER.info("======未中锤返的R积分数量=======:" + hcAccount.getMyP()+par);
             hcAccount.setMyP(hcAccount.getMyP()+par);
+            hcAccount.setUpdateDate(new Date());
             int result = hcAccountMapper.updateById(hcAccount);
             FmRecyleLog recyleLog = new FmRecyleLog();
             recyleLog.setUid(hcAccount.getId());
@@ -288,7 +289,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             recyleLog.setTakeDate(new Date());
             recyleLog.setTakeNum(par);
             recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
-            recyleLog.setTakeMsg("没有中锤返回"+par+"R积分！");
+            recyleLog.setTakeMsg("参加活动未中锤返回"+par+"R积分奖励");
             recyleLogs.add(recyleLog);
         }
         fmRecyleLogMapper.batchAddRecyleLog(recyleLogs);
