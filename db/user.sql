@@ -29,7 +29,7 @@ ALTER TABLE `hc_userimage` CHANGE `time` `time` TIMESTAMP NULL COMMENT '身份�
 CHANGE `status` `status` INT(2) DEFAULT 0 NULL COMMENT '0、未支付认证；1、已支付认证', ADD COLUMN `pay_cert_time`
 TIMESTAMP NULL COMMENT '支付认证时间' AFTER `wechat_photo`;
 
-/*created by huangs on 2018-09-21*/
+--created by huangs on 2018-09-21
 INSERT INTO `hc_points_class` (`name`, `describe`) VALUES ('微信绑定', '微信绑定（15积分）');
 INSERT INTO `hc_points_class` (`name`, `describe`) VALUES ('支付宝绑定', '支付宝绑定（15积分）');
 

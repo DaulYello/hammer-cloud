@@ -1,6 +1,6 @@
 package com.fmkj.race.dao.mapper;
 
-import com.fmkj.race.dao.domain.GcAssets;
+import com.fmkj.race.dao.domain.FmAssetsPoundage;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author youxun
  * @since 2018-10-17
  */
-public interface GcAssetsMapper extends BaseMapper<GcAssets> {
+public interface FmAssetsPoundageMapper extends BaseMapper<FmAssetsPoundage> {
 
 }

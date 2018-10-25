@@ -1,7 +1,7 @@
 package com.fmkj.race.server.service;
 
 import com.fmkj.common.base.BaseService;
-import com.fmkj.race.dao.domain.GcAssets;
+import com.fmkj.race.dao.domain.FmAssetsPoundage;
 
 /**
 * @Description: GcAssets Service接口
@@ -9,6 +9,6 @@ import com.fmkj.race.dao.domain.GcAssets;
 * @CreateDate: 2018/10/17.
 * @Version: 1.0
 **/
-public interface GcAssetsService extends BaseService<GcAssets> {
+public interface FmAssetsPoundageService extends BaseService<FmAssetsPoundage> {
 
 }

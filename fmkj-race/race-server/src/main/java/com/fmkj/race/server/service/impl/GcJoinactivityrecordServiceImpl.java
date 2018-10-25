@@ -278,15 +278,27 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         String messageStr =head+gcActivitytype.getType()+"—" + joinActivityDto.getPname() + message;
         GcMessage gcMessage = new GcMessage();
         gcMessage.setMessage(messageStr);
-        gcMessage.setType(2);
+        gcMessage.setType(0);
         gcMessage.setTime(new Date());
         int mid = gcMessageMapper.insert(gcMessage);
-        if(mid > 0){
+        LOGGER.info("发给用户中锤的消息"+mid);
+        GcMessage gcMes = new GcMessage();
+        gcMes.setMessage("恭喜“"+joinActivityDto.getNickname()+"”获得活动商品 — “"+joinActivityDto.getPname()+"”");
+        gcMes.setType(2);
+        gcMes.setTime(new Date());
+        int rows= gcMessageMapper.insert(gcMes);
+        LOGGER.info("插入用户中锤的公告消息"+rows);
+        if(mid > 0 && rows>0){
             notice.setMid(gcMessage.getId());
             notice.setUid(winId);
-            notice.setFlag(1);
             int row = gcNoticeMapper.insert(notice);
-            if(row > 0){
+            LOGGER.info("发给用户中锤的消息"+row);
+            GcNotice gcNotice = new GcNotice();
+            gcNotice.setFlag(1);
+            gcNotice.setMid(gcMes.getId());
+            int row2 = gcNoticeMapper.insert(gcNotice);
+            LOGGER.info("插入用户中锤的公告消息"+row2);
+            if(row > 0 && row2>0){
                 GcActivity gcActivity = gcActivityMapper.selectById(joinActivityDto.getAid());
                 gcActivity.setStatus(3);
                 gcActivity.setGetid(winId);

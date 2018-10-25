@@ -16,8 +16,8 @@ import java.io.Serializable;
  * @author youxun
  * @since 2018-10-17
  */
-@TableName("gc_assets")
-public class GcAssets extends Model<GcAssets> {
+@TableName("fm_assets_poundage")
+public class FmAssetsPoundage extends Model<FmAssetsPoundage> {
 
     private static final long serialVersionUID = 1L;
 

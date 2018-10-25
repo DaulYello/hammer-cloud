@@ -59,7 +59,7 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
     private HcAccountApi hcAccountApi;
 
     @Autowired
-    private GcAssetsMapper gcAssetsMapper;
+    private FmAssetsPoundageMapper gcAssetsMapper;
 
 
     /**
@@ -132,7 +132,7 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
             /*******根据活动类型id获取活动类型名称*******/
 
             LOGGER.debug("向gc_assets资产表中插入资产记录");
-            GcAssets assets = new GcAssets();
+            FmAssetsPoundage assets = new FmAssetsPoundage();
             assets.setAid(one.getId());
             assets.setTotalAssets((1+premium)*price*pnumber);
             assets.setPoundage(poundage);
