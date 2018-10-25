@@ -18,4 +18,6 @@ public interface FmRecyleLogService extends BaseService<FmRecyleLog> {
     List queryRankList();
 
     void batchAddRecyleLog(List<FmRecyleLog> recyleLogs);
+
+    Double queryInviteRankCnt(Integer id);
 }

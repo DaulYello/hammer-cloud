@@ -44,4 +44,9 @@ public class FmRecyleLogServiceImpl extends BaseServiceImpl<FmRecyleLogMapper, F
     public void batchAddRecyleLog(List<FmRecyleLog> recyleLogs){
         fmRecyleLogMapper.batchAddRecyleLog(recyleLogs);
     }
+
+    @Override
+    public Double queryInviteRankCnt(Integer uid) {
+        return fmRecyleLogMapper.queryInviteRankCnt(uid);
+    }
 }

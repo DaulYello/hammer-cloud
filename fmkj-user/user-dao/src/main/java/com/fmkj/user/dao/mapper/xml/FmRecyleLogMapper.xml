@@ -14,6 +14,18 @@
         <result column="friend_id" property="friendId" />
     </resultMap>
 
+    <!--recyle_type 1代表CNT;  take_type IN (4, 7) 4排行榜奖励, 7 邀请好友奖励-->
+    <select id="queryInviteRankCnt"  resultType="java.lang.Double" parameterType="java.lang.Integer">
+        SELECT
+          IF(ISNULL(SUM(take_num)), 0, SUM(take_num)) AS takeNum
+        FROM
+          fm_recyle_log
+        WHERE uid = 14
+          AND recyle_type = 1
+          AND take_type IN (4, 7)
+
+    </select>
+
     <select id="queryCntDynamic" resultType="java.util.HashMap" parameterType="java.lang.Integer">
        SELECT
           f.id,

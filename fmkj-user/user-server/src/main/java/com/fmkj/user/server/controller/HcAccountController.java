@@ -547,11 +547,8 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         if (StringUtils.isNull(rcode)) {
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户没有邀请码!", false);
         }
-        /*// 查询邀请人来注册获得的总积分
-        Integer pointNum = hcPointsRecordService.queryPoints(hc.getId());
-        if (pointNum == null) {
-            pointNum = 0;
-        }*/
+        //统计用户邀请与周排行奖励的CNT
+        Double takeNum = fmRecyleLogService.queryInviteRankCnt(hc.getId());
 
         // 查询邀请人来注册获得的总能量
         HcAccount hcAccount = new HcAccount();
@@ -560,7 +557,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         int count = hcAccountService.selectCount(hcWrapper);
         // 每邀请到一个人得到1P，getPs就是获得的总能量
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("points", count * 1); //CNT
+        hashMap.put("points", takeNum); //CNT
         hashMap.put("getAllP", count * 5); //R
         hashMap.put("getAllUser", count);
         hashMap.put("reode", rcode);

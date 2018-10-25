@@ -25,5 +25,5 @@ public interface FmRecyleLogMapper extends BaseMapper<FmRecyleLog> {
 
     void batchAddRecyleLog(List<FmRecyleLog> recyleLogs);
 
-
+    Double queryInviteRankCnt(Integer uid);
 }
