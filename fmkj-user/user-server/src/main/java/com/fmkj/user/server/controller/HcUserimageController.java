@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/hcUserimage")
@@ -86,11 +87,11 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
             userimage.setUrl(userCodeImagePath);
             String newFileName=PropertiesUtil.uploadImage(file,userCodeImagePath);
             if(status == ImageEnum.TYPE_FULL.status){
-                userimage.setFullPhoto(newFileName);
+                userimage.setFullPhoto(userCodeImageIpPath+newFileName);
             }else if(status == ImageEnum.TYPE_REVERSE.status){
-                userimage.setReversePhoto(newFileName);
+                userimage.setReversePhoto(userCodeImageIpPath+newFileName);
             }
-
+            userimage.setTime(new Date());
             HcUserimage hm = new HcUserimage();
             hm.setUid(uid);
             EntityWrapper<HcUserimage> wrapper = new EntityWrapper<>(hm);
