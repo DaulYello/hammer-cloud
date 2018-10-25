@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseServiceImpl;
 import com.fmkj.common.comenum.PointEnum;
 import com.fmkj.common.util.DateUtil;
+import com.fmkj.common.util.StringUtils;
 import com.fmkj.user.dao.domain.*;
 import com.fmkj.user.dao.dto.GradeDto;
 import com.fmkj.user.dao.dto.HcAccountDto;
@@ -68,8 +69,13 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
 
     @Override
     public boolean bindEmail(HcAccount ha) {
+        LOGGER.info("上传头像，在更新hc_account之前，先查询该表中logo字段是否为空");
+        HcAccount account = hcAccountMapper.selectById(ha.getId());
         int result = hcAccountMapper.updateById(ha);
         if(result > 0){
+            if(StringUtils.isNotEmpty(account.getEmail())){
+                return true;
+            }
             HcPointsRecord hcp = new HcPointsRecord();
             hcp.setUid(ha.getId());
             hcp.setPointsId(PointEnum.BIND_EMAIL.pointId);
@@ -92,6 +98,8 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
 
     @Override
     public boolean uploadUserHead(HcAccount hcAccount, String fileName, String path) {
+        LOGGER.info("上传头像，在更新hc_account之前，先查询该表中logo字段是否为空");
+        HcAccount account = hcAccountMapper.selectById(hcAccount.getId());
         int update = hcAccountMapper.updateById(hcAccount);
         if(update > 0){
             HcUserhead hcUserhead = new HcUserhead();
@@ -101,6 +109,9 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             hcUserhead.setTime(new Date());
             int row = hcUserheadMapper.insert(hcUserhead);
             if(row > 0){
+                if(StringUtils.isNotEmpty(account.getLogo())){
+                    return true;
+                }
                 HcPointsRecord record = new HcPointsRecord();
                 record.setPointsId(PointEnum.UPLOAD_HEAD.pointId);
                 record.setPointsNum(PointEnum.UPLOAD_HEAD.pointNum);
