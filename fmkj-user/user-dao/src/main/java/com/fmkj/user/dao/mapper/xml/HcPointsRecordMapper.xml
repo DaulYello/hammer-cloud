@@ -48,31 +48,88 @@
 
     <!-- 查询用户邀请人数得周榜单(本周至当前得数据) -->
     <select id="queryInvitingFriendsRankWeek" resultMap="RankWeekMap">
+
   		SELECT
 		  h.id AS uid,
-		  h.invite_id,
+		  h.rid,
 		  h.nickname,
 		  h.create_date AS TIME,
 		  (SELECT
 			COUNT(1)
 		  FROM
 			hc_account
-		  WHERE invite_id = h.id) AS invitingNum,
+		  WHERE rid = h.id
+			AND create_date BETWEEN
+			(SELECT
+			  DATE_FORMAT(
+				SUBDATE(
+				  CURDATE(),
+				  DATE_FORMAT(CURDATE(), '%w') - 1
+				),
+				'%Y-%m-%d 00:00:00'
+			  ))
+			AND
+			(SELECT
+			  DATE_FORMAT(
+				SUBDATE(
+				  CURDATE(),
+				  DATE_FORMAT(CURDATE(), '%w') - 7
+				),
+				'%Y-%m-%d 23:59:59'
+			  ))) AS invitingNum,
 		  (SELECT
 			COUNT(1)
 		  FROM
 			hc_account
-		  WHERE invite_id = h.id) * 5 AS points,
+		  WHERE rid = h.id
+			AND create_date BETWEEN
+			(SELECT
+			  DATE_FORMAT(
+				SUBDATE(
+				  CURDATE(),
+				  DATE_FORMAT(CURDATE(), '%w') - 1
+				),
+				'%Y-%m-%d 00:00:00'
+			  ))
+			AND
+			(SELECT
+			  DATE_FORMAT(
+				SUBDATE(
+				  CURDATE(),
+				  DATE_FORMAT(CURDATE(), '%w') - 7
+				),
+				'%Y-%m-%d 23:59:59'
+			  ))) * 5 AS points,
 		  h.logo
 		FROM
 		  hc_account h
-		  WHERE (SELECT
+		WHERE
+		  (SELECT
 			COUNT(1)
 		  FROM
 			hc_account
-		  WHERE invite_id = h.id) > #{peopleNum}
-		  ORDER BY invitingNum DESC
-		  LIMIT 0, #{dataNum}
+		  WHERE rid = h.id
+			AND create_date BETWEEN
+			(SELECT
+			  DATE_FORMAT(
+				SUBDATE(
+				  CURDATE(),
+				  DATE_FORMAT(CURDATE(), '%w') - 1
+				),
+				'%Y-%m-%d 00:00:00'
+			  ))
+			AND
+			(SELECT
+			  DATE_FORMAT(
+				SUBDATE(
+				  CURDATE(),
+				  DATE_FORMAT(CURDATE(), '%w') - 7
+				),
+				'%Y-%m-%d 23:59:59'
+			  ))) >  #{peopleNum}
+		ORDER BY invitingNum DESC
+		LIMIT 0, #{dataNum}
+
 	</select>
 
     <!-- 传入uid查询用户积分记录次数 -->

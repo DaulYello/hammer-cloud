@@ -57,8 +57,8 @@ public class HcAccount extends Model<HcAccount> implements Serializable{
 
 	private Double cnt;
 
-	@TableField("invite_id")
-	private String inviteId;
+	@TableField("user_level")
+	private String userLevel;
 
 	//注册时间
 	@TableField("create_date")
@@ -69,12 +69,12 @@ public class HcAccount extends Model<HcAccount> implements Serializable{
 	@TableField("update_date")
 	private Date updateDate;
 
-	public String getInviteId() {
-		return inviteId;
+	public String getUserLevel() {
+		return userLevel;
 	}
 
-	public void setInviteId(String inviteId) {
-		this.inviteId = inviteId;
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
 	}
 
 	public Date getCreateDate() {
