@@ -10,6 +10,8 @@ import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.mapper.*;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
 import com.fmkj.race.server.api.HcAccountApi;
+import com.fmkj.race.server.async.RaceAsyncFactory;
+import com.fmkj.race.server.async.RaceAsyncManager;
 import com.fmkj.race.server.service.GcActivityService;
 import com.fmkj.user.dao.domain.HcPointsRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,24 +116,10 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
         if(row > 0){
             boolean result = addNoticeAndMessage(ga.getStartid(), ga.getTypeid());
             if(result){
-                //上传活动的文件
-                if(StringUtils.isNotNull(file)&&file.length>0) {
-                    int i = 1;
-                    for (MultipartFile multipartFile : file) {
-                        String fileName = null;
-                        try {
-                            fileName = PropertiesUtil.uploadImage(multipartFile, activityImagePath);
-                        } catch (IOException e) {
-                            throw new RuntimeException("上传活动图片异常：" + e.getMessage());
-                        }
-                        GcPimage gp = new GcPimage();
-                        gp.setAid(ga.getId());
-                        gp.setFlag(i++);
-                        gp.setImageurl(activityImageIpPath + fileName);
-                        gcPimageMapper.insert(gp);
-                    }
-                    return true;
+                if(StringUtils.isNotNull(file) && file.length > 0) {
+                    RaceAsyncManager.me().execute(RaceAsyncFactory.uploadImage(ga, file, activityImagePath, activityImageIpPath));
                 }
+                return true;
             }
 
         }

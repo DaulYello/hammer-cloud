@@ -92,9 +92,6 @@ public class PropertiesUtil {
      */
     public static String uploadImage(MultipartFile file, String url) throws IOException {
 
-        System.err.println("filesss="+file);
-
-        System.err.println("url="+url);
         if (file != null && url != null) {
             new File(url).mkdirs();//创建文件夹(已存在则无效)
             UUID uuid = UUID.randomUUID();
