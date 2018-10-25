@@ -42,7 +42,6 @@ public class UserLogAspect {
     @Pointcut("@annotation(com.fmkj.user.server.annotation.UserLog)")
     public void logPointCut() {
 
-        System.out.println("AAAAAAAAAAAA");
 
     }
 
@@ -83,7 +82,7 @@ public class UserLogAspect {
                 operateLog.setExceptionMsg(e.getMessage());
             }
             String userId = ServletUtils.getRequest().getHeader("globalUserId");
-            if(StringUtils.isNull(userId)){
+            if(StringUtils.isNotEmpty(userId)){
                 operateLog.setUserId(Integer.parseInt(userId));
             }
             operateLog.setModule(controllerLog.module());

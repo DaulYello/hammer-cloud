@@ -21,6 +21,16 @@ public class FriendQueryVo extends HcFriend {
 
     private String nickName;
 
+    private String telephone;
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
     public String getNickName() {
         return nickName;
     }

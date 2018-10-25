@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description:
@@ -294,6 +291,11 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         }
         fmRecyleLogMapper.batchAddRecyleLog(recyleLogs);
         return true;
+    }
+
+    @Override
+    public List<HcAccount> searchAccount(HashMap<String, Object> params) {
+        return hcAccountMapper.searchAccount(params);
     }
 
     public boolean changeGrade(GradeDto gb, Integer uid) {

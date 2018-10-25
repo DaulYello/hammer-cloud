@@ -147,14 +147,18 @@ public class FriendController {
     @ApiOperation(value="搜索陌生人", notes="参数：nickName")
     @PutMapping("/searchStrangers")
     public BaseResult searchStrangers(@RequestBody FriendQueryVo queryVo) {
-        if(StringUtils.isEmpty(queryVo.getNickName())){
-            return new BaseResult(BaseResultEnum.BLANK.status,"昵称不能为空!",false);
+        if(StringUtils.isEmpty(queryVo.getNickName()) && StringUtils.isEmpty(queryVo.getTelephone())){
+            return new BaseResult(BaseResultEnum.BLANK.status,"请输入昵称或电话进行查询!",false);
         }
         // 查询出来陌生人
-        HcAccount hcAccount = new HcAccount();
-        hcAccount.setNickname(queryVo.getNickName());
-        EntityWrapper<HcAccount> wrapper = new EntityWrapper<>(hcAccount);
-        List<HcAccount> hcAccountList = hcAccountService.selectList(wrapper);
+        HashMap<String, Object> params = new HashMap<>();
+        if(StringUtils.isNotEmpty(queryVo.getNickName())){
+            params.put("nickname", queryVo.getNickName());
+        }
+        if(StringUtils.isNotEmpty(queryVo.getTelephone())){
+            params.put("telephone", queryVo.getTelephone());
+        }
+        List<HcAccount> hcAccountList = hcAccountService.searchAccount(params);
         return new BaseResult(BaseResultEnum.SUCCESS.status,"查询成功!",hcAccountList);
     }
 

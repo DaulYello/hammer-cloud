@@ -5,6 +5,7 @@ import com.fmkj.common.base.BaseService;
 import com.fmkj.user.dao.domain.HcAccount;
 import com.fmkj.user.dao.dto.HcAccountDto;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,4 +47,6 @@ public interface HcAccountService extends BaseService<HcAccount> {
     int queryActivitNum(Integer id);
 
     boolean granCredites(Double par, List<Integer> uids);
+
+    List<HcAccount> searchAccount(HashMap<String, Object> params);
 }

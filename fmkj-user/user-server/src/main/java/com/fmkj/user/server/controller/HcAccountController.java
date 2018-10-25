@@ -547,24 +547,22 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         if (StringUtils.isNull(rcode)) {
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户没有邀请码!", false);
         }
-        // 查询邀请人来注册获得的总积分
+        /*// 查询邀请人来注册获得的总积分
         Integer pointNum = hcPointsRecordService.queryPoints(hc.getId());
         if (pointNum == null) {
             pointNum = 0;
-        }
+        }*/
 
         // 查询邀请人来注册获得的总能量
         HcAccount hcAccount = new HcAccount();
         hcAccount.setRid(hc.getId());
         EntityWrapper<HcAccount> hcWrapper = new EntityWrapper<>(hcAccount);
-        List<HcAccount> queryUserByExample = hcAccountService.selectList(hcWrapper);
-
+        int count = hcAccountService.selectCount(hcWrapper);
         // 每邀请到一个人得到1P，getPs就是获得的总能量
-        Integer getAllP = queryUserByExample.size() * 1;
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("points", pointNum);
-        hashMap.put("getAllP", getAllP);
-        hashMap.put("getAllUser", queryUserByExample.size());
+        hashMap.put("points", count * 1); //CNT
+        hashMap.put("getAllP", count * 5); //R
+        hashMap.put("getAllUser", count);
         hashMap.put("reode", rcode);
 
         int accountNum = hcAccountService.selectCount(new EntityWrapper<>());
