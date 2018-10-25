@@ -20,7 +20,7 @@
           IF(ISNULL(SUM(take_num)), 0, SUM(take_num)) AS takeNum
         FROM
           fm_recyle_log
-        WHERE uid = 14
+        WHERE uid = #{uid}
           AND recyle_type = 1
           AND take_type IN (4, 7)
 
