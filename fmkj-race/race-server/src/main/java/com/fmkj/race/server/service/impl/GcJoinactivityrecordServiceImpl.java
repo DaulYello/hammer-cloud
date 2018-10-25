@@ -270,7 +270,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         notice.setUid(winId);
         notice.setFlag(1);
         StringBuilder sb = new StringBuilder();
-        String head = new String("恭喜您中锤");
+        String head = new String("恭喜您");
         String message = new String(",请在48小时内及时联系客服QQ：2500702820办理资产转移。");
         sb.append(head);
         sb.append(gcActivitytype.getType());
@@ -284,7 +284,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         int mid = gcMessageMapper.insert(gcMessage);
         LOGGER.info("发给用户中锤的消息"+mid);
         GcMessage gcMes = new GcMessage();
-        gcMes.setMessage("恭喜“"+joinActivityDto.getNickname()+"”获得活动商品 — “"+joinActivityDto.getPname()+"”");
+        gcMes.setMessage("恭喜"+joinActivityDto.getNickname()+"获得活动商品 — "+joinActivityDto.getPname());
         gcMes.setType(2);
         gcMes.setTime(new Date());
         int rows= gcMessageMapper.insert(gcMes);
