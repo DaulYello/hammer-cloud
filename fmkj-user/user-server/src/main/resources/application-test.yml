@@ -74,16 +74,16 @@ feign:
           execution:
             isolation:
               thread:
-                timeoutInMilliseconds: 60000
+                timeoutInMilliseconds: 120000
 
 zuul:
   host:
-    socket-timeout-millis: 60000
-    connect-timeout-millis: 60000
+    socket-timeout-millis: 120000
+    connect-timeout-millis: 120000
 
 ribbon:
-  ReadTimeout: 60000
-  ConnectTimeout: 60000
+  ReadTimeout: 120000
+  ConnectTimeout: 120000
 
 #获取头像图片ip路径
 userHeadImageIpPath: http://192.168.10.218:8080/userHead/

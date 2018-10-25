@@ -24,7 +24,7 @@ public interface HcAccountService extends BaseService<HcAccount> {
      * @param
      * @return 
     */
-    List<Map<String, Object>> queryOneNewNotice();
+    HashMap<String, Object> queryOneNewNotice();
 
     boolean bindEmail(HcAccount ha);
 

@@ -60,7 +60,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
      * @param
      * @return java.util.List<java.util.Map<java.lang.String,java.lang.Object>>
      */
-    public List<Map<String, Object>> queryOneNewNotice() {
+    public HashMap<String, Object> queryOneNewNotice() {
         return hcAccountMapper.queryOneNewNotice();
     }
 

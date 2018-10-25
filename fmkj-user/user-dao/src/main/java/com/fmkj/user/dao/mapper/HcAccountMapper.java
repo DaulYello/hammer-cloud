@@ -22,7 +22,7 @@ public interface HcAccountMapper extends BaseMapper<HcAccount> {
      * @param
      * @return
     */
-    List<Map<String,Object>> queryOneNewNotice();
+    HashMap<String, Object> queryOneNewNotice();
 
     HcAccount queryUserTaskMessage(@Param("uid") Integer uid);
 

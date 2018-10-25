@@ -179,7 +179,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     @PutMapping("/queryOneNewNotice")
     public BaseResult queryOneNewNotice(){
         try {
-            List<Map<String,Object>> map = hcAccountService.queryOneNewNotice();
+            HashMap<String, Object> map = hcAccountService.queryOneNewNotice();
             return new BaseResult(BaseResultEnum.SUCCESS,map);
         } catch (Exception e) {
             throw new RuntimeException("查询最新一条中奖用户信息异常：" + e.getMessage());
