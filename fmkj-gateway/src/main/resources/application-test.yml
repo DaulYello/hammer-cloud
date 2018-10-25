@@ -24,9 +24,16 @@ zuul:
 
 server:
   port: 9090
+
 feign:
   hystrix:
     enabled: true
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 120000
 
 
 

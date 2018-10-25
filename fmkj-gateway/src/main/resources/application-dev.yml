@@ -27,6 +27,12 @@ server:
 feign:
   hystrix:
     enabled: true
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 120000
 
 
 
