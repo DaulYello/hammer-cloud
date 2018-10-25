@@ -16,6 +16,7 @@
         <result column="num" property="num"/>
         <result column="par" property="par"/>
         <result column="contract" property="contract"/>
+        <result column="pointNum" property="pointNum"/>
     </resultMap>
 
     <select id="queryJoinActivityByAid" parameterType="com.fmkj.race.dao.queryVo.JoinActivityPage" resultMap="BaseResultMap">
@@ -24,7 +25,8 @@
           ac.nickname,
           ac.logo,
           ac.score,
-          ac.id
+          ac.id,
+          (SELECT SUM(points_num) FROM hc_points_record WHERE uid = jr.uid) pointNum
         FROM
           gc_joinactivityrecord jr
           INNER JOIN hc_account ac

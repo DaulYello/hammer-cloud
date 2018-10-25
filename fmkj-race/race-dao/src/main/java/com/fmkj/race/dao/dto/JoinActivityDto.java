@@ -38,6 +38,16 @@ public class JoinActivityDto extends GcJoinactivityrecord {
      */
     private String pname;
 
+    private Double pointNum;
+
+    public Double getPointNum() {
+        return pointNum;
+    }
+
+    public void setPointNum(Double pointNum) {
+        this.pointNum = pointNum;
+    }
+
     public Integer getTypeid() {
         return typeid;
     }

@@ -21,20 +21,20 @@ public class RaceLineRunner implements ApplicationRunner {
     @Autowired
     private GcJoinactivityrecordService joinactivityrecordService;
 
-    private Long sleepTime = 0L;
+    private Long sleepTime = 60000L;
 
     @Override
     public void run(ApplicationArguments args){
         while (true){
             try {
-                LOGGER.info("程序延迟执行" + sleepTime + "毫秒");
+                LOGGER.info("程序延迟" + sleepTime + "毫秒执行");
+                Thread.sleep(sleepTime);
+                if(sleepTime > 600000L){//如果大于10分钟
+                    sleepTime = 60000L;
+                }
                 List<JoinActivityDto> recordList =  joinactivityrecordService.queryJoinActivityList();
                 if(StringUtils.isEmpty(recordList)){
                     sleepTime += 60000L;
-                    Thread.sleep(sleepTime);
-                    if(sleepTime > 600000L){//如果大于10分钟
-                        sleepTime = 60000L;
-                    }
                 }else{
                     sleepTime = 1L;
                 }
@@ -53,7 +53,7 @@ public class RaceLineRunner implements ApplicationRunner {
                 }
                 LOGGER.info("执行上链计划执行结束==================================结束");
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.info("执行上链计出现异常：" + e.getMessage());
             }
 
         }

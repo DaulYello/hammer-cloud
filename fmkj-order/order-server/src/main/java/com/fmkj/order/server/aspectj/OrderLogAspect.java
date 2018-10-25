@@ -80,7 +80,7 @@ public class OrderLogAspect {
                 operateLog.setExceptionMsg(e.getMessage());
             }
             String userId = ServletUtils.getRequest().getHeader("globalUserId");
-            if(StringUtils.isNull(userId)){
+            if(StringUtils.isNotEmpty(userId)){
                 operateLog.setUserId(Integer.parseInt(userId));
             }
             operateLog.setModule(controllerLog.module());

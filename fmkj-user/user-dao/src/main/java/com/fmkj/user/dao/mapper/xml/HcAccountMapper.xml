@@ -28,6 +28,21 @@
 	</resultMap>
 
 
+	<select id="searchAccount" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+		SELECT ha.id,ha.telephone,ha.logo,ha.nickname,ha.email,ha.rid,ha.my_p AS myP,ha.grade_id AS gradeId,ha.card_status AS cardStatus,
+       		ha.isboong,ha.cdbid,ha.password,SUM(hp.points_num) AS score
+        	FROM hc_account ha
+        	LEFT JOIN hc_points_record hp ON ha.id = hp.uid
+          	WHERE 1 = 1
+		<if test="nickname != null">
+			and ha.nickname = #{nickname}
+		</if>
+		<if test="telephone != null">
+			and ha.telephone = #{telephone}
+		</if>
+
+	</select>
 	<!-- 查询最新一条中奖用户的信息 -->
 	<select id="queryOneNewNotice" resultType="java.util.Map">
 		select ga.id as aid,ga.name,ga.pname,ga.pnumber,ga.price,ha.id as uid,ha.nickname
