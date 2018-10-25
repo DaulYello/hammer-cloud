@@ -20,7 +20,7 @@ public class RaceLineRunner {
     @Autowired
     private GcJoinactivityrecordService joinactivityrecordService;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟执行一次
+    @Scheduled(cron = "0 0/12 * * * ?") // 每12分钟执行一次
     public void run() {
         LOGGER.info("===================上链轮询开始扫描=============================");
         //每10分钟最多执行5条上链计划
