@@ -75,6 +75,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             }
             HcPointsRecord hcp = new HcPointsRecord();
             hcp.setUid(ha.getId());
+            hcp.setTime(new Date());
             hcp.setPointsId(PointEnum.BIND_EMAIL.pointId);
             hcp.setPointsNum(PointEnum.BIND_EMAIL.pointNum);
             hcPointsRecordMapper.insert(hcp);
@@ -151,7 +152,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                 record.setPointsId(PointEnum.SELF_REGISTER.pointId);
                 record.setPointsNum(PointEnum.SELF_REGISTER.pointNum);
                 record.setUid(resultHc.getId());
-                record.setTime(DateUtil.getNowInMillis(0L));
+                record.setTime(new Date());
                 int point = hcPointsRecordMapper.insert(record);
                 if(point > 0){
                     //插入邀请人注册的积分奖励记录

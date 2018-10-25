@@ -81,6 +81,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             //参与活动添加10飞羽
             HcPointsRecord hcp = new HcPointsRecord();
             hcp.setUid(uid);
+            hcp.setTime(new Date());
             hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
             hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
             boolean result = hcAccountApi.addHcPointsRecord(hcp);
