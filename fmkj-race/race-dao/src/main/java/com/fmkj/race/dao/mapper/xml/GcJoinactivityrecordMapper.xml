@@ -55,6 +55,7 @@
           AND a.isChain = 0
           AND b.status = 2
           ORDER BY b.time ASC
+          LIMIT 0, 5
     </select>
 
 </mapper>

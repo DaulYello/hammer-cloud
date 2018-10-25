@@ -290,6 +290,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
                 GcActivity gcActivity = gcActivityMapper.selectById(joinActivityDto.getAid());
                 gcActivity.setStatus(3);
                 gcActivity.setGetid(winId);
+                gcActivity.setEndtime(new Date());
                 int updateRow = gcActivityMapper.updateById(gcActivity);
                 if(updateRow > 0){
                     GcJoinactivityrecord gcJoinactivityrecord = gcJoinactivityrecordMapper.selectById(joinActivityDto.getId());

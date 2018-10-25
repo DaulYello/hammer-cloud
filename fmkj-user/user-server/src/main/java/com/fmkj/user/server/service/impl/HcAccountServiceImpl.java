@@ -250,7 +250,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             fmRecyleLog.setTakeDate(new Date());
             fmRecyleLog.setTakeNum(cnt);
             fmRecyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
-            fmRecyleLog.setTakeType(TakeEnum.USER_LOST.status);
+            fmRecyleLog.setTakeType(TakeEnum.PART_ACITIVITY.status);
             fmRecyleLog.setTakeMsg("参加活动扣除"+cnt+"CNT");
             fmRecyleLogMapper.insert(fmRecyleLog);
             return true;
@@ -268,7 +268,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             fmRecyleLog.setTakeDate(new Date());
             fmRecyleLog.setTakeNum(starterCnt);
             fmRecyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
-            fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+            fmRecyleLog.setTakeType(TakeEnum.TAKE_GOODS.status);
             fmRecyleLog.setTakeMsg("用户确认收货后获得"+starterCnt+"CNT");
             fmRecyleLogMapper.insert(fmRecyleLog);
             return true;
@@ -293,10 +293,10 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             FmRecyleLog recyleLog = new FmRecyleLog();
             recyleLog.setUid(hcAccount.getId());
             recyleLog.setFriendId(hcAccount.getId());
-            recyleLog.setRecyleType(2);
+            recyleLog.setRecyleType(RecyleEnum.TYPE_R.status);
             recyleLog.setTakeDate(new Date());
             recyleLog.setTakeNum(par);
-            recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+            recyleLog.setTakeType(TakeEnum.NO_WIN.status);
             recyleLog.setTakeMsg("参加活动未中锤返回"+par+"R积分奖励");
             recyleLogs.add(recyleLog);
         }
@@ -385,7 +385,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         fmRecyleLog.setTakeDate(now);
         fmRecyleLog.setTakeNum(5D);
         fmRecyleLog.setRecyleType(RecyleEnum.TYPE_R.status);
-        fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+        fmRecyleLog.setTakeType(TakeEnum.INVITE_FRIEND.status);
         fmRecyleLog.setTakeMsg("邀请用户【"+userId+"】完成注册，获得5R积分奖励");
         logList.add(fmRecyleLog);
 
@@ -395,7 +395,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         recyleLog.setTakeDate(now);
         recyleLog.setTakeNum(1D);
         recyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
-        recyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+        recyleLog.setTakeType(TakeEnum.INVITE_FRIEND.status);
         recyleLog.setTakeMsg("邀请用户【"+userId+"】完成注册，获得1CNT奖励");
         logList.add(recyleLog);
         fmRecyleLogMapper.batchAddRecyleLog(logList);

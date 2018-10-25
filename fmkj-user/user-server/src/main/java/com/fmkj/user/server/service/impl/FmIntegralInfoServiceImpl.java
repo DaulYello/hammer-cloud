@@ -75,7 +75,7 @@ public class FmIntegralInfoServiceImpl extends BaseServiceImpl<FmIntegralInfoMap
                 fmRecyleLog.setTakeDate(now);
                 fmRecyleLog.setTakeNum(fmIntegralInfo.getIntegralNum());
                 fmRecyleLog.setRecyleType(RecyleEnum.TYPE_R.status);
-                fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+                fmRecyleLog.setTakeType(TakeEnum.USER_STEAL.status);
                 fmRecyleLog.setTakeMsg("偷取了您" + fmIntegralInfo.getIntegralNum() + "R积分");
                 int insertRow = fmRecyleLogMapper.insert(fmRecyleLog);
                 if(insertRow > 0){
@@ -114,7 +114,7 @@ public class FmIntegralInfoServiceImpl extends BaseServiceImpl<FmIntegralInfoMap
                 fmRecyleLog.setTakeDate(now);
                 fmRecyleLog.setTakeNum(fmIntegralInfo.getIntegralNum());
                 fmRecyleLog.setRecyleType(RecyleEnum.TYPE_R.status);
-                fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+                fmRecyleLog.setTakeType(TakeEnum.USER_GET.status);
                 fmRecyleLog.setTakeMsg("您获取了" + fmIntegralInfo.getIntegralNum() + "R积分");
                 int insertRow = fmRecyleLogMapper.insert(fmRecyleLog);
                 if(insertRow > 0){

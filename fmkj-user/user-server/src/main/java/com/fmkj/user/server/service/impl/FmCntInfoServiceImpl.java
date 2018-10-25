@@ -70,7 +70,7 @@ public class FmCntInfoServiceImpl extends BaseServiceImpl<FmCntInfoMapper, FmCnt
                 fmRecyleLog.setTakeDate(now);
                 fmRecyleLog.setTakeNum(fmCntInfo.getCntNum());
                 fmRecyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
-                fmRecyleLog.setTakeType(TakeEnum.TYPE_USER.status);
+                fmRecyleLog.setTakeType(TakeEnum.USER_GET.status);
                 fmRecyleLog.setTakeMsg("您获取了" + fmCntInfo.getCntNum() + "CNT");
                 int insertRow = fmRecyleLogMapper.insert(fmRecyleLog);
                 if(insertRow > 0){
