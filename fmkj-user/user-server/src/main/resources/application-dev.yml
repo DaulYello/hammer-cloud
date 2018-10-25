@@ -86,15 +86,17 @@ cardPwd: 8fda758a86044ca3a6b67f268c3964a6
 wordPath: https://way.jd.com/tongchengyuan/minganci
 
 #存放身份证照片物理路径
-userCodeImagePath: E:\\huangs\\cardImages
+userCodeImagePath: D:\\apache-tomcat-8.5.34\\webapps\\cardImages
 
 #存放支付照片物理路径
-userPayImagePath: E:\\huangs\\payImages
+userPayImagePath: D:\\apache-tomcat-8.5.34\\webapps\\payImages
+
 
 #公网ip:47.101.52.173
 #测试ip:47.74.181.255
 #获取身份证照片ip路径(实名认证后台活动图片ip地址)
-userCodeImageIpPath: http://47.101.52.255:9898/image/
+userCodeImageIpPath: http://192.168.10.218:8080/cardImages/
 
-userPayImageIpPath: http://47.101.52.255:9898/payimage/
+
+userPayImageIpPath: http://192.168.10.218:8080/payImages/
 
