@@ -75,7 +75,7 @@
 		</if>
 
 		<if test="order.userId != null">
-			and fm.user_id = #{order.userId}
+			and (fm.user_id = #{order.userId} OR fm.seller_id = #{order.userId})
 		</if>
 
 		<if test="order.orderStatus != null">
