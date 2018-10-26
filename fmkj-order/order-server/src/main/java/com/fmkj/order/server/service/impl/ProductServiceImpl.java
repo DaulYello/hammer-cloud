@@ -1,6 +1,7 @@
 package com.fmkj.order.server.service.impl;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.annotation.BaseService;
 import com.fmkj.common.base.BaseServiceImpl;
@@ -41,6 +42,12 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductIn
     @Override
     public List<ProductDto> getProductPage(Pagination pagination, ProductQueryVo productQueryVo) {
         List<ProductDto> result = productMapper.queryProductPage(pagination, productQueryVo);
+        return result;
+    }
+
+    @Override
+    public List<ProductDto> getMyProductPage(Page<ProductDto> pagination, ProductQueryVo productQueryVo) {
+        List<ProductDto> result = productMapper.getMyProductPage(pagination, productQueryVo);
         return result;
     }
 
@@ -90,4 +97,6 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductIn
         }
         return false;
     }
+
+
 }

@@ -41,8 +41,7 @@ public class ProductController extends BaseController<ProductInfo, ProductServic
     private ProductService productService;
 
 
-    @ApiOperation(value="查询商品列表", notes="分页查询商品列表")
-    @OrderLog(module= LogConstant.HC_PRODUCT, actionDesc = "查询商品列表")
+    @ApiOperation(value="查询买入卖出的商品列表", notes="分页查询买入卖出的商品列表")
     @PutMapping("/getProductPage")
     public BaseResult<Page<ProductDto>> getProductPage(@RequestBody ProductQueryVo productQueryVo){
         try {
@@ -52,6 +51,19 @@ public class ProductController extends BaseController<ProductInfo, ProductServic
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
         } catch (Exception e) {
            throw new RuntimeException("查询商品列表异常：" + e.getMessage());
+        }
+    }
+
+    @ApiOperation(value="查询我的商品列表", notes="分页查询我的商品列表")
+    @PutMapping("/getMyProductPage")
+    public BaseResult<Page<ProductDto>> getMyProductPage(@RequestBody ProductQueryVo productQueryVo){
+        try {
+            Page<ProductDto> tPage = buildPage(productQueryVo);
+            List<ProductDto> list = productService.getMyProductPage(tPage, productQueryVo);
+            tPage.setRecords(list);
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
+        } catch (Exception e) {
+            throw new RuntimeException("查询商品列表异常：" + e.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package com.fmkj.order.dao.mapper;
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.order.dao.domain.ProductInfo;
 import com.fmkj.order.dao.dto.ProductDto;
@@ -14,4 +15,6 @@ public interface ProductMapper extends BaseMapper<ProductInfo> {
 
 
     List<ProductDto> queryProductPage(Pagination pagination, @Param("product") ProductQueryVo productQueryVo);
+
+    List<ProductDto> getMyProductPage(Page<ProductDto> pagination, @Param("product") ProductQueryVo productQueryVo);
 }

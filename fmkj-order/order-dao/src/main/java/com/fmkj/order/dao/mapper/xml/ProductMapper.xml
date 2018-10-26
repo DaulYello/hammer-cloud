@@ -51,6 +51,82 @@
 
 
 	<select id="queryProductPage" parameterType="com.fmkj.order.dao.queryVo.ProductQueryVo" resultMap="BaseResultMap">
+
+			SELECT
+			fm.id,
+			fm.product_no,
+			fm.product_name,
+			fm.product_sum,
+			fm.product_price,
+			fm.product_stock,
+			fm.product_icon,
+			fm.status,
+			fm.category_type,
+			fm.user_id,
+			fm.create_time,
+			fm.update_time,
+			fm.product_detail,
+			fm.product_type,
+			fm.currency,
+			fm.max_price,
+			fm.min_limit,
+			fm.max_limit,
+			fm.payment_term,
+			(SELECT COUNT(1) FROM
+			fm_order_info t
+			WHERE t.product_id = fm.id
+			AND order_status = 3) AS successNum,
+			CASE WHEN
+			(SELECT u.alipay_account FROM
+			hc_userimage u
+			WHERE fm.user_id = u.uid) IS NOT NULL
+			THEN '1'
+			ELSE '0'
+			END AS alipayStatus,
+			CASE WHEN
+			(SELECT u.wechat_account FROM
+			hc_userimage u
+			WHERE fm.user_id = u.uid) IS NOT NULL
+			THEN '1'
+			ELSE '0'
+			END AS wechatStatus,
+			hc.*
+			FROM fm_product_info fm LEFT JOIN hc_account hc
+			ON fm.user_id = hc.id
+			LEFT JOIN hc_userimage im
+			ON im.uid = fm.user_id
+			WHERE 1 = 1
+			<if test="product.productName != null">
+				and fm.product_name = #{product.productName}
+			</if>
+
+			<if test="product.productNo != null">
+				and fm.product_no = #{product.productNo}
+			</if>
+
+			<if test="product.status != null">
+				and fm.status = #{product.status}
+			</if>
+
+			<if test="product.categoryType != null">
+				and fm.category_type = #{product.categoryType}
+			</if>
+
+			<if test="product.userId != null">
+				and fm.user_id != #{product.userId}
+			</if>
+
+			<if test="product.productType != null">
+				and fm.product_type = #{product.productType}
+			</if>
+
+			<if test="product.id != null">
+				and fm.id = #{product.id}
+			</if>
+	</select>
+
+
+	<select id="getMyProductPage" parameterType="com.fmkj.order.dao.queryVo.ProductQueryVo" resultMap="BaseResultMap">
 		SELECT
 		fm.id,
 		fm.product_no,

@@ -1,5 +1,6 @@
 package com.fmkj.order.server.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseService;
 import com.fmkj.order.dao.domain.ProductInfo;
@@ -20,4 +21,6 @@ public interface ProductService extends BaseService<ProductInfo> {
     boolean publishProduct(ProductInfo productInfo);
 
     boolean unLineProduct(ProductInfo productInfo);
+
+    List<ProductDto> getMyProductPage(Page<ProductDto> tPage, ProductQueryVo productQueryVo);
 }

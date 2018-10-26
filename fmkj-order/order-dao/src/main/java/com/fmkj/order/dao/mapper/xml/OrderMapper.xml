@@ -68,7 +68,7 @@
 		FROM
 			fm_order_info fm
 			LEFT JOIN hc_account hc
-			ON fm.seller_id = hc.id
+			ON fm.user_id = hc.id
 		WHERE 1 = 1
 		<if test="order.orderNo != null">
 			and fm.order_no = #{order.orderNo}
