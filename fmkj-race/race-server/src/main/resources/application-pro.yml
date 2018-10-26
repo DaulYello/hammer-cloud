@@ -92,6 +92,9 @@ activityImagePath: D:\\apache-tomcat-8.5.34\\webapps\\activityImage
 #竞锤后台活动图片ip地址
 activityImageIpPath: http://192.168.10.218:8080/activityImage/
 
+defuatFileName: 123456789777777777788888888889999999999defualt.jpg
+
+
 web-password: 11111111
 web-walletfile: F:\\SwanChain\\data\\00\\keystore\\UTC--2018-10-19T10-02-14.891008500Z--0cf95994875cfed5b633d24877ea3cc1beab9bd7
 web-ip: 192.168.10.218

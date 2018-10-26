@@ -14,6 +14,8 @@ import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
 import com.fmkj.race.server.annotation.RaceLog;
 import com.fmkj.race.server.api.BmListApi;
+import com.fmkj.race.server.async.RaceAsyncFactory;
+import com.fmkj.race.server.async.RaceAsyncManager;
 import com.fmkj.race.server.service.GcActivityService;
 import com.fmkj.race.server.service.GcPimageService;
 import io.swagger.annotations.Api;
@@ -55,6 +57,9 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
 
     @Value("${activityImageIpPath}")
     private String activityImageIpPath;
+
+    @Value("${defuatFileName}")
+    private String defuatFileName;
 
     @ApiOperation(value="发起活动", notes="用户发起活动")
     @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "用户发起活动")
@@ -134,9 +139,13 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         ga.setNum(num);
         ga.setCollectgoodstatus(0);
         ga.setPar(par);
-        boolean result = gcActivityService.addGcActivity(ga, file, activityImagePath, activityImageIpPath);
-        if(result)
+        boolean result = gcActivityService.addGcActivity(ga);
+        if(result){
+            if(file != null){
+                RaceAsyncManager.me().execute(RaceAsyncFactory.uploadImage(ga.getId(), file, activityImagePath, activityImageIpPath, defuatFileName));
+            }
             return new BaseResult(BaseResultEnum.SUCCESS.status, "活动发起成功!",true);
+        }
         return new BaseResult(BaseResultEnum.ERROR.status, "活动发起失败!",false);
 
     }

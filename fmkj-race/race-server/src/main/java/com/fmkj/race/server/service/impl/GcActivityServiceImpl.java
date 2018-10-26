@@ -3,9 +3,10 @@ package com.fmkj.race.server.service.impl;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseServiceImpl;
 import com.fmkj.common.comenum.PointEnum;
-import com.fmkj.common.util.PropertiesUtil;
-import com.fmkj.common.util.StringUtils;
-import com.fmkj.race.dao.domain.*;
+import com.fmkj.race.dao.domain.GcActivity;
+import com.fmkj.race.dao.domain.GcActivitytype;
+import com.fmkj.race.dao.domain.GcMessage;
+import com.fmkj.race.dao.domain.GcNotice;
 import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.mapper.*;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
@@ -15,9 +16,7 @@ import com.fmkj.user.dao.domain.HcPointsRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -104,35 +103,17 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
     /**
      * 插入发起活动
      * @param ga
-     * @param activityImagePath
-     * @param activityImageIpPath
      * @return
      */
     @Override
-    public boolean addGcActivity(GcActivity ga, MultipartFile[] file, String activityImagePath, String activityImageIpPath) {
+    public boolean addGcActivity(GcActivity ga) {
         int row = gcActivityMapper.insert(ga);
         if(row > 0){
             boolean result = addNoticeAndMessage(ga.getStartid(), ga.getTypeid());
             if(result){
-                //上传活动的文件
-                if(StringUtils.isNotNull(file)&&file.length>0) {
-                    int i = 1;
-                    for (MultipartFile multipartFile : file) {
-                        String fileName = null;
-                        try {
-                            fileName = PropertiesUtil.uploadImage(multipartFile, activityImagePath);
-                        } catch (IOException e) {
-                            throw new RuntimeException("上传活动图片异常：" + e.getMessage());
-                        }
-                        GcPimage gp = new GcPimage();
-                        gp.setAid(ga.getId());
-                        gp.setFlag(i++);
-                        gp.setImageurl(activityImageIpPath + fileName);
-                        gcPimageMapper.insert(gp);
-                    }
-                    return true;
-                }
-            }
+                return true;
+            }else
+                throw new RuntimeException("发布活动出现异常！");
 
         }
         return false;

@@ -5,7 +5,6 @@ import com.fmkj.common.base.BaseService;
 import com.fmkj.race.dao.domain.GcActivity;
 import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,11 +63,9 @@ public interface GcActivityService extends BaseService<GcActivity>{
     /**
      * 插入发起活动信息
      * @param ga
-     * @param activityImagePath
-     * @param activityImageIpPath
      * @return
      */
-    boolean addGcActivity(GcActivity ga, MultipartFile[] file, String activityImagePath, String activityImageIpPath);
+    boolean addGcActivity(GcActivity ga);
 
 
     /**
