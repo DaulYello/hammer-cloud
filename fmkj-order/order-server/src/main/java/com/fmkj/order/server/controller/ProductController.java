@@ -41,10 +41,13 @@ public class ProductController extends BaseController<ProductInfo, ProductServic
     private ProductService productService;
 
 
-    @ApiOperation(value="查询买入卖出的商品列表", notes="分页查询买入卖出的商品列表")
+    @ApiOperation(value="查询买入卖出的商品列表", notes="分页查询买入卖出的商品列表-必传参数：userId")
     @PutMapping("/getProductPage")
     public BaseResult<Page<ProductDto>> getProductPage(@RequestBody ProductQueryVo productQueryVo){
         try {
+            if(StringUtils.isNull(productQueryVo) || StringUtils.isNull(productQueryVo.getUserId())){
+                return new BaseResult(BaseResultEnum.BLANK.getStatus(), "userId不能为空", false);
+            }
             Page<ProductDto> tPage = buildPage(productQueryVo);
             List<ProductDto> list = productService.getProductPage(tPage, productQueryVo);
             tPage.setRecords(list);
@@ -89,7 +92,10 @@ public class ProductController extends BaseController<ProductInfo, ProductServic
             if(StringUtils.isNull(productInfo) || productInfo.getId() == null){
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "ID不能为空", "ID不能为空");
             }
-            service.deleteById(productInfo.getId());
+            ProductInfo product = service.selectById(productInfo.getId());
+            product.setStatus(ProductEnum.PRODUCT_DELETE.status);
+            product.setUpdateTime(new Date());
+            service.updateById(product);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "删除成功", "数据删除成功");
         } catch (Exception e) {
             throw new RuntimeException("删除异常：" + e.getMessage());

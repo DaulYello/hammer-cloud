@@ -6,6 +6,7 @@ package com.fmkj.order.server.enmu;
  * @Version: 1.0
  **/
 public enum ProductEnum {
+    PRODUCT_DELETE(-1, "删除"),
     PRODUCT_ADD(0,"新建状态"),
     PRODUCT_LINE(1,"在线-已发布"),
     PRODUCT_UNLINE(2,"下架");

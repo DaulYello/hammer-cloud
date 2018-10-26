@@ -68,7 +68,7 @@ public class OrderController extends BaseController<OrderInfo, OrderService> imp
         }
     }
 
-    @ApiOperation(value="分页查询商品下的订单列表", notes="分页查询商品下的订单列表--输入参数:sellerId")
+    /*@ApiOperation(value="分页查询商品下的订单列表", notes="分页查询商品下的订单列表--输入参数:sellerId")
     @PutMapping("/getOrderPageBySeller")
     public BaseResult<Page<OrderDto>> getOrderPageBySeller(@RequestBody OrderQueryVo orderQueryVo){
         try {
@@ -82,7 +82,7 @@ public class OrderController extends BaseController<OrderInfo, OrderService> imp
         } catch (Exception e) {
             throw new RuntimeException("查询商品下订单列表异常：" + e.getMessage());
         }
-    }
+    }*/
 
     @ApiOperation(value="取消订单", notes="取消订单、需要把P能量退回到商品的库存中--入参为：id, productId, tradeNum")
     @OrderLog(module= LogConstant.HC_ORDER, actionDesc = "取消订单")
