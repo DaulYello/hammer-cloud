@@ -21,7 +21,6 @@
 		<result column="payAccount" property="payAccount" />
 		<result column="payCode" property="payCode" />
 		<association column="hc" property="hcAccount" javaType="com.fmkj.order.dao.domain.HcAccount">
-			<id column="id" property="id" />
 			<result column="nation" property="nation" />
 			<result column="telephone" property="telephone" />
 			<result column="dycode" property="dycode" />
@@ -47,35 +46,55 @@
 
 
 	<select id="queryOrderPage" parameterType="com.fmkj.order.dao.queryVo.OrderQueryVo" resultMap="BaseResultMap">
-		SELECT
-			fm.id,
-			fm.order_no,
-		    fm.order_type,
-			fm.user_id,
-			fm.seller_id,
-			fm.payment,
-			fm.payment_type,
-			fm.order_status,
-			fm.payment_time,
-			fm.end_time,
-			fm.create_time,
-			fm.update_time,
-			fm.is_pay,
-			fm.leave_msg,
-			fm.trade_num,
-			fm.product_id,
-			hc.*
+		(SELECT
+		fm.id,
+		fm.order_no,
+		fm.order_type,
+		fm.user_id,
+		fm.seller_id,
+		fm.payment,
+		fm.payment_type,
+		fm.order_status,
+		fm.payment_time,
+		fm.end_time,
+		fm.create_time,
+		fm.update_time,
+		fm.is_pay,
+		fm.leave_msg,
+		fm.trade_num,
+		fm.product_id,
+		hc.nation,
+		hc.telephone,
+		hc.dycode,
+		hc.dycodetime,
+		hc.logo,
+		hc.nickname,
+		hc.email,
+		hc.password,
+		hc.name,
+		hc.cardnum,
+		hc.authlock,
+		hc.rid,
+		hc.make_weight,
+		hc.my_p,
+		hc.score,
+		hc.grade_id,
+		hc.card_status,
+		hc.isboong,
+		hc.cdbid,
+		hc.cnt
 		FROM
-			fm_order_info fm
-			LEFT JOIN hc_account hc
-			ON fm.seller_id = hc.id
+		fm_order_info fm
+		LEFT JOIN hc_account hc
+		ON fm.seller_id = hc.id
 		WHERE 1 = 1
+		AND fm.order_status != -1
 		<if test="order.orderNo != null">
 			and fm.order_no = #{order.orderNo}
 		</if>
 
 		<if test="order.userId != null">
-			and (fm.user_id = #{order.userId} OR fm.seller_id = #{order.userId})
+			and fm.user_id = #{order.userId}
 		</if>
 
 		<if test="order.orderStatus != null">
@@ -89,6 +108,73 @@
 		<if test="order.sellerId != null">
 			and fm.seller_id = #{order.sellerId}
 		</if>
+		)
+
+		UNION ALL
+
+		(SELECT
+		o.id,
+		o.order_no,
+		o.order_type,
+		o.user_id,
+		o.seller_id,
+		o.payment,
+		o.payment_type,
+		o.order_status,
+		o.payment_time,
+		o.end_time,
+		o.create_time,
+		o.update_time,
+		o.is_pay,
+		o.leave_msg,
+		o.trade_num,
+		o.product_id,
+		h.nation,
+		h.telephone,
+		h.dycode,
+		h.dycodetime,
+		h.logo,
+		h.nickname,
+		h.email,
+		h.password,
+		h.name,
+		h.cardnum,
+		h.authlock,
+		h.rid,
+		h.make_weight,
+		h.my_p,
+		h.score,
+		h.grade_id,
+		h.card_status,
+		h.isboong,
+		h.cdbid,
+		h.cnt
+		FROM
+		fm_order_info o
+		LEFT JOIN hc_account h
+		ON o.user_id = h.id
+		WHERE 1 = 1
+		AND o.order_status != -1
+		<if test="order.orderNo != null">
+			and o.order_no = #{order.orderNo}
+		</if>
+
+		<if test="order.userId != null">
+			and o.seller_id = #{order.userId}
+		</if>
+
+		<if test="order.orderStatus != null">
+			and o.order_status = #{order.orderStatus}
+		</if>
+
+		<if test="order.paymentType != null">
+			and o.payment_type = #{order.paymentType}
+		</if>
+
+		<if test="order.sellerId != null">
+			and o.seller_id = #{order.sellerId}
+		</if>
+		)
 
 	</select>
 
@@ -111,7 +197,7 @@
 			fm.leave_msg,
 			fm.trade_num,
 			fm.product_id,
-			hc.*
+			hc.nation
 		FROM
 			fm_order_info fm
 			LEFT JOIN hc_account hc

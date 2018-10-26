@@ -36,10 +36,7 @@
         	LEFT JOIN hc_points_record hp ON ha.id = hp.uid
           	WHERE 1 = 1
 		<if test="nickname != null">
-			and ha.nickname = #{nickname}
-		</if>
-		<if test="telephone != null">
-			and ha.telephone = #{telephone}
+			and ha.nickname = #{nickname} or ha.telephone = #{nickname}
 		</if>
 
 	</select>

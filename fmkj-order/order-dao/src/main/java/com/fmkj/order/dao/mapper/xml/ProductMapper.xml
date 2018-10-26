@@ -96,6 +96,7 @@
 			LEFT JOIN hc_userimage im
 			ON im.uid = fm.user_id
 			WHERE 1 = 1
+		    AND fm.status != -1
 			<if test="product.productName != null">
 				and fm.product_name = #{product.productName}
 			</if>
@@ -171,6 +172,7 @@
 		LEFT JOIN hc_userimage im
 		ON im.uid = fm.user_id
 		WHERE 1 = 1
+		AND fm.status != -1
 		<if test="product.productName != null">
 			and fm.product_name = #{product.productName}
 		</if>
