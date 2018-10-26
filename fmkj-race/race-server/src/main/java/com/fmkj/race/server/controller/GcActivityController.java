@@ -152,7 +152,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
 
     //  活动广场分页查询所有活动,只查询活动中(status=2)
     @ApiOperation(value="活动广场分页查询所有活动", notes="活动广场分页查询所有活动")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "活动广场分页查询所有活动")
     @PutMapping("/queryAllActivityByPage")
     public BaseResult queryAllActivityByPage(@RequestBody GcBaseModel gcBaseModel){
         try {
@@ -172,7 +171,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
 
 
     @ApiOperation(value="传入活动id查询活动详情", notes="传入活动id查询活动详情")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "传入活动id查询活动详情")
     @PutMapping("/queryActivityById")
     public BaseResult<HashMap<String,Object>> queryActivityById(@RequestBody GcBaseModel gcBaseModel){
 
@@ -184,7 +182,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
 
 
     @ApiOperation(value="传入活动id查询活动产品的所有图片", notes="传入活动id查询活动产品的所有图片")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "传入活动id查询活动产品的所有图片")
     @PutMapping("/queryActivityImageById")
     public BaseResult queryActivityImageById(@RequestBody GcBaseModel gcBaseModel){
 
@@ -198,7 +195,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
 
     //传入uid查询用户参与的活动    status：1进行中  2已锤到的  3.已结束
     @ApiOperation(value="查询用户参与的活动，参数：pageSize,status（二级菜单编号）,uid", notes="查询用户参与的活动")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "查询用户参与的活动")
     @PutMapping("/queryMyJoinActivityByUid")
     public BaseResult queryMyJoinActivityByUid(@RequestBody GcBaseModel gcBaseModel){
         try {
@@ -222,7 +218,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
      *  传入uid查询用户发起的活动    status：0:待审核 1:驳回 2:活动中 3：已结束 4：活动异常 5：活动失败
      */
     @ApiOperation(value="传入uid查询用户发起的活动，参数：pageSize，status，uid", notes="传入uid查询用户发起的活动 ")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "传入uid查询用户发起的活动 ")
     @PutMapping("/queryMyStartActivityByUid")
     public BaseResult queryMyStartActivityByUid(@RequestBody GcBaseModel gcBaseModel){
         try {
@@ -240,7 +235,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
     }
 
     @ApiOperation(value="根据活动id查询活动中奖人,参数：id", notes="根据活动id查询活动中奖人")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "根据活动id查询活动中奖人")
     @PutMapping("/queryActivityByUserId")
     public BaseResult<HashMap<String,Object>> queryActivityByUserId(@RequestBody GcActivity gcActivity){
         if(StringUtils.isNull(gcActivity) || StringUtils.isNull(gcActivity.getId())){
@@ -255,7 +249,6 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
      *  传入uid查询用户发起的活动    status：0:待审核 1:驳回 2:活动中 3：已结束 4：活动异常 5：活动失败
      */
     @ApiOperation(value="传入uid查询用户未处理的活动，参数：pageSize，uid", notes="传入uid查询用户未处理的活动")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "传入uid查询用户未处理的活动，")
     @PutMapping("/queryMyUntreatedActivityByUid")
     public BaseResult queryMyUntreatedActivityByUid(@RequestBody GcBaseModel gcBaseModel){
         try {

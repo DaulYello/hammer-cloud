@@ -67,7 +67,6 @@ public class GcNoticeController extends BaseController<GcNotice,GcNoticeService>
 
 
     @ApiOperation(value="分页查询用户所有通知信息", notes="分页查询用户所有通知信息")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "分页查询用户所有通知信息")
     @PutMapping("/queryGcNoticeByUid")
     public BaseResult queryGcNoticeByUid(@RequestBody NoticeQueryPage noticeQueryPage){
 

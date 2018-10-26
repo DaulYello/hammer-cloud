@@ -47,7 +47,6 @@ public class ApkNoticeController {
     private HcApkversionService hcApkversionService;
 
     @ApiOperation(value="最新公告信息",notes="查询最新的公告消息")
-    @UserLog(module= LogConstant.NOTICE_INFO, actionDesc = "最新公告信息")
     @PutMapping("/queryNewestNotice")
     public BaseResult queryNewestNotice (){
 
@@ -63,7 +62,6 @@ public class ApkNoticeController {
 
 
     @ApiOperation(value="所有公告信息",notes="查询所有的公告消息")
-    @UserLog(module= LogConstant.NOTICE_INFO, actionDesc = "所有公告信息")
     @PutMapping("/queryNoticesPage")
     public BaseResult queryNoticesPage (@RequestBody NoticeQueryVo queryVo){
 
@@ -98,7 +96,6 @@ public class ApkNoticeController {
 
 
     @ApiOperation(value="查询发布反馈消息",notes="查询自己发布反馈消息,参数：uid")
-    @UserLog(module= LogConstant.FEEDBACK_INFO, actionDesc = "查询自己发布反馈消息")
     @PutMapping("/queryfeedbackInfo")
     public BaseResult queryfeedbackInfo (@RequestBody HcFeedback fk){
 
@@ -117,7 +114,6 @@ public class ApkNoticeController {
 
 
     @ApiOperation(value="查询最新的版本号",notes="查询最新的版本号")
-    @UserLog(module= LogConstant.NOTICE_INFO, actionDesc = "查询最新的版本号")
     @PutMapping("/queryNewestApkverion")
     public BaseResult queryNewestApkverion (){
 

@@ -100,7 +100,6 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
 
 
     @ApiOperation(value="活动参与记录,参数：aid,uid,pageSize ", notes="活动参与记录")
-    @RaceLog(module= LogConstant.Gc_Join_Activity_Record, actionDesc = "活动参与记录")
     @PutMapping("/queryJoinActivityByAid")
     public BaseResult queryJoinActivityByAid(@RequestBody JoinActivityPage joinActivityPage) {
 

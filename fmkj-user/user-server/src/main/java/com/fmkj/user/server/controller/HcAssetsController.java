@@ -40,7 +40,6 @@ public class HcAssetsController extends BaseController<HcAssets,HcAssetsService>
 	 * @return
 	 */
 	@ApiOperation(value="查询用户的资产信息",notes="查询用户的资产信息,参数：userId")
-	@UserLog(module= LogConstant.HC_ASSETS, actionDesc = "查询用户的资产信息")
 	@PutMapping("/queryAssetsInfo")
 	public BaseResult queryAssetsInfo(@RequestBody HcAssets asset) {
 

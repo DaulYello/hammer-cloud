@@ -30,7 +30,6 @@ public class GcActivitytypeController {
 
 
     @ApiOperation(value="查询所有活动类型 ", notes="查询所有活动类型 ")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "查询所有活动类型 ")
     @PutMapping("/queryAllActivityType")
     public BaseResult queryAllActivityType(){
         List<GcActivitytype> list = gcActivitytypeService.queryAllActivityType();

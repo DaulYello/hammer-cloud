@@ -71,7 +71,6 @@ public class GcAddressController extends BaseController<GcAddress,GcAddressServi
      * @return
     */
     @ApiOperation(value="传入地址id删除地址", notes="传入地址id删除地址")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "传入地址id删除地址")
     @PostMapping("/deleteAddressById")
     public BaseResult deleteAddressById(@RequestBody GcAddress gcAddress){
         try {
@@ -135,7 +134,6 @@ public class GcAddressController extends BaseController<GcAddress,GcAddressServi
      * @return
      */
     @ApiOperation(value="查询用户所有收货地址", notes="查询用户所有收货地址")
-    @RaceLog(module= LogConstant.Gc_Activity, actionDesc = "查询用户所有收货地址，参数：uid")
     @PutMapping("/queryAllAddressByUid")
     public BaseResult<Page<GcAddress>> queryAllAddressByUid(@RequestBody GcAddress gc){
         try {

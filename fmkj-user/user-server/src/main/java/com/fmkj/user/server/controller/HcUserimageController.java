@@ -188,7 +188,6 @@ public class HcUserimageController extends BaseController<HcUserimage, HcUserima
 
 
     @ApiOperation(value="支付方式" ,notes="参数：uid")
-    @UserLog(module= LogConstant.HC_CERT, actionDesc = "通过用户的id获取绑定支付方式")
     @PutMapping("/getUserPayWay")
     public BaseResult<HcUserimage> getUserPayWay(@RequestBody HcUserimage userimage) {
 

@@ -24,9 +24,7 @@ public class GcPremiumController extends BaseController<GcPremium, GcPremiumServ
 //    private  GcPremiumService gcPremiumService;
 
     @ApiOperation(value="查询溢价率信息", notes="按照用户积分查询溢价率信息")
-    @RaceLog(module= LogConstant.GC_PREMIUM, actionDesc = "查询溢价率信息")
     @PutMapping(value = "/getPremiumByIntegral")
-
     public BaseResult<GcPremium> getPremiumByIntegral (@RequestBody Map<String, Integer> parm){
         try {
             if(StringUtils.isNull(parm) || parm.isEmpty() == true){
