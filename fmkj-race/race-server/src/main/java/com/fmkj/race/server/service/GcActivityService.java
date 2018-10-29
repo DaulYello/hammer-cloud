@@ -65,7 +65,7 @@ public interface GcActivityService extends BaseService<GcActivity>{
      * @param ga
      * @return
      */
-    boolean addGcActivity(GcActivity ga);
+    GcActivity addGcActivity(GcActivity ga);
 
 
     /**

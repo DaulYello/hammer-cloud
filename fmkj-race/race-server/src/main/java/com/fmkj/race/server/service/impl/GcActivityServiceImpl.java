@@ -3,10 +3,7 @@ package com.fmkj.race.server.service.impl;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.base.BaseServiceImpl;
 import com.fmkj.common.comenum.PointEnum;
-import com.fmkj.race.dao.domain.GcActivity;
-import com.fmkj.race.dao.domain.GcActivitytype;
-import com.fmkj.race.dao.domain.GcMessage;
-import com.fmkj.race.dao.domain.GcNotice;
+import com.fmkj.race.dao.domain.*;
 import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.mapper.*;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
@@ -106,17 +103,17 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
      * @return
      */
     @Override
-    public boolean addGcActivity(GcActivity ga) {
+    public GcActivity addGcActivity(GcActivity ga) {
         int row = gcActivityMapper.insert(ga);
         if(row > 0){
             boolean result = addNoticeAndMessage(ga.getStartid(), ga.getTypeid());
             if(result){
-                return true;
+                return ga;
             }else
                 throw new RuntimeException("发布活动出现异常！");
 
         }
-        return false;
+        return ga;
     }
 
     /**

@@ -96,8 +96,12 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
 
     @Override
     public boolean uploadUserHead(HcAccount hcAccount, String fileName, String path) {
-        LOGGER.info("上传头像，在更新hc_account之前，先查询该表中logo字段是否为空");
+        //上传头像，在更新hc_account之前，先查询该表中logo字段是否为空
+        boolean isPoint = false;
         HcAccount account = hcAccountMapper.selectById(hcAccount.getId());
+        if(StringUtils.isEmpty(account.getLogo())){
+            isPoint = true;
+        }
         int update = hcAccountMapper.updateById(hcAccount);
         if(update > 0){
             HcUserhead hcUserhead = new HcUserhead();
@@ -107,15 +111,14 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             hcUserhead.setTime(new Date());
             int row = hcUserheadMapper.insert(hcUserhead);
             if(row > 0){
-                if(StringUtils.isNotEmpty(account.getLogo())){
-                    return true;
+                if(isPoint){
+                    HcPointsRecord record = new HcPointsRecord();
+                    record.setPointsId(PointEnum.UPLOAD_HEAD.pointId);
+                    record.setPointsNum(PointEnum.UPLOAD_HEAD.pointNum);
+                    record.setUid(hcAccount.getId());
+                    record.setTime(DateUtil.getNowInMillis(0L));
+                    hcPointsRecordMapper.insert(record);
                 }
-                HcPointsRecord record = new HcPointsRecord();
-                record.setPointsId(PointEnum.UPLOAD_HEAD.pointId);
-                record.setPointsNum(PointEnum.UPLOAD_HEAD.pointNum);
-                record.setUid(hcAccount.getId());
-                record.setTime(DateUtil.getNowInMillis(0L));
-                hcPointsRecordMapper.insert(record);
                 return true;
             }else
                 return false;

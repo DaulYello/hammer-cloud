@@ -7,6 +7,7 @@ import com.fmkj.common.base.BaseController;
 import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseResultEnum;
 import com.fmkj.common.constant.LogConstant;
+import com.fmkj.common.util.PropertiesUtil;
 import com.fmkj.common.util.StringUtils;
 import com.fmkj.race.dao.domain.GcActivity;
 import com.fmkj.race.dao.domain.GcPimage;
@@ -14,19 +15,21 @@ import com.fmkj.race.dao.dto.GcActivityDto;
 import com.fmkj.race.dao.queryVo.GcBaseModel;
 import com.fmkj.race.server.annotation.RaceLog;
 import com.fmkj.race.server.api.BmListApi;
-import com.fmkj.race.server.async.RaceAsyncFactory;
-import com.fmkj.race.server.async.RaceAsyncManager;
 import com.fmkj.race.server.service.GcActivityService;
 import com.fmkj.race.server.service.GcPimageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +44,8 @@ import java.util.List;
 @DependsOn("springContextHandler")
 @Api(tags ={ "活动服务"},description = "活动服务接口-网关路径/api-race")
 public class GcActivityController extends BaseController<GcActivity,GcActivityService> implements BaseApiService<GcActivity>{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GcActivityController.class);
 
     @Autowired
     private GcActivityService gcActivityService;//活动接口
@@ -139,14 +144,37 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         ga.setNum(num);
         ga.setCollectgoodstatus(0);
         ga.setPar(par);
-        boolean result = gcActivityService.addGcActivity(ga);
-        if(result){
-            if(file != null){
-                RaceAsyncManager.me().execute(RaceAsyncFactory.uploadImage(ga.getId(), file, activityImagePath, activityImageIpPath, defuatFileName));
-            }
+        GcActivity activity = gcActivityService.addGcActivity(ga);
+        if(StringUtils.isNotNull(activity.getId())){
+            excuteTask(activity.getId(), file);
             return new BaseResult(BaseResultEnum.SUCCESS.status, "活动发起成功!",true);
         }
         return new BaseResult(BaseResultEnum.ERROR.status, "活动发起失败!",false);
+
+    }
+
+    @Async
+    public void excuteTask(Integer id, MultipartFile[] file){
+        int i = 1;
+        for (MultipartFile multipartFile : file) {
+            String fileName = null;
+            try {
+                fileName = PropertiesUtil.uploadImage(multipartFile, activityImagePath);
+            } catch (IOException e) {
+                LOGGER.info("上传活动图片异常：" + e.getMessage());
+                e.printStackTrace();
+            }
+            GcPimage gp = new GcPimage();
+            gp.setAid(id);
+            gp.setFlag(i++);
+            if(fileName == null){
+                gp.setImageurl(activityImageIpPath + defuatFileName);
+            }else{
+                gp.setImageurl(activityImageIpPath + fileName);
+            }
+            boolean result = gcPimageService.insert(gp);
+            LOGGER.info("插入图片信息返回结果：" + result);
+        }
 
     }
 
