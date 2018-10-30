@@ -32,7 +32,7 @@ feign:
         execution:
           isolation:
             thread:
-              timeoutInMilliseconds: 120000
+              timeoutInMilliseconds: 200000
 
 
 

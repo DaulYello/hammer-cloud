@@ -42,7 +42,7 @@
           LEFT JOIN hc_account a
             ON f.uid = a.id
         WHERE TO_DAYS(f.take_date) = TO_DAYS(NOW())
-          AND f.take_type = 0
+          AND f.take_type IN (0,3,4,5,7,8)
           AND f.friend_id = #{uid}
          ORDER BY f.take_date DESC
     </select>
@@ -61,7 +61,7 @@
           LEFT JOIN hc_account c
             ON t.uid = c.id
         WHERE TO_DAYS(t.take_date) = TO_DAYS(NOW())
-          AND t.take_type = 0
+          AND t.take_type IN (0,3,4,5,7,8)
           AND t.recyle_type = 2
         GROUP BY t.uid
         ORDER BY takeNum DESC
@@ -78,7 +78,7 @@
         FROM
           fm_recyle_log t
         WHERE TO_DAYS(t.take_date) = TO_DAYS(NOW())
-          AND t.take_type = 0
+          AND t.take_type IN (0,3,4,5,7,8)
           AND t.recyle_type = 1
           AND t.uid = #{uid}
     </select>
@@ -93,7 +93,7 @@
         FROM
           fm_recyle_log t
         WHERE TO_DAYS(t.take_date) = TO_DAYS(NOW())
-          AND t.take_type = 0
+          AND t.take_type IN (0,3,4,5,7,8)
           AND t.recyle_type = 2
           AND t.uid = #{uid}
     </select>
