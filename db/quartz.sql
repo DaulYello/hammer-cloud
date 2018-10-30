@@ -190,6 +190,12 @@ create table sys_job (
   primary key (job_id, job_name, job_group)
 ) engine=innodb auto_increment=100 default charset=utf8 comment = '定时任务调度表';
 
+INSERT  INTO `sys_job`(`job_id`,`job_name`,`job_group`,`method_name`,`method_params`,`cron_expression`,`misfire_policy`,`status`,`create_by`,`create_time`,`update_by`,`update_time`,`remark`) VALUES
+(1,'rIntegTask','系统默认（无参）','runRIntegral','14','0 0 2,6,12,15,18,23 * * ?','3','0','admin','2018-03-16 11:33:00','admin','2018-10-18 18:12:25',''),
+(2,'cntTask','系统默认（无参）','runExcute','14','0 0 1 * * ?','3','0','admin','2018-10-15 17:40:00','admin','2018-10-18 18:14:47',''),
+(3,'recycleTask','系统默认（无参）','runRecyle','14','0 5 0 * * ?','3','0','admin','2018-10-16 13:38:14','admin','2018-10-16 13:38:19',''),
+(4,'rewardTask','系统默认（无参）','runReward','','0 0 2 ? * MON','3','0','admin','2018-10-19 16:36:19','',NULL,'');
+
 
 -- ----------------------------
 -- 12、定时任务调度日志表

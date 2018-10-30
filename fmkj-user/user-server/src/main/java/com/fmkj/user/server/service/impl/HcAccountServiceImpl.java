@@ -172,21 +172,18 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                         hcAccount.setCnt(hcAccount.getCnt() + 1);
                         int update = hcAccountMapper.updateById(hcAccount);
                         if(update > 0){
+                            /*不需要用户等级
                             GradeDto gradeDto = hcPointsRecordMapper.selectGrandByUid(hcAccount.getId());
-                            boolean change = changeGrade(gradeDto, ha.getId());
-                            if (change){
-                                HcRcode rc = new HcRcode();
-                                rc.setUid(resultHc.getId());
-                                rc.setCode(Rcode.getRcode(resultHc.getId()));
-                                int recodeRow = hcRcodeMapper.insert(rc);
-                                if(recodeRow > 0){
-                                    addRecyleLog(resultHc.getId(), uid);//插入日志表
-                                    return ha.getId();
-                                }else
-                                    throw new RuntimeException("生成邀请码失败！");
-                            }
-                            else
-                                throw new RuntimeException("用户等级更新失败！");
+                            boolean change = changeGrade(gradeDto, ha.getId());*/
+                            HcRcode rc = new HcRcode();
+                            rc.setUid(resultHc.getId());
+                            rc.setCode(Rcode.getRcode(resultHc.getId()));
+                            int recodeRow = hcRcodeMapper.insert(rc);
+                            if(recodeRow > 0){
+                                addRecyleLog(resultHc.getId(), uid);//插入日志表
+                                return ha.getId();
+                            }else
+                                throw new RuntimeException("生成邀请码失败！");
                         }
                         else
                             throw new RuntimeException("给邀请人1P失败！");
