@@ -76,6 +76,7 @@ zuul:
 ribbon:
   ReadTimeout: 120000
   ConnectTimeout: 120000
+
 feign:
   hystrix:
     enabled: true
@@ -90,6 +91,7 @@ feign:
 activityImagePath: D:\\apache-tomcat-8.5.34\\webapps\\activityImage
 #竞锤后台活动图片ip地址
 activityImageIpPath: http://192.168.10.218:8080/activityImage/
+
 defuatFileName: 123456789777777777788888888889999999999defualt.jpg
 
 web-password: 11111111

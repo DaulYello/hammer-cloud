@@ -57,9 +57,6 @@ public class HcAccount extends Model<HcAccount> implements Serializable{
 
 	private Double cnt;
 
-	@TableField("user_level")
-	private String userLevel;
-
 	//注册时间
 	@TableField("create_date")
 	private Date createDate;
@@ -68,14 +65,6 @@ public class HcAccount extends Model<HcAccount> implements Serializable{
 	 */
 	@TableField("update_date")
 	private Date updateDate;
-
-	public String getUserLevel() {
-		return userLevel;
-	}
-
-	public void setUserLevel(String userLevel) {
-		this.userLevel = userLevel;
-	}
 
 	public Date getCreateDate() {
 		return createDate;
