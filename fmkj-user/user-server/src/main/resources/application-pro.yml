@@ -74,16 +74,16 @@ feign:
           execution:
             isolation:
               thread:
-                timeoutInMilliseconds: 120000
+                timeoutInMilliseconds: 200000
 
 zuul:
   host:
-    socket-timeout-millis: 120000
-    connect-timeout-millis: 120000
+    socket-timeout-millis: 200000
+    connect-timeout-millis: 200000
 
 ribbon:
-  ReadTimeout: 120000
-  ConnectTimeout: 120000
+  ReadTimeout: 200000
+  ConnectTimeout: 200000
 
 #获取头像图片ip路径
 userHeadImageIpPath: http://47.101.52.173:8080/userHead/
@@ -112,3 +112,5 @@ userPayImagePath: C:\\Program Files\\apache-tomcat-8.5.24\\webapps\\payImages
 userCodeImageIpPath: http://47.101.52.173:8080/cardImages/
 
 userPayImageIpPath: http://47.101.52.173:8080/payImages/
+
+

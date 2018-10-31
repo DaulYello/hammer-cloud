@@ -24,6 +24,7 @@ zuul:
 
 server:
   port: 9090
+
 feign:
   hystrix:
     enabled: true
@@ -32,7 +33,19 @@ feign:
         execution:
           isolation:
             thread:
-              timeoutInMilliseconds: 200000
+              timeoutInMilliseconds: 300000
+fmkj-user:
+  ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+fmkj-race:
+  ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+fmkj-order:
+  ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
 
 
 
