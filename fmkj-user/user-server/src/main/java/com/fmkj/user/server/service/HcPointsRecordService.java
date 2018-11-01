@@ -18,7 +18,7 @@ public interface HcPointsRecordService extends BaseService<HcPointsRecord> {
 
     public Integer queryPoints(Integer id);
 
-    public List<BaseBean> queryInvitingFriendsRankWeek(int peopleNum, int accountNum);
+    public List queryInvitingFriendsRankWeek();
 
     public Integer queryUserScoresByUid(Integer id);
 }

@@ -49,19 +49,21 @@
     <!-- 查询用户邀请人数得周榜单(本周至当前得数据) -->
     <select id="queryInvitingFriendsRankWeek" resultMap="RankWeekMap">
   		SELECT
-		  rid,
-		  nickname,
-		  logo,
-		  COUNT(rid) * 5 AS points,
-		  COUNT(rid) AS invitingNum
+		  h.nickname,
+		  h.logo,
+		  t.rid AS uid,
+		  COUNT(t.rid) * 5 AS points,
+		  COUNT(t.rid) AS invitingNum
 		FROM
-		  hc_account
+		  hc_account t
+		  LEFT JOIN hc_account h
+			ON t.rid = h.id
 		WHERE YEARWEEK(
-			DATE_FORMAT(create_date, '%Y-%m-%d') - INTERVAL 1 DAY
+			DATE_FORMAT(t.create_date, '%Y-%m-%d') - INTERVAL 1 DAY
 		  ) = YEARWEEK(NOW() - INTERVAL 1 DAY)
-		GROUP BY rid
+		GROUP BY t.rid
 		ORDER BY invitingNum DESC
-		limit 0, 10
+		LIMIT 0, 10
 
 	</select>
 

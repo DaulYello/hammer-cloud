@@ -41,8 +41,8 @@ public class HcPointsRecordServiceImpl extends BaseServiceImpl<HcPointsRecordMap
     }
 
     @Override
-    public List<BaseBean> queryInvitingFriendsRankWeek(int peopleNum, int accountNum) {
-        return hcPointsRecordMapper.queryInvitingFriendsRankWeek(peopleNum, accountNum);
+    public List<BaseBean> queryInvitingFriendsRankWeek() {
+        return hcPointsRecordMapper.queryInvitingFriendsRankWeek();
     }
 
     @Override

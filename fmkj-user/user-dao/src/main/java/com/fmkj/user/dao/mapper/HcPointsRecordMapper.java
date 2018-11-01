@@ -22,7 +22,7 @@ public interface HcPointsRecordMapper extends BaseMapper<HcPointsRecord> {
 
     Integer queryPoints(Integer uid);
 
-    List<BaseBean> queryInvitingFriendsRankWeek(@Param("peopleNum")int peopleNum, @Param("dataNum")int dataNum);
+    List queryInvitingFriendsRankWeek();
 
     Integer queryUserScoresByUid(Integer uid);
 
