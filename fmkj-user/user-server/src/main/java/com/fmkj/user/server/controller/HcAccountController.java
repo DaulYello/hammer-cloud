@@ -562,9 +562,9 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         hashMap.put("getAllUser", count);
         hashMap.put("reode", rcode);
 
-        int accountNum = hcAccountService.selectCount(new EntityWrapper<>());
+        //int accountNum = hcAccountService.selectCount(new EntityWrapper<>());
         // 查询用户的排名(邀请人数大于0)
-        List<BaseBean> rankWeek = hcPointsRecordService.queryInvitingFriendsRankWeek(0,accountNum);
+        List<BaseBean> rankWeek = hcPointsRecordService.queryInvitingFriendsRankWeek(0,10);
         if (StringUtils.isEmpty(rankWeek)) {
             hashMap.put("position", "你本周未邀请人");
         }
