@@ -75,4 +75,6 @@ public interface GcActivityMapper extends BaseMapper<GcActivity> {
      * @return
      */
     List<GcActivityDto> queryMyUntreatedActivityByUid(Pagination pagination, @Param("gbm") GcBaseModel gcBaseModel);
+
+    List<GcActivityDto> queryEndActivity();
 }

@@ -82,4 +82,6 @@ public interface GcActivityService extends BaseService<GcActivity>{
      * @return
      */
     List<GcActivityDto> queryMyUntreatedActivityByUid(Pagination pagination, GcBaseModel gcBaseModel);
+
+    List<GcActivityDto> queryEndActivity();
 }

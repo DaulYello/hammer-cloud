@@ -169,4 +169,9 @@ public class GcActivityServiceImpl extends BaseServiceImpl<GcActivityMapper,GcAc
     public List<GcActivityDto> queryMyUntreatedActivityByUid(Pagination pagination, GcBaseModel gcBaseModel) {
         return gcActivityMapper.queryMyUntreatedActivityByUid(pagination, gcBaseModel);
     }
+
+    @Override
+    public List<GcActivityDto> queryEndActivity() {
+        return gcActivityMapper.queryEndActivity();
+    }
 }

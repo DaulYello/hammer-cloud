@@ -195,6 +195,14 @@ public class GcActivityController extends BaseController<GcActivity,GcActivitySe
         }
     }
 
+    @ApiOperation(value="查询已结束活动中价值最大的活动与最新的活动", notes="统计10条数据，先按价格排序，在按时间排序")
+    @PutMapping("/queryEndActivity")
+    public BaseResult queryEndActivity(){
+        List<GcActivityDto> list = gcActivityService.queryEndActivity();
+        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", list);
+
+    }
+
 
 
 

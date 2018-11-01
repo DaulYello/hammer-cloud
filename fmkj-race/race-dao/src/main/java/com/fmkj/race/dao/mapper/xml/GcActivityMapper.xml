@@ -44,6 +44,42 @@
         ORDER BY ga.id DESC
     </select>
 
+    <select id="queryEndActivity" resultMap="BaseResultMap">
+
+      SELECT
+          ga.id,
+          ga.startid,
+          ga.typeid,
+          ga.contract,
+          ga.isbond,
+          ga.pname,
+          ga.pnumber,
+          ga.price,
+          ga.premium,
+          ga.time,
+          ga.num,
+          ga.par,
+          ga.pdescribe,
+          ga.status,
+          ga.delivergoodstatus,
+          ga.collectgoodstatus,
+          ga.endtime,
+          ga.name,
+          gp.imageurl,
+          gat.type
+        FROM
+          gc_activity ga
+          LEFT JOIN gc_pimage gp
+            ON gp.aid = ga.id
+          LEFT JOIN gc_activitytype gat
+            ON ga.typeid = gat.id
+        WHERE ga.status = 3
+        GROUP BY ga.id
+        ORDER BY ga.price DESC,
+          ga.time DESC
+        LIMIT 0, 10
+    </select>
+
 
 
     <!-- 传入id查询活动详情 -->
