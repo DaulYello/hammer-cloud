@@ -8,6 +8,7 @@ import java.util.List;
 import com.fmkj.race.server.hammer.contracts.PuzzleHammer.PuzzleHammer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -59,8 +60,8 @@ public class Helper {
      */
     public Helper() {
         this.password = "11111111";
-        this.walletfile = "F:\\SwanChain\\data\\00\\keystore\\UTC--2018-10-19T10-02-14.891008500Z--0cf95994875cfed5b633d24877ea3cc1beab9bd7";
-        this.ip = "192.168.10.218";
+        this.walletfile = "C:\\swanchain\\data\\00\\keystore\\UTC--2018-10-19T03-47-19.803792500Z--4aef396f4f43ebbf7e47beeff8d3cf402b2ff8ad";
+        this.ip = "localhost";
         this.port = "9797";
     }
 

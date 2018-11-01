@@ -95,7 +95,8 @@ activityImageIpPath: http://47.101.52.173:8080/activityImage/
 defuatFileName: 123456789777777777788888888889999999999defualt.jpg
 
 web-password: 11111111
-web-walletfile: C:\\Users\\Administrator\\AppData\\Roaming\\Roaming\\keystore\\UTC--2018-10-19T03-47-19.803792500Z--4aef396f4f43ebbf7e47beeff8d3cf402b2ff8ad
-web-ip: 47.101.52.173
+web-walletfile: C:\\swanchain\\data\\00\\keystore\\UTC--2018-10-19T03-47-19.803792500Z--4aef396f4f43ebbf7e47beeff8d3cf402b2ff8ad
+
+web-ip: localhost
 web-port: 9797
 
