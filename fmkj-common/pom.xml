@@ -53,15 +53,6 @@
 
     <dependencies>
 
-        <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>${mail-version}</version>
-        </dependency>
-        <!-- 这个依赖提供了spring mail封装的各接口, -->
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
-
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>

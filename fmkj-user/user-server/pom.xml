@@ -19,6 +19,13 @@
     </properties>
 
     <dependencies>
+
+        <!-- 支持发送邮件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- unirest -->
         <dependency>
             <groupId>com.mashape.unirest</groupId>
