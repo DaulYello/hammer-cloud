@@ -60,8 +60,8 @@ public class Helper {
      */
     public Helper() {
         this.password = "11111111";
-        this.walletfile = "C:\\swanchain\\data\\00\\keystore\\UTC--2018-10-19T03-47-19.803792500Z--4aef396f4f43ebbf7e47beeff8d3cf402b2ff8ad";
-        this.ip = "localhost";
+        this.walletfile = "C:\\Users\\Administrator\\AppData\\Roaming\\Ethereum\\keystore\\UTC--2018-10-19T03-47-19.803792500Z--4aef396f4f43ebbf7e47beeff8d3cf402b2ff8ad";
+        this.ip = "127.0.0.1";
         this.port = "9797";
     }
 

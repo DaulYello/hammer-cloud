@@ -192,6 +192,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
     @UserLog(module = LogConstant.HC_ACCOUNT, actionDesc = "更改用户cnt")
     @PostMapping("/updateUserP")
     public Boolean updateUserP(@RequestBody HcAccount hc) {
+        LOGGER.info("更改用户CNT--竞锤调用-----------------------------------"+JSON.toJSONString(hc));
         double par = hc.getCnt();
         HcAccount account = hcAccountService.selectById(hc.getId());
        if (Double.doubleToLongBits(account.getCnt()) < Double.doubleToLongBits(par)) {

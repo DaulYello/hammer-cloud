@@ -77,6 +77,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         hc.setId(uid);
         hc.setCnt(par);
         boolean flag = hcAccountApi.updateUserP(hc);
+        LOGGER.info("更改用户CNT------------------------------------------->"+flag);
         if (flag){
             //参与活动添加10飞羽
             HcPointsRecord hcp = new HcPointsRecord();
