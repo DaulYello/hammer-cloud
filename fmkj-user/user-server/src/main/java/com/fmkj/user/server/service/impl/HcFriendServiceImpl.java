@@ -34,7 +34,7 @@ public class HcFriendServiceImpl extends BaseServiceImpl<HcFriendMapper, HcFrien
     @Override
     public void addFriend(HcFriend hcFriend) {
         // 添加好友需要插入两条数据
-        hcFriend.setPass(0);
+        hcFriend.setPass(1);
         int row = hcFriendMapper.insert(hcFriend);
         if(row > 0){
             HcFriend hc = new HcFriend();
