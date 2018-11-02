@@ -30,6 +30,13 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
+  mail:
+    default-encoding: UTF-8
+    host: smtp.163.com
+    password: youxun123
+    port: 25
+    protocol: smtp
+    username: yooxuu@163.com
 eureka:
   client:
     service-url:
