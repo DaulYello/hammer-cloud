@@ -46,6 +46,20 @@
 		WHERE uid = #{uid}
 	</select>
 
+	<!-- 查询用户邀请人数得周榜单(本周至当前得数据) -->
+	<select id="getInviteRankWeek" resultMap="RankWeekMap">
+		SELECT
+		  t.rid AS uid,
+		  COUNT(t.rid) AS invitingNum
+		FROM
+		  hc_account t
+		WHERE YEARWEEK(
+			DATE_FORMAT(t.create_date, '%Y-%m-%d') - INTERVAL 1 DAY
+		  ) = YEARWEEK(NOW() - INTERVAL 1 DAY)
+		GROUP BY t.rid
+		ORDER BY invitingNum DESC
+	</select>
+
     <!-- 查询用户邀请人数得周榜单(本周至当前得数据) -->
     <select id="queryInvitingFriendsRankWeek" resultMap="RankWeekMap">
   		SELECT

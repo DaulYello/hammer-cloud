@@ -565,12 +565,21 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
         //int accountNum = hcAccountService.selectCount(new EntityWrapper<>());
         // 查询用户的排名(邀请人数大于0)
-        //List<BaseBean> rankWeek = hcPointsRecordService.queryInvitingFriendsRankWeek(0,10);
-        if (count == 0) {
+        List<BaseBean> rankWeek = hcPointsRecordService.getInviteRankWeek();
+        if(StringUtils.isEmpty(rankWeek)){
             hashMap.put("position", "你本周未邀请人");
         }else{
-            hashMap.put("position", count);
+            for(int i = 0; i < rankWeek.size(); i++){
+                BaseBean bean = rankWeek.get(i);
+                if (bean.getUid() == hc.getId()) {
+                    hashMap.put("position", i + 1);
+                    break;
+                }else{
+                    hashMap.put("position", "你本周未邀请人");
+                }
+            }
         }
+
         // ·榜
         List<BaseBean> friendsRankWeek = hcPointsRecordService.queryInvitingFriendsRankWeek();
         result.put("rank", friendsRankWeek);

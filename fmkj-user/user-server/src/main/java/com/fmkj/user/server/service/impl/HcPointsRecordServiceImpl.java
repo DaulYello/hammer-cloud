@@ -49,4 +49,9 @@ public class HcPointsRecordServiceImpl extends BaseServiceImpl<HcPointsRecordMap
     public Integer queryUserScoresByUid(Integer uid) {
         return hcPointsRecordMapper.queryUserScoresByUid(uid);
     }
+
+    @Override
+    public List<BaseBean> getInviteRankWeek() {
+        return hcPointsRecordMapper.getInviteRankWeek();
+    }
 }

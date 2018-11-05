@@ -29,4 +29,6 @@ public interface HcPointsRecordMapper extends BaseMapper<HcPointsRecord> {
     GradeDto selectGrandByUid(@Param("uid") Integer id);
 
     int queryActivitNum(@Param("uid") Integer uid);
+
+    List<BaseBean> getInviteRankWeek();
 }
