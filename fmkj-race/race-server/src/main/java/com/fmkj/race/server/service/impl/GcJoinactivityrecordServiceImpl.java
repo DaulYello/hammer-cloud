@@ -77,20 +77,8 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         hc.setId(uid);
         hc.setCnt(par);
         boolean flag = hcAccountApi.updateUserP(hc);
-        LOGGER.info("更改用户CNT------------------------------------------->"+flag);
-        if (flag){
-            //参与活动添加10飞羽
-            HcPointsRecord hcp = new HcPointsRecord();
-            hcp.setUid(uid);
-            hcp.setTime(new Date());
-            hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
-            hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
-            boolean result = hcAccountApi.addHcPointsRecord(hcp);
-            if(result){
-                return true;
-            }
-        }
-        return false;
+        LOGGER.info("调用用户API更改用户CNT----:"+flag);
+        return flag;
     }
 
 
@@ -217,50 +205,45 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         //活动需要人数
         double par = joinActivityDto.getPar();//活动需要的cnt能量
         //插入用户参与记录/更改用户cnt值/
-        boolean flag = updateCntAndPiont(joinActivityDto.getUid(), par);
-        LOGGER.info("更改参加用户CNT值与添加飞羽返回结果:" + flag);
-        if (flag) {
-            //最后一个用户参与活动
-            if (joinActivityDto.getIslast() == 1) {
-                //初始化合约加载合约
-                int winId = lastChangeStage(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
-                if(winId == -1){
-                    throw new RuntimeException("最后一个用户参与活动上链更新合约状态失败");
-                }
-                boolean saveNotice = saveNoticeInfo(winId, joinActivityDto);
-                if(!saveNotice){
-                    throw new RuntimeException("插入通知表，保存优胜者的记录执行失败");
-                }
-                GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
-                gcJoinactivityrecord.setAid(joinActivityDto.getAid());
-                EntityWrapper<GcJoinactivityrecord> wrapper = new EntityWrapper<>(gcJoinactivityrecord);
-                List<GcJoinactivityrecord> joinactivityrecords= gcJoinactivityrecordMapper.selectList(wrapper);
-                List<Integer> uids = new ArrayList<>();
-                for(GcJoinactivityrecord joinactivityrecord : joinactivityrecords){
-                    if(joinactivityrecord.getUid() != winId){
-                        uids.add(joinactivityrecord.getUid());
-                    }
-                }
-                boolean rusult = hcAccountApi.grantCredits(par,uids);
-                LOGGER.info("竞锤成功后给用户发R积分:" + rusult);
-                return true;
-            }else {
-                boolean part = participateActivity(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
-                if(!part){
-                    throw new RuntimeException("参加活动上链失败");
-                }else{
-                    GcJoinactivityrecord gcJoinactivityrecord = gcJoinactivityrecordMapper.selectById(joinActivityDto.getId());
-                    gcJoinactivityrecord.setIschain(1);
-                    int updateChain = gcJoinactivityrecordMapper.updateById(gcJoinactivityrecord);
-                    if(updateChain > 0){
-                        return true;
-                    }else{
-                        throw new RuntimeException("更改上链状态失败！");
-                    }
+        //boolean flag = updateCntAndPiont(joinActivityDto.getUid(), par);
+        //最后一个用户参与活动
+        if (joinActivityDto.getIslast() == 1) {
+            //初始化合约加载合约
+            int winId = lastChangeStage(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
+            if(winId == -1){
+                throw new RuntimeException("最后一个用户参与活动上链更新合约状态失败");
+            }
+            boolean saveNotice = saveNoticeInfo(winId, joinActivityDto);
+            if(!saveNotice){
+                throw new RuntimeException("插入通知表，保存优胜者的记录执行失败");
+            }
+            GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
+            gcJoinactivityrecord.setAid(joinActivityDto.getAid());
+            EntityWrapper<GcJoinactivityrecord> wrapper = new EntityWrapper<>(gcJoinactivityrecord);
+            List<GcJoinactivityrecord> joinactivityrecords= gcJoinactivityrecordMapper.selectList(wrapper);
+            List<Integer> uids = new ArrayList<>();
+            for(GcJoinactivityrecord joinactivityrecord : joinactivityrecords){
+                if(joinactivityrecord.getUid() != winId){
+                    uids.add(joinactivityrecord.getUid());
                 }
             }
+            boolean rusult = hcAccountApi.grantCredits(par,uids);
+            LOGGER.info("竞锤成功后给用户发R积分:" + rusult);
+            return true;
         }else {
-            throw new RuntimeException("更改参加用户CNT值与添加飞羽失败");
+            boolean part = participateActivity(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
+            if(!part){
+                throw new RuntimeException("参加活动上链失败");
+            }else{
+                GcJoinactivityrecord gcJoinactivityrecord = gcJoinactivityrecordMapper.selectById(joinActivityDto.getId());
+                gcJoinactivityrecord.setIschain(1);
+                int updateChain = gcJoinactivityrecordMapper.updateById(gcJoinactivityrecord);
+                if(updateChain > 0){
+                    return true;
+                }else{
+                    throw new RuntimeException("更改上链状态失败！");
+                }
+            }
         }
     }
 
@@ -322,5 +305,14 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     @Override
     public List<JoinActivityDto> queryJoinActivityList() {
         return gcJoinactivityrecordMapper.queryJoinActivityList();
+    }
+
+    @Override
+    public boolean addActivity(GcJoinactivityrecord gcJoinactivityrecord, Double par) {
+        if(updateCntAndPiont(gcJoinactivityrecord.getUid(), par)){
+            int row = gcJoinactivityrecordMapper.insert(gcJoinactivityrecord);
+            return true;
+        }
+        return false;
     }
 }

@@ -31,4 +31,6 @@ public interface GcJoinactivityrecordService extends BaseService<GcJoinactivityr
     boolean participateActivity(String contract,Integer uid, String nickname);
 
     List<JoinActivityDto> queryJoinActivityList();
+
+    boolean addActivity(GcJoinactivityrecord gcJoinactivityrecord, Double par);
 }

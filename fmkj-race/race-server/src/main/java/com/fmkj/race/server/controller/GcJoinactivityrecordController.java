@@ -85,7 +85,7 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
         gcJoinactivityrecord.setIschain(0);
         gcJoinactivityrecord.setAid(joinActivity.getAid());
         gcJoinactivityrecord.setUid(joinActivity.getUid());
-        boolean result = gcJoinactivityrecordService.insert(gcJoinactivityrecord);
+        boolean result = gcJoinactivityrecordService.addActivity(gcJoinactivityrecord, gcActivity.getPar());
         int joinNum = gcJoinactivityrecordService.selectCount(entityWrapper);//当前参与人数
         if(joinNum == gcActivity.getNum()){
             gcJoinactivityrecord.setIslast(1);

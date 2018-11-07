@@ -224,6 +224,7 @@
         WHERE 1 = 1
           AND jr.ischain = 0
           AND jr.`uid` = #{gbm.uid}
+          GROUP BY gp.aid
           ORDER BY gc.id DESC
     </select>
 

@@ -253,6 +253,14 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
     public boolean updateUserP(HcAccount account, double cnt) {
         int row = hcAccountMapper.updateById(account);
         if(row > 0){
+            //参与活动添加10飞羽
+            HcPointsRecord hcp = new HcPointsRecord();
+            hcp.setUid(account.getId());
+            hcp.setTime(new Date());
+            hcp.setPointsId(PointEnum.PART_ACITIVITY.pointId);
+            hcp.setPointsNum(PointEnum.PART_ACITIVITY.pointNum);
+            int update = hcPointsRecordMapper.insert(hcp);
+            LOGGER.info("参加活动添加飞羽返回结果:" + update);
             FmRecyleLog fmRecyleLog = new FmRecyleLog();
             fmRecyleLog.setUid(account.getId());
             fmRecyleLog.setFriendId(account.getId());
@@ -261,7 +269,8 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
             fmRecyleLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
             fmRecyleLog.setTakeType(TakeEnum.PART_ACITIVITY.status);
             fmRecyleLog.setTakeMsg("参加活动扣除"+cnt+"CNT");
-            fmRecyleLogMapper.insert(fmRecyleLog);
+            int fmr = fmRecyleLogMapper.insert(fmRecyleLog);
+            LOGGER.info("参加活动记录日志表返回结果:" + fmr);
             return true;
         }
         return false;
