@@ -81,7 +81,7 @@ public class HcUserimageServiceImpl extends BaseServiceImpl<HcUserimageMapper, H
             HcUserimage hcUserimage = hcUserimageMapper.selectOne(imagePay);
             boolean result = false;
             if((account.getCardStatus() ==0)
-                    || (StringUtils.isNotEmpty(hcUserimage.getFullPhoto()) || StringUtils.isNotEmpty(hcUserimage.getReversePhoto()))){
+                    || (StringUtils.isEmpty(hcUserimage.getFullPhoto()) || StringUtils.isEmpty(hcUserimage.getReversePhoto()))){
                 LOGGER.debug("还没有实名认证就绑定支付认证");
                 return new BaseResult(BaseResultEnum.ERROR.getStatus(), "用户还没有实名认证，请先实名认证！", false);
             }else{
