@@ -318,6 +318,11 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         return hcAccountMapper.searchAccount(params);
     }
 
+    @Override
+    public HashMap<String, Object> getAccountInfoByUid(Integer id) {
+        return hcAccountMapper.getAccountInfoByUid(id);
+    }
+
     public boolean changeGrade(GradeDto gb, Integer uid) {
         Integer num1 = paseInteger(gb.getNum1());//签到次数
         Integer num2 = paseInteger(gb.getNum2());//参与竞拍次数

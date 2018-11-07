@@ -49,4 +49,6 @@ public interface HcAccountService extends BaseService<HcAccount> {
     boolean granCredites(Double par, List<Integer> uids);
 
     List<HcAccount> searchAccount(HashMap<String, Object> params);
+
+    HashMap<String,Object> getAccountInfoByUid(Integer id);
 }

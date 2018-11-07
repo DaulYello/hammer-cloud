@@ -51,6 +51,22 @@
 		LIMIT 0, 1
 	</select>
 
+	<select id="getAccountInfoByUid" resultType="java.util.HashMap">
+		SELECT
+		  t.id,
+		  t.cardnum,
+		  t.card_status AS cardStatus,
+		  t.name,
+		  t.realnam_info AS realnamInfo,
+		  h.full_photo AS fullPhoto,
+		  h.reverse_photo AS reversePhoto
+		FROM
+		  hc_account t
+		  LEFT JOIN hc_userimage h
+			ON t.id = h.uid
+		WHERE t.id = #{uid}
+	</select>
+
 	<!-- 查询单个用户信息，包括用户总积分 -->
 	<select id="queryUserTaskMessage" resultType="com.fmkj.user.dao.domain.HcAccount">
 		select ha.id,ha.telephone,ha.logo,ha.nickname,ha.email,ha.rid,ha.my_p as myP,ha.grade_id as gradeId,ha.card_status as cardStatus,

@@ -175,7 +175,6 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
 
     @ApiOperation(value="查询最新一条中奖用户信息", notes="查询最新一条中奖用户信息")
-    @UserLog(module= LogConstant.HC_ACCOUNT, actionDesc = "查询最新一条中奖用户信息")
     @PutMapping("/queryOneNewNotice")
     public BaseResult queryOneNewNotice(){
         try {
@@ -649,6 +648,20 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         result.put("scores", pointsNum);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", result);
     }
+
+
+    @ApiOperation(value="根据用户ID获取实名认证信息", notes="参数：id")
+    @PutMapping("/getAccountInfoByUid")
+    public  BaseResult getAccountInfoByUid(@RequestBody HcAccount hcAccount) {
+        if (StringUtils.isNull(hcAccount.getId())) {
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空!", false);
+        }
+        HashMap<String, Object> result = hcAccountService.getAccountInfoByUid(hcAccount.getId());
+        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功!", result);
+    }
+
+
+
 
     private Long createRandom() {
         Long cdbid = (long) ((Math.random()*1)*1000000000);
