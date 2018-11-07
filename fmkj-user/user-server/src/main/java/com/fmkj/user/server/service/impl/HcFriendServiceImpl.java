@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,8 +34,11 @@ public class HcFriendServiceImpl extends BaseServiceImpl<HcFriendMapper, HcFrien
 
     @Override
     public void addFriend(HcFriend hcFriend) {
+        Date now = new Date();
         // 添加好友需要插入两条数据
-        hcFriend.setPass(1);
+        hcFriend.setPass(0);
+        hcFriend.setType(1);
+        hcFriend.setCreateDate(now);
         int row = hcFriendMapper.insert(hcFriend);
         if(row > 0){
             HcFriend hc = new HcFriend();
@@ -42,12 +46,16 @@ public class HcFriendServiceImpl extends BaseServiceImpl<HcFriendMapper, HcFrien
             hc.setFriendId(hcFriend.getAccountId());
             hc.setMsg(hcFriend.getMsg());
             hc.setPass(0);
+            hc.setType(0);
+            hc.setCreateDate(now);
             hcFriendMapper.insert(hc);
         }
     }
 
     @Override
     public void passFReq(HcFriend hcFriend) {
+        Date now = new Date();
+        hcFriend.setUpdateDate(now);
         int row = hcFriendMapper.passFReq(hcFriend);
         if(row > 0){
             HcFriend hc = new HcFriend();
@@ -55,6 +63,7 @@ public class HcFriendServiceImpl extends BaseServiceImpl<HcFriendMapper, HcFrien
             hc.setFriendId(hcFriend.getAccountId());
             hc.setMsg(hcFriend.getMsg());
             hc.setPass(hcFriend.getPass());
+            hc.setUpdateDate(now);
             hcFriendMapper.passFReq(hc);
         }
     }

@@ -82,7 +82,9 @@ public class UserLogAspect {
                 operateLog.setExceptionMsg(e.getMessage());
             }
             String userId = ServletUtils.getRequest().getHeader("globalUserId");
-            if(StringUtils.isNotEmpty(userId)){
+            log.info("方法名：" + ServletUtils.getRequest().getRequestURI());
+            log.info("用户ID：" + userId);
+            if(StringUtils.isNotEmpty(userId) && !"undefined".equals(userId)){
                 operateLog.setUserId(Integer.parseInt(userId));
             }
             operateLog.setModule(controllerLog.module());

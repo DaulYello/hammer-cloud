@@ -89,8 +89,9 @@ public class FriendController {
         }
         // 查询出所有好友请求
         HcFriend hc = new HcFriend();
-        hc.setFriendId(hcFriend.getAccountId());
+        hc.setAccountId(hcFriend.getAccountId());
         hc.setPass(0);
+        hc.setType(0);
         EntityWrapper<HcFriend> wrapper = new EntityWrapper<>(hc);
         List<HcFriend> hcFriendList = hcFriendService.selectList(wrapper);
         if (StringUtils.isEmpty(hcFriendList)) {
@@ -100,7 +101,7 @@ public class FriendController {
         ArrayList<HashMap<String, Object>> friendReqInfoList = new ArrayList<HashMap<String, Object>>();
         for (HcFriend h : hcFriendList) {
             HashMap<String, Object> friendReqInfo = new HashMap<String, Object>();
-            HcAccount hcAccount = hcAccountService.selectById(h.getAccountId());
+            HcAccount hcAccount = hcAccountService.selectById(h.getFriendId());
             friendReqInfo.put("accountId", hcAccount.getId());
             friendReqInfo.put("msg", h.getMsg());
             friendReqInfo.put("logo", hcAccount.getLogo());

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -35,6 +36,39 @@ public class HcFriend extends Model<HcFriend> {
      */
     private Integer pass;
 
+    private Integer type;
+
+    @TableField("create_date")
+    private Date createDate;
+    /**
+     * 更新时间
+     */
+    @TableField("update_date")
+    private Date updateDate;
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;

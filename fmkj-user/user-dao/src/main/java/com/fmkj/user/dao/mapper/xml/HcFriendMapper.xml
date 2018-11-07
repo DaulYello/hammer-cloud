@@ -12,9 +12,9 @@
     </resultMap>
 
     <update id="passFReq">
-        update hc_friend
-        set pass=#{pass}
-        where (account_id=#{friendId} and friend_id=#{accountId} and pass=0)
+
+        UPDATE hc_friend SET  pass = #{pass}, update_date = NOW() WHERE account_id = #{accountId} AND friend_id = #{friendId} AND pass = 0
+
     </update>
 
     <!-- 去重查询所有好友请求记录 -->

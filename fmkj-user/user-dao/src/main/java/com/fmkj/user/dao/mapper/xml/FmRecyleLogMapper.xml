@@ -65,6 +65,7 @@
           AND t.recyle_type = 2
         GROUP BY t.uid
         ORDER BY takeNum DESC
+        LIMIT 0, 9
 
     </select>
 
