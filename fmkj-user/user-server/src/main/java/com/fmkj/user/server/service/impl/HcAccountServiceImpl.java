@@ -22,7 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Description:
@@ -52,6 +55,9 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
 
     @Autowired
     private FmRecyleLogMapper fmRecyleLogMapper;
+
+    @Autowired
+    private HcFriendMapper hcFriendMapper;
 
     /**
      * @author yangshengbin
@@ -180,6 +186,8 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                             rc.setCode(Rcode.getRcode(resultHc.getId()));
                             int recodeRow = hcRcodeMapper.insert(rc);
                             if(recodeRow > 0){
+                                //自动成为好友
+                                addFriend(resultHc.getId(), uid);
                                 addRecyleLog(resultHc.getId(), uid);//插入日志表
                                 return ha.getId();
                             }else
@@ -400,6 +408,37 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         recyleLog.setTakeMsg("邀请用户【"+userId+"】完成注册，获得1CNT奖励");
         logList.add(recyleLog);
         fmRecyleLogMapper.batchAddRecyleLog(logList);
+    }
+
+
+    /**
+     * 邀请人注册自动成为好友
+     * @param id
+     * @param rid
+     */
+    private void addFriend(Integer id, Integer rid) {
+        HcFriend hcFriend = new HcFriend();
+        Date now = new Date();
+        hcFriend.setPass(1);
+        hcFriend.setType(1);
+        hcFriend.setAccountId(rid);
+        hcFriend.setFriendId(id);
+        hcFriend.setCreateDate(now);
+        hcFriend.setUpdateDate(now);
+        hcFriend.setMsg("邀请注册自动成为好友");
+        int row = hcFriendMapper.insert(hcFriend);
+        if(row > 0){
+            HcFriend hc = new HcFriend();
+            hc.setAccountId(hcFriend.getFriendId());
+            hc.setFriendId(hcFriend.getAccountId());
+            hc.setMsg(hcFriend.getMsg());
+            hc.setPass(1);
+            hc.setType(0);
+            hc.setCreateDate(now);
+            hc.setUpdateDate(now);
+            hcFriendMapper.insert(hc);
+        }
+
     }
 
 
