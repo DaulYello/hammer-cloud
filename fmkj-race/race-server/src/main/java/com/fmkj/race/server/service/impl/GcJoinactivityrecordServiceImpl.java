@@ -249,6 +249,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
 
     private boolean saveNoticeInfo(int winId, JoinActivityDto joinActivityDto) {
         LOGGER.info("保存优胜者的记录输入参数winId={},typeId={}", winId, joinActivityDto.getTypeid());
+        HcAccount account = hcAccountApi.selectHcAccountById(winId);
         GcActivitytype gcActivitytype = gcActivitytypeMapper.selectById(joinActivityDto.getTypeid());
         GcNotice notice = new GcNotice();
         notice.setUid(winId);
@@ -268,7 +269,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
         int mid = gcMessageMapper.insert(gcMessage);
         LOGGER.info("发给用户中锤的消息"+mid);
         GcMessage gcMes = new GcMessage();
-        gcMes.setMessage("恭喜"+joinActivityDto.getNickname()+"获得活动商品 — "+joinActivityDto.getPname());
+        gcMes.setMessage("恭喜"+account.getNickname()+"获得活动商品 — "+joinActivityDto.getPname());
         gcMes.setType(2);
         gcMes.setTime(new Date());
         int rows= gcMessageMapper.insert(gcMes);

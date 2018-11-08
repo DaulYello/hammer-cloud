@@ -89,8 +89,9 @@ zuul:
     connect-timeout-millis: 200000
 
 ribbon:
-  ReadTimeout: 200000
-  ConnectTimeout: 200000
+  eager-load:
+    enabled: true
+    clients: fmkj-user
 
 #获取头像图片ip路径
 userHeadImageIpPath: http://47.101.52.173:8080/userHead/

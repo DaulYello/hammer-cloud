@@ -74,8 +74,9 @@ zuul:
     connect-timeout-millis: 60000
 
 ribbon:
-  ReadTimeout: 60000
-  ConnectTimeout: 60000
+  eager-load:
+    enabled: true
+    clients: fmkj-user
 
 feign:
   hystrix:
@@ -85,7 +86,7 @@ feign:
         execution:
           isolation:
             thread:
-              timeoutInMilliseconds: 60000
+              timeoutInMilliseconds: 300000
 
 #竞锤后台活动图片物理地址
 activityImagePath: C:\\Program Files\\apache-tomcat-8.5.24\\webapps\\activityImage
@@ -99,4 +100,5 @@ web-walletfile: C:\\swanchain\\data\\00\\keystore\\UTC--2018-10-19T03-47-19.8037
 
 web-ip: localhost
 web-port: 9797
+
 

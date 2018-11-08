@@ -200,13 +200,7 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
         double newCnt = account.getCnt() - par;//用户新的CNT
         account.setCnt(newCnt);
         account.setUpdateDate(new Date());
-        boolean result = false;
-        try {
-            result = hcAccountService.updateUserP(account, par);
-        } catch (Exception e) {
-            throw new RuntimeException("更改用户CNT异常" + e.getMessage());
-        }
-        return result;
+        return hcAccountService.updateUserP(account, par);
     }
 
 
