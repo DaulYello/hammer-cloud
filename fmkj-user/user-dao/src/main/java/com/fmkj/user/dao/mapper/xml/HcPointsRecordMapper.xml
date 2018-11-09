@@ -77,7 +77,6 @@
 		  ) = YEARWEEK(NOW() - INTERVAL 1 DAY)
 		GROUP BY t.rid
 		ORDER BY invitingNum DESC
-		LIMIT 0, 10
 
 	</select>
 

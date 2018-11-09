@@ -77,11 +77,6 @@ feign:
   hystrix:
       enabled: true
 
-ribbon:
-  eager-load:
-    enabled: true
-    clients: fmkj-user
-
 #获取头像图片ip路径
 userHeadImageIpPath: http://127.0.0.1:9898/userHead/
 

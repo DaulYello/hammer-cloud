@@ -558,23 +558,32 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
 
         //int accountNum = hcAccountService.selectCount(new EntityWrapper<>());
         // 查询用户的排名(邀请人数大于0)
-        List<BaseBean> rankWeek = hcPointsRecordService.getInviteRankWeek();
+        List<BaseBean> rankWeek = hcPointsRecordService.queryInvitingFriendsRankWeek();
+        List<BaseBean> friendsRankWeek = new ArrayList<>();
         if(StringUtils.isEmpty(rankWeek)){
             hashMap.put("position", "你本周未邀请人");
         }else{
+            int num = 0;
             for(int i = 0; i < rankWeek.size(); i++){
                 BaseBean bean = rankWeek.get(i);
-                if (bean.getUid() == hc.getId()) {
-                    hashMap.put("position", i + 1);
+                int a = bean.getUid();
+                int b = hc.getId();
+                if (a == b) {
+                    num = i + 1;
                     break;
-                }else{
-                    hashMap.put("position", "你本周未邀请人");
                 }
             }
-        }
+            if(num == 0){
+                hashMap.put("position", "你本周未邀请人");
+            } else{
+                hashMap.put("position", num);
+            }
 
-        // ·榜
-        List<BaseBean> friendsRankWeek = hcPointsRecordService.queryInvitingFriendsRankWeek();
+            for(int k = 0; k < 10; k++){
+                BaseBean bean = rankWeek.get(k);
+                friendsRankWeek.add(bean);
+            }
+        }
         result.put("rank", friendsRankWeek);
         result.put("myData", hashMap);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", result);
