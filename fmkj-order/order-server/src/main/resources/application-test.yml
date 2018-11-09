@@ -72,8 +72,9 @@ zuul:
     connect-timeout-millis: 60000
 
 ribbon:
-  ReadTimeout: 60000
-  ConnectTimeout: 60000
+  eager-load:
+    enabled: true
+    clients: fmkj-user
 
 feign:
   hystrix:
