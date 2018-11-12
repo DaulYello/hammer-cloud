@@ -78,14 +78,32 @@
 
 	<!-- 传入uid查询所有好友 -->
 	<select id="selectAllFriends" resultMap="BaseResultMap">
-
-		select ha.id,ha.telephone,ha.logo,ha.nickname,ha.authlock,ha.my_p,ha.grade_id,sum(hp.points_num) as score,
-		ha.card_status,ha.isboong,ha.cdbid
-		from hc_account  ha
-		left join hc_friend hf on hf.friend_id = ha.id
-		left join hc_points_record hp on  hp.uid = ha.id
-		where hf.pass=1 and  hf.account_id=#{uid}
-		group by ha.id
+		SELECT
+		  ha.id,
+		  ha.telephone,
+		  ha.logo,
+		  ha.nickname,
+		  ha.authlock,
+		  ha.my_p,
+		  ha.grade_id,
+		  SUM(hp.points_num) AS score,
+		  ha.card_status,
+		  ha.isboong,
+		  ha.cdbid
+		FROM
+		  hc_account ha
+		  LEFT JOIN hc_points_record hp
+			ON hp.uid = ha.id
+		WHERE ha.id IN
+		  (SELECT
+			account_id
+		  FROM
+			hc_friend f
+			LEFT JOIN hc_account h
+			  ON f.friend_id = h.id
+		  WHERE f.pass = 1
+			AND f.friend_id = #{uid})
+		GROUP BY ha.id
 
 	</select>
 
