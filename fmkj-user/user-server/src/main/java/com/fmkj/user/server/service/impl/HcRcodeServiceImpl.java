@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
 * @Description: HcRcode Service实现
 * @Author: youxun
@@ -27,4 +29,8 @@ public class HcRcodeServiceImpl extends BaseServiceImpl<HcRcodeMapper, HcRcode> 
     @Autowired
     private HcRcodeMapper hcrcodeMapper;
 
+    @Override
+    public List<HcRcode> selectRecodList() {
+        return hcrcodeMapper.selectRecodList();
+    }
 }
