@@ -579,9 +579,12 @@ public class HcAccountController extends BaseController<HcAccount, HcAccountServ
                 hashMap.put("position", num);
             }
 
-            for(int k = 0; k < 10; k++){
+            for(int k = 0; k < rankWeek.size(); k++){
                 BaseBean bean = rankWeek.get(k);
                 friendsRankWeek.add(bean);
+                if(k == 9){
+                    break;
+                }
             }
         }
         result.put("rank", friendsRankWeek);

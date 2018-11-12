@@ -10,4 +10,16 @@
         <result column="islock" property="islock" />
     </resultMap>
 
+
+    <select id="selectRecodList" resultMap="BaseResultMap">
+
+        SELECT t.id AS uid, h.code FROM hc_account t
+        LEFT JOIN hc_rcode h ON t.id = h.uid
+        WHERE ISNULL(h.code) OR h.code = ''
+        LIMIT 0, 30
+
+    </select>
+
 </mapper>
+
+
