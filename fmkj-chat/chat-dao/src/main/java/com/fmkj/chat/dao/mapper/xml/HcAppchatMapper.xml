@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.chat.dao.mapper.HcAppchatMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.chat.dao.domain.HcAppchat">
+        <id column="id" property="id" />
+        <result column="send_id" property="sendId" />
+        <result column="accept_id" property="acceptId" />
+        <result column="status" property="status" />
+        <result column="text" property="text" />
+        <result column="create_date" property="createDate" />
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.fmkj.chat.dao.domain.WebMessage">
+        <id column="id" property="id" />
+        <result column="text" property="text" />
+        <result column="create_date" property="createdAt" />
+        <association column="hc" property="user" javaType="com.fmkj.chat.dao.domain.User">
+            <result column="userId" property="userId" />
+            <result column="name" property="name" />
+            <result column="avatar" property="avatar" />
+        </association>
+    </resultMap>
+
+    <select id="queryUserInfo" resultType="com.fmkj.chat.dao.domain.User">
+        SELECT
+          id AS userId,
+          nickname AS name,
+          logo AS avatar
+        FROM
+          hc_account
+        WHERE id = #{uid}
+    </select>
+    
+    <select id="queryChatPage" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultMap="UserResultMap">
+       SELECT
+          t.id,
+          t.text,
+          t.create_date,
+          hc.id AS userId,
+          hc.nickname AS name,
+          hc.logo AS avatar
+        FROM
+          hc_appchat t
+          LEFT JOIN hc_account hc
+            ON t.send_id = hc.id
+          WHERE 1 = 1
+          AND t.accept_id = #{chat.uid}
+          AND t.send_id = #{chat.chatId}
+
+    </select>
+
+</mapper>
