@@ -26,8 +26,8 @@ public class ALiSmsUtil {
     static final String accessKeySecret = "GEpHqFcxAlRTiixa4Mepbzw78P7BAY";
     
     //公司前面及模板号
-    static final String singName = "费马科技";
-    static final String templateCode = "SMS_139240347";
+    static final String singName = "风云科技";
+    static final String templateCode = "SMS_151070283";
     
     public static SendSmsResponse send(String phone,HashMap<String, String> codeMap) throws ClientException {
 
