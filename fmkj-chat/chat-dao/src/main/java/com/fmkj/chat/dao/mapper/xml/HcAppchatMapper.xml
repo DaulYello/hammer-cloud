@@ -23,6 +23,16 @@
         </association>
     </resultMap>
 
+    <update id="updateChatStatus" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo">
+
+          UPDATE hc_appchat t SET t.status = 1
+          WHERE 1 = 1
+          AND t.status = 0
+          AND t.send_id = #{chat.chatId} OR t.send_id = #{chat.uid}
+
+    </update>
+
+
     <select id="queryUserInfo" resultType="com.fmkj.chat.dao.domain.User">
         SELECT
           id AS userId,
@@ -46,8 +56,7 @@
           LEFT JOIN hc_account hc
             ON t.send_id = hc.id
           WHERE 1 = 1
-          AND t.accept_id = #{chat.uid}
-          AND t.send_id = #{chat.chatId}
+          AND t.send_id = #{chat.chatId} OR t.send_id = #{chat.uid}
 
     </select>
 

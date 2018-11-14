@@ -87,7 +87,8 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductIn
     public boolean unLineProduct(ProductInfo productInfo) {
         int result = productMapper.updateById(productInfo);
         if(result > 0){
-            if (productInfo.getProductStock() > 0){
+            ProductInfo prod = productMapper.selectById(productInfo.getId());
+            if (productInfo.getProductStock() > 0 && prod.getProductType() == ProductTypeEnum.SELL_TYPE.getStatus()){
                 HcAccount hcAccount = hcAccountMapper.selectById(productInfo.getUserId());
                 Double myCnt = hcAccount.getCnt();
                 hcAccount.setCnt(myCnt + productInfo.getProductStock());

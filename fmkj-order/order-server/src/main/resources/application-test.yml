@@ -70,12 +70,6 @@ zuul:
   host:
     socket-timeout-millis: 60000
     connect-timeout-millis: 60000
-
-ribbon:
-  eager-load:
-    enabled: true
-    clients: fmkj-user
-
 feign:
   hystrix:
     enabled: true

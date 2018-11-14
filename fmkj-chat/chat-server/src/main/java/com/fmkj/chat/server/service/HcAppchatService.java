@@ -20,4 +20,6 @@ public interface HcAppchatService extends BaseService<HcAppchat> {
     User queryUserInfo(Integer sendId);
 
     List<WebMessage> getChatPage(Pagination pagination, ChatQueryVo queryVo);
+
+    boolean updateChatStatus(ChatQueryVo queryVo);
 }

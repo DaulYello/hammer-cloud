@@ -19,6 +19,9 @@ zuul:
     user:
       path: /api-user/**
       serviceId: fmkj-user
+    chat:
+      path: /api-chat/**
+      serviceId: fmkj-chat
   #排除某些路由 写法  - /**/myRace/**
   ignored-patterns:
 

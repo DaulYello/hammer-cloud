@@ -43,4 +43,9 @@ public class HcAppchatServiceImpl extends BaseServiceImpl<HcAppchatMapper, HcApp
     public List<WebMessage> getChatPage(Pagination pagination, ChatQueryVo queryVo) {
         return hcAppchatMapper.queryChatPage(pagination, queryVo);
     }
+
+    @Override
+    public boolean updateChatStatus(ChatQueryVo queryVo) {
+        return hcAppchatMapper.updateChatStatus(queryVo);
+    }
 }

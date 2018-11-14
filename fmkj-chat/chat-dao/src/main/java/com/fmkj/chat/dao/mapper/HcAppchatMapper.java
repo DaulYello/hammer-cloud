@@ -23,4 +23,6 @@ public interface HcAppchatMapper extends BaseMapper<HcAppchat> {
     User queryUserInfo(@Param("uid") Integer sendId);
 
     List<WebMessage> queryChatPage(Pagination pagination, @Param("chat") ChatQueryVo queryVo);
+
+    boolean updateChatStatus(@Param("chat") ChatQueryVo queryVo);
 }
