@@ -67,9 +67,11 @@ public class WebSocketService {
     }
 
     public void sendMessageTo(HcAppchat hcAppchat) throws IOException {
-        Session se = sessionMap.get(String.valueOf(hcAppchat.getAcceptId()));
+        String key = hcAppchat.getAcceptId() + "&" + hcAppchat.getSendId();
+        Session se = sessionMap.get(String.valueOf(key));
         Date now = new Date();
         hcAppchat.setCreateDate(now);
+        hcAppchat.setEachLabel(hcAppchat.getSendId() + "-" + hcAppchat.getAcceptId());
         if(se != null){
             WebMessage webms = new WebMessage();
             hcAppchat.setStatus(1);

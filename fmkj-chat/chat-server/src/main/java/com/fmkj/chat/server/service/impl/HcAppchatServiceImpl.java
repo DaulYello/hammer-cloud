@@ -48,4 +48,34 @@ public class HcAppchatServiceImpl extends BaseServiceImpl<HcAppchatMapper, HcApp
     public boolean updateChatStatus(ChatQueryVo queryVo) {
         return hcAppchatMapper.updateChatStatus(queryVo);
     }
+
+    @Override
+    public List queryNewsCaht(ChatQueryVo queryVo) {
+        return hcAppchatMapper.queryNewsCaht(queryVo);
+    }
+
+    @Override
+    public List queryNewActivity() {
+        return hcAppchatMapper.queryNewActivity();
+    }
+
+    @Override
+    public List queryNewsRaceInfo(ChatQueryVo queryVo) {
+        return hcAppchatMapper.queryNewsRaceInfo(queryVo);
+    }
+
+    @Override
+    public List queryNewsOrder(ChatQueryVo queryVo) {
+        return hcAppchatMapper.queryNewsOrder(queryVo);
+    }
+
+    @Override
+    public List queryApplyList(ChatQueryVo queryVo) {
+        return hcAppchatMapper.queryApplyList(queryVo);
+    }
+
+    @Override
+    public List queryRefuseList(ChatQueryVo queryVo) {
+        return hcAppchatMapper.queryRefuseList(queryVo);
+    }
 }

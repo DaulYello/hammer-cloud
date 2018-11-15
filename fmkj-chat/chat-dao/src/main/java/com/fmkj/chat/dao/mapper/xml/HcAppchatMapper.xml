@@ -56,8 +56,153 @@
           LEFT JOIN hc_account hc
             ON t.send_id = hc.id
           WHERE 1 = 1
-          AND t.send_id = #{chat.chatId} OR t.send_id = #{chat.uid}
+          AND (t.send_id = #{chat.chatId} OR t.send_id = #{chat.uid})
+          AND (t.each_label = CONCAT(send_id, '-', accept_id) OR t.each_label = CONCAT(accept_id, '-', send_id))
 
     </select>
 
+    <select id="queryNewsCaht" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultType="java.util.HashMap">
+        SELECT
+          t.id,
+          t.text,
+          t.create_date AS createDate,
+          COUNT(t.accept_id) AS newsNum,
+          hc.id AS userId,
+          hc.nickname,
+          hc.logo AS avatar
+        FROM
+          hc_appchat t
+          LEFT JOIN hc_account hc
+            ON t.send_id = hc.id
+        WHERE 1 = 1
+          AND t.accept_id = #{chat.uid}
+          AND t.status = 0
+        GROUP BY t.send_id
+        ORDER BY createDate DESC
+    </select>
+
+
+    <select id="queryNewActivity" resultType="java.util.HashMap">
+       SELECT
+          t.id,
+          t.pname,
+          t.name,
+          t.begintime AS createDate,
+          hc.id AS userId,
+          hc.nickname,
+          g.imageurl AS avatar,
+          CONCAT(hc.nickname, '发布了新活动，点击查看详情') AS message
+        FROM
+          gc_activity t
+          LEFT JOIN hc_account hc
+            ON t.startid = hc.id
+          LEFT JOIN gc_pimage g
+            ON g.aid = t.id
+        WHERE 1 = 1
+          AND t.status = 2
+          AND t.begintime >= NOW() - INTERVAL 24 HOUR
+    </select>
+
+    <select id="queryNewsRaceInfo" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultType="java.util.HashMap">
+        SELECT
+          n.id,
+          n.uid AS userId,
+          t.nickname,
+          t.logo AS avatar,
+          m.message AS text,
+          m.time AS createDate
+        FROM
+          gc_notice n
+          LEFT JOIN gc_message m
+            ON n.mid = m.id
+          LEFT JOIN hc_account t
+          ON t.id = n.uid
+        WHERE n.uid = #{chat.uid}
+        AND n.flag = 1
+        ORDER BY m.time DESC
+        LIMIT 0, 1
+    </select>
+
+    <select id="queryNewsOrder" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultType="java.util.HashMap">
+
+        SELECT
+          *
+        FROM
+          (SELECT
+            fm.id,
+            fm.order_no,
+            fm.create_time AS createDate,
+            hc.logo AS avatar,
+            '订单待处理，点击查看详情' AS message,
+            hc.nickname,
+            hc.id AS userId
+          FROM
+            fm_order_info fm
+            LEFT JOIN hc_account hc
+              ON fm.seller_id = hc.id
+          WHERE 1 = 1
+            AND fm.order_status = 0
+            AND fm.user_id = #{chat.uid}
+          UNION
+          ALL
+          SELECT
+            fm.id,
+            fm.order_no,
+            fm.create_time AS createDate,
+            hc.logo avatar,
+            hc.nickname,
+            hc.id
+          FROM
+            fm_order_info fm
+            LEFT JOIN hc_account hc
+              ON fm.seller_id = hc.id
+          WHERE 1 = 1
+            AND fm.order_status = 1
+            AND fm.seller_id = #{chat.uid}) AS fmorder
+        ORDER BY createDate DESC
+
+    </select>
+
+
+    <select id="queryApplyList" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultType="java.util.HashMap">
+
+        SELECT
+          t.id,
+          h.id AS userId,
+          t.create_date AS createDate,
+          h.nickname,
+          CONCAT(h.nickname, '申请加您为好友') AS message,
+          h.logo AS avatar
+        FROM
+          hc_friend t
+          LEFT JOIN hc_account h
+            ON t.friend_id = h.id
+        WHERE t.account_id = #{chat.uid}
+          AND t.pass = 0
+          AND t.type = 0
+        ORDER BY t.create_date DESC
+
+    </select>
+
+    <select id="queryRefuseList" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultType="java.util.HashMap">
+
+        SELECT
+          t.id,
+          h.id AS userId,
+          t.update_date AS createDate,
+          h.nickname,
+          CONCAT(h.nickname, '拒绝了您的好友申请') AS message,
+          h.logo AS avatar
+        FROM
+          hc_friend t
+          LEFT JOIN hc_account h
+            ON t.account_id = h.id
+        WHERE t.account_id = #{chat.uid}
+          AND t.pass = - 1
+          AND t.type = 1
+          AND TO_DAYS(t.update_date) = TO_DAYS(NOW())
+        ORDER BY t.update_date DESC
+
+
+    </select>
 </mapper>

@@ -7,6 +7,7 @@ import com.fmkj.chat.dao.domain.WebMessage;
 import com.fmkj.chat.dao.queryVo.ChatQueryVo;
 import com.fmkj.common.base.BaseService;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,4 +23,16 @@ public interface HcAppchatService extends BaseService<HcAppchat> {
     List<WebMessage> getChatPage(Pagination pagination, ChatQueryVo queryVo);
 
     boolean updateChatStatus(ChatQueryVo queryVo);
+
+    List queryNewsCaht(ChatQueryVo queryVo);
+
+    List queryNewActivity();
+
+    List queryNewsRaceInfo(ChatQueryVo queryVo);
+
+    List queryNewsOrder(ChatQueryVo queryVo);
+
+    List queryApplyList(ChatQueryVo queryVo);
+
+    List queryRefuseList(ChatQueryVo queryVo);
 }

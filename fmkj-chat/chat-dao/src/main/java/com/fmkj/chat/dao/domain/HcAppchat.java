@@ -52,6 +52,17 @@ public class HcAppchat extends Model<HcAppchat> {
     @TableField("create_date")
     private Date createDate;
 
+    @TableField("each_label")
+    private String eachLabel;
+
+    public String getEachLabel() {
+        return eachLabel;
+    }
+
+    public void setEachLabel(String eachLabel) {
+        this.eachLabel = eachLabel;
+    }
+
     public Integer getStatus() {
         return status;
     }

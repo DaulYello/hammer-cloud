@@ -25,4 +25,16 @@ public interface HcAppchatMapper extends BaseMapper<HcAppchat> {
     List<WebMessage> queryChatPage(Pagination pagination, @Param("chat") ChatQueryVo queryVo);
 
     boolean updateChatStatus(@Param("chat") ChatQueryVo queryVo);
+
+    List queryNewsCaht(@Param("chat") ChatQueryVo queryVo);
+
+    List queryNewActivity();
+
+    List queryNewsRaceInfo(@Param("chat") ChatQueryVo queryVo);
+
+    List queryNewsOrder(@Param("chat") ChatQueryVo queryVo);
+
+    List queryApplyList(@Param("chat") ChatQueryVo queryVo);
+
+    List queryRefuseList(@Param("chat") ChatQueryVo queryVo);
 }
