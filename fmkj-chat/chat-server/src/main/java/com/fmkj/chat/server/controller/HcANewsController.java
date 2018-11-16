@@ -103,8 +103,7 @@ public class HcANewsController extends BaseController<FmNews, FmNewsService> imp
                                 FmNewsDto fmNewsDto = new FmNewsDto();
                                 fmNewsDto.setId(news.getId());
                                 fmNewsDto.setTitle(news.getName());
-                                Long newsNum = (Long) map.get("newsNum");
-                                fmNewsDto.setNewsNum(newsNum.intValue());
+                                fmNewsDto.setNewsNum(appchatList.size());
                                 fmNewsDto.setNewsType(news.getType());
                                 fmNewsDto.setNickname((String) map.get("nickname"));
                                 Long userId = (Long) map.get("userId");
@@ -114,6 +113,7 @@ public class HcANewsController extends BaseController<FmNews, FmNewsService> imp
                                 Date createDate = (Date) map.get("createDate");
                                 fmNewsDto.setCreateDate(DateUtil.dateStr(createDate, "yyyy-MM-dd HH:mm:ss"));
                                 resultList.add(fmNewsDto);
+                                break;
                             }
                         }
                         break;
