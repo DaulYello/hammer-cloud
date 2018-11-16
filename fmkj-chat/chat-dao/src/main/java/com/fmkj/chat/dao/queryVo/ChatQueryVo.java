@@ -12,6 +12,10 @@ public class ChatQueryVo {
      */
     private Integer chatId;
 
+    private String leftLabel;
+
+    private String rightLabel;
+
     //当前页码
     private int pageNo = 1;
     //每页条数
@@ -20,6 +24,22 @@ public class ChatQueryVo {
     private String orderBy;
     // 升序字段
     private String orderByAsc;
+
+    public String getLeftLabel() {
+        return leftLabel;
+    }
+
+    public void setLeftLabel(String leftLabel) {
+        this.leftLabel = leftLabel;
+    }
+
+    public String getRightLabel() {
+        return rightLabel;
+    }
+
+    public void setRightLabel(String rightLabel) {
+        this.rightLabel = rightLabel;
+    }
 
     public Integer getUid() {
         return uid;
@@ -70,4 +90,8 @@ public class ChatQueryVo {
     }
 
 
+    public void initLabel() {
+        this.leftLabel = this.uid + "-" + this.chatId;
+        this.rightLabel = this.chatId + "-" + this.uid;
+    }
 }

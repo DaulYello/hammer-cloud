@@ -57,7 +57,7 @@
             ON t.send_id = hc.id
           WHERE 1 = 1
           AND (t.send_id = #{chat.chatId} OR t.send_id = #{chat.uid})
-          AND (t.each_label = CONCAT(send_id, '-', accept_id) OR t.each_label = CONCAT(accept_id, '-', send_id))
+          AND (t.each_label = #{chat.leftLabel} OR t.each_label = #{chat.rightLabel})
 
     </select>
 

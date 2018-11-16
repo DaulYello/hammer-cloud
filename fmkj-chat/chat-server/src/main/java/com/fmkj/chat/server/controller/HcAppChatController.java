@@ -33,6 +33,7 @@ public class HcAppChatController extends BaseController<HcAppchat, HcAppchatServ
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "UID或CHATID不能为空", false);
             }
             Page<WebMessage> tPage = buildPage(queryVo);
+            queryVo.initLabel();
             List<WebMessage> list = hcAppchatService.getChatPage(tPage, queryVo);
             tPage.setRecords(list);
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", tPage);
