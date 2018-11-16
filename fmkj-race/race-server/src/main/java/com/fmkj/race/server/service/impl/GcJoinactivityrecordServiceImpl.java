@@ -213,23 +213,7 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
             if(winId == -1){
                 throw new RuntimeException("最后一个用户参与活动上链更新合约状态失败");
             }
-            boolean saveNotice = saveNoticeInfo(winId, joinActivityDto);
-            if(!saveNotice){
-                throw new RuntimeException("插入通知表，保存优胜者的记录执行失败");
-            }
-            GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
-            gcJoinactivityrecord.setAid(joinActivityDto.getAid());
-            EntityWrapper<GcJoinactivityrecord> wrapper = new EntityWrapper<>(gcJoinactivityrecord);
-            List<GcJoinactivityrecord> joinactivityrecords= gcJoinactivityrecordMapper.selectList(wrapper);
-            List<Integer> uids = new ArrayList<>();
-            for(GcJoinactivityrecord joinactivityrecord : joinactivityrecords){
-                if(joinactivityrecord.getUid() != winId){
-                    uids.add(joinactivityrecord.getUid());
-                }
-            }
-            boolean rusult = hcAccountApi.grantCredits(par,uids);
-            LOGGER.info("竞锤成功后给用户发R积分:" + rusult);
-            return true;
+            return joinActivityWin(joinActivityDto, par, winId);
         }else {
             boolean part = participateActivity(contract,joinActivityDto.getUid(), joinActivityDto.getNickname());
             if(!part){
@@ -245,6 +229,27 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
                 }
             }
         }
+    }
+
+    @Override
+    public boolean joinActivityWin(JoinActivityDto joinActivityDto, double par, int winId) {
+        boolean saveNotice = saveNoticeInfo(winId, joinActivityDto);
+        if(!saveNotice){
+            throw new RuntimeException("插入通知表，保存优胜者的记录执行失败");
+        }
+        GcJoinactivityrecord gcJoinactivityrecord = new GcJoinactivityrecord();
+        gcJoinactivityrecord.setAid(joinActivityDto.getAid());
+        EntityWrapper<GcJoinactivityrecord> wrapper = new EntityWrapper<>(gcJoinactivityrecord);
+        List<GcJoinactivityrecord> joinactivityrecords= gcJoinactivityrecordMapper.selectList(wrapper);
+        List<Integer> uids = new ArrayList<>();
+        for(GcJoinactivityrecord joinactivityrecord : joinactivityrecords){
+            if(joinactivityrecord.getUid() != winId){
+                uids.add(joinactivityrecord.getUid());
+            }
+        }
+        boolean rusult = hcAccountApi.grantCredits(par,uids);
+        LOGGER.info("竞锤成功后给用户发R积分:" + rusult);
+        return true;
     }
 
     private boolean saveNoticeInfo(int winId, JoinActivityDto joinActivityDto) {
