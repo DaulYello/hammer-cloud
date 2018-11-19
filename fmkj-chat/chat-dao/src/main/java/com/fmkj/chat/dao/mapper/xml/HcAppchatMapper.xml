@@ -28,7 +28,9 @@
           UPDATE hc_appchat t SET t.status = 1
           WHERE 1 = 1
           AND t.status = 0
-          AND t.send_id = #{chat.chatId} OR t.send_id = #{chat.uid}
+          AND t.send_id = #{chat.chatId}
+          AND t.accept_id = #{chat.uid}
+
 
     </update>
 
@@ -68,15 +70,28 @@
           t.create_date AS createDate,
           hc.id AS userId,
           hc.nickname,
-          hc.logo AS avatar
+          hc.logo AS avatar,
+          (SELECT
+          COUNT(1)
+        FROM
+          hc_appchat
+        WHERE accept_id = #{chat.uid}
+          AND STATUS = 0
+          AND send_id = t.send_id) AS newsNum
         FROM
           hc_appchat t
           LEFT JOIN hc_account hc
             ON t.send_id = hc.id
-        WHERE 1 = 1
+        WHERE (
+            t.create_date =
+            (SELECT
+              MAX(create_date)
+            FROM
+              hc_appchat
+            WHERE send_id = t.send_id)
+          )
           AND t.accept_id = #{chat.uid}
           AND t.status = 0
-        ORDER BY createDate DESC
     </select>
 
 
