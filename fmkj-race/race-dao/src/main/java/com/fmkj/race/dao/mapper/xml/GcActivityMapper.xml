@@ -21,6 +21,8 @@
         <result column="begintime" jdbcType="TIMESTAMP" property="begintime" />
         <result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="ordername" jdbcType="VARCHAR" property="ordername" />
+        <result column="ordernum" jdbcType="VARCHAR" property="ordernum" />
         <result column="num" jdbcType="INTEGER" property="num" />
         <result column="par"  property="par" />
         <result column="type" property="type" />
@@ -196,17 +198,32 @@
     <!-- 传入id查询活动详情 -->
     <select id="queryActivityByUserId" parameterType="com.fmkj.race.dao.domain.GcActivity" resultType="java.util.HashMap">
         SELECT
-          ha.*,ga.name AS gname,ga.telephone AS telephone,ga.province AS province,ga.city AS city,ga.county AS county,ga.lock AS glock,ga.address AS address
+        ha.*,
+        ga.name AS gname,
+        gc.delivergoodstatus AS delivergoodstatus,
+        ga.telephone AS telephone,
+        ga.province AS province,
+        ga.city AS city,
+        ga.county AS county,
+        ga.lock AS glock,
+        gp.`imageurl` AS imageurl,
+        go.name AS ordername,
+        go.number AS ordernum,
+        ga.address AS address
         FROM
-          gc_activity gc
-          LEFT JOIN hc_account ha
-            ON ha.id = gc.getid
-          LEFT JOIN gc_address ga
-            ON ga.uid = gc.getid
+        gc_activity gc
+        LEFT JOIN hc_account ha
+        ON ha.id = gc.getid
+        LEFT JOIN gc_address ga
+        ON ga.uid = gc.getid
+        LEFT JOIN gc_pimage gp
+        ON gp.aid = gc.id
+        LEFT JOIN gc_order go
+        ON go.aid = gc.id
         WHERE gc.getid IS NOT NULL
-          AND gc.status = 3
-          AND ga.status = 1
-          AND gc.Id = #{id}
+        AND gc.status = 3
+        AND ga.status = 1
+        AND gc.Id = #{id} ORDER BY gp.id;
     </select>
 
 

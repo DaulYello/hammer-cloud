@@ -13,9 +13,14 @@ import com.fmkj.race.server.annotation.RaceLog;
 import com.fmkj.race.server.service.GcAddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -29,6 +34,8 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags ={ "用户地址"},description = "用户地址接口-网关路径/api-race")
 public class GcAddressController extends BaseController<GcAddress,GcAddressService> implements BaseApiService<GcAddress> {
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GcAddressController.class);
 
     @Autowired
     private GcAddressService gcAddressService;//用户地址接口
@@ -51,8 +58,18 @@ public class GcAddressController extends BaseController<GcAddress,GcAddressServi
             if(StringUtils.isNull(gcAddress) || StringUtils.isNull(gcAddress.getUid())){
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "UID不能为空", "UID不能为空");
             }
-            gcAddress.setStatus(0);
+            LOGGER.info("新增地址之前，先查询该用户是否已经有地址了，如果有了，直接插入，如果没有，将这条地址设为默认地址。");
+            EntityWrapper<GcAddress> entityWrapper = new EntityWrapper<GcAddress>(gcAddress);
+            List<GcAddress> addresses=gcAddressService.selectList(entityWrapper);
+            if(addresses.size()>0){
+                LOGGER.info("已有旧地址！");
+                gcAddress.setStatus(0);
+            }else{
+                LOGGER.info("没有旧地址，所以把这条新地址设为默认地址！");
+                gcAddress.setStatus(1);
+            }
             gcAddress.setLock(0);
+            gcAddress.setCreateTime(new Date());
             gcAddressService.insert(gcAddress);
             return new BaseResult(BaseResultEnum.SUCCESS,"数据添加成功");
         }
@@ -78,11 +95,28 @@ public class GcAddressController extends BaseController<GcAddress,GcAddressServi
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "ID不能为空", "ID不能为空");
             }
             gcAddressService.deleteById(gcAddress.getId());
+            LOGGER.info("删除地址，后查询用户的地址");
+            GcAddress address = new GcAddress();
+            address.setUid(gcAddress.getUid());
+            address.setStatus(1);
+            EntityWrapper<GcAddress> entityWrapper = new EntityWrapper<GcAddress>(address);
+            GcAddress gcAddress1= gcAddressService.selectOne(entityWrapper);
+            if(gcAddress1 == null){
+                GcAddress addre = new GcAddress();
+                addre.setUid(gcAddress.getUid());
+                List<GcAddress> addresses = gcAddressService.selectListByTimeOrder(addre);
+                LOGGER.info("通过用户id查询用户的收货地址"+addresses.size());
+                if (addresses.size()>0){
+                    GcAddress site = addresses.get(0);
+                    site.setStatus(1);
+                    site.setUpdateTime(new Date());
+                    gcAddressService.updateAllColumnById(site);
+                }
+            }
             return new BaseResult(BaseResultEnum.SUCCESS,"数据删除成功");
         } catch (Exception e) {
             throw new RuntimeException("删除异常：" + e.getMessage());
         }
-
     }
 
 
@@ -149,5 +183,23 @@ public class GcAddressController extends BaseController<GcAddress,GcAddressServi
             throw new RuntimeException("查询商品列表异常：" + e.getMessage());
         }
     }
+    @ApiOperation(value="通过用户id，查询用户是否有已填地址，参数(用户的id)：uid ", notes="参与活动之前，先查询用户是否填了收货地址")
+    @PutMapping("/judgeFillAddressed")
+    public BaseResult judgeFillAddressed(@RequestBody GcAddress address) {
 
+        try {
+            if(StringUtils.isNull(address) ||StringUtils.isNull(address.getUid())){
+                return new BaseResult(BaseResultEnum.BLANK.getStatus(), "用户ID不能为空", false);
+            }
+            EntityWrapper<GcAddress> entityWrapper = new EntityWrapper<GcAddress>(address);
+            List<GcAddress> addresses=gcAddressService.selectList(entityWrapper);
+            boolean flag = false;
+            if (addresses.size()>0){
+                flag = true;
+            }
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", flag);
+        } catch (Exception e) {
+            throw new RuntimeException("查询用户是否有已填地址异常：" + e.getMessage());
+        }
+    }
 }

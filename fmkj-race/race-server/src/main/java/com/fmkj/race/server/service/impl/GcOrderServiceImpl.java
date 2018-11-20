@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -108,12 +109,22 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
         GcActivity ga = new GcActivity();
         ga.setId(aid);
         ga.setCollectgoodstatus(1);
+        GcActivity activity= gcActivityMapper.selectById(aid);
+        if(activity == null){
+            LOGGER.info("活动为null，id="+aid);
+            return false;
+        }
+        if(activity.getCollectgoodstatus() == 1){
+            LOGGER.info("该活动已经确认收货，id="+aid);
+            return true;
+        }
         Integer row = gcActivityMapper.updateById(ga);
         if(row>0) {
             GcActivity one = gcActivityMapper.selectOne(ga);//查询活动
             Integer startid = one.getStartid();//获得发起者
             Double price = one.getPrice();//获取产品价格
             Double premium = one.getPremium();//获取产品溢价率
+
 
             /************获取手续费***********/
             Integer pnumber = one.getPnumber();//获取产品数量
@@ -149,14 +160,18 @@ public class GcOrderServiceImpl extends BaseServiceImpl<GcOrderMapper, GcOrder> 
             boolean cntReturn = hcAccountApi.grantUserP(hc);
             String message = null;
             if(cntReturn){
-                message = "您已发起的"+type+"溢价活动已经完成，该活动扣除手续费"+poundage+"，您已获得资产"+starterCnt+"，请注意查收。";
+                BigDecimal bg = new BigDecimal(poundage);
+                double poundage2 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                BigDecimal bd = new BigDecimal(starterCnt);
+                double starterCnt2 = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                message = "您已发起的"+type+"溢价活动已经完成，该活动扣除手续费"+poundage2+"，您已获得资产"+starterCnt2+"，请注意查收。";
                 boolean addReturnByStartID = postMessage(message,startid);
                 LOGGER.debug("给发起活动的用户发送信息addReturnByStartID="+addReturnByStartID);
                 boolean addReturnByGetID =false;
                 if(addReturnByStartID){
-                    message = "您收到了"+type+"—"+one.getPname()+"， 锤多宝锤出不一样的美好！！！";
+                    message = "您收到了"+type+"—"+one.getPname()+"， 请注意查收！！！";
                     addReturnByGetID=postMessage(message,one.getGetid());
-                    LOGGER.debug("发给重锤的用户信息是否成功："+addReturnByStartID);
+                    LOGGER.debug("发给中锤的用户信息是否成功："+addReturnByStartID);
                 }
                 return addReturnByGetID;
             }else{

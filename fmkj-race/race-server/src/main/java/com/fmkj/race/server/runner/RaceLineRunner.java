@@ -32,6 +32,7 @@ public class RaceLineRunner {
                 if (result){
                     LOGGER.info("恭喜==用户【" + dto.getNickname() +"】参与活动【"+dto.getAid()+"】上链成功!");
                 }else{
+                    LOGGER.info("上链失败，给开发发一天短息通知！");
                     LOGGER.info("很抱歉==用户【" + dto.getNickname() +"】参与活动【"+dto.getAid()+"】上链失败, 请检查执行日志!");
                     break;
                 }

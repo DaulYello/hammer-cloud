@@ -1,10 +1,12 @@
 package com.fmkj.race.dao.domain;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -53,6 +55,16 @@ public class GcAddress extends Model<GcAddress> {
      * 收货人详细地址
      */
     private String address;
+    /**
+     * 地址创建时间
+     */
+    @TableField("create_time")
+    private Date createTime;
+    /**
+     * 地址修改时间
+     */
+    @TableField("update_time")
+    private Date updateTime;
 
 
     public Integer getId() {
@@ -140,4 +152,19 @@ public class GcAddress extends Model<GcAddress> {
         return this.Id;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

@@ -29,6 +29,11 @@ public class JoinActivityDto extends GcJoinactivityrecord {
     private String contract;
 
     /**
+     * 获胜者的id
+     */
+    private Integer winId;
+
+    /**
      * 对应活动类型表gc_activitytype中的主键
      */
     private Integer typeid;
@@ -110,5 +115,13 @@ public class JoinActivityDto extends GcJoinactivityrecord {
 
     public void setPar(Double par) {
         this.par = par;
+    }
+
+    public Integer getWinId() {
+        return winId;
+    }
+
+    public void setWinId(Integer winId) {
+        this.winId = winId;
     }
 }

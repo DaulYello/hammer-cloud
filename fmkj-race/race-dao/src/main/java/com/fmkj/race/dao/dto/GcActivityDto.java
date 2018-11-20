@@ -8,6 +8,10 @@ public class GcActivityDto extends GcActivity {
 
     private String imageurl;
 
+    private String ordername;
+
+    private String ordernum;
+
     public String getType() {
         return type;
     }
@@ -24,8 +28,19 @@ public class GcActivityDto extends GcActivity {
         this.imageurl = imageurl;
     }
 
+    public String getOrdername() {
+        return ordername;
+    }
 
+    public void setOrdername(String ordername) {
+        this.ordername = ordername;
+    }
 
+    public String getOrdernum() {
+        return ordernum;
+    }
 
-
+    public void setOrdernum(String ordernum) {
+        this.ordernum = ordernum;
+    }
 }

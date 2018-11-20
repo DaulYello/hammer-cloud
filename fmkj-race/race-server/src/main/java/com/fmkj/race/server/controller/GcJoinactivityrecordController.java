@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -131,4 +132,12 @@ public class GcJoinactivityrecordController  extends BaseController<GcJoinactivi
     }
 
 
+    @PutMapping("/pushNoticeAndActivity")
+    public BaseResult pushNoticeAndActivity(@RequestBody JoinActivityDto joinActivityDto){
+
+        LOGGER.info("发消息失败重新调用接口，发送信息");
+        LOGGER.info("参数："+JSON.toJSONString(joinActivityDto));
+        boolean result = gcJoinactivityrecordService.joinActivityWin(joinActivityDto,joinActivityDto.getPar(),joinActivityDto.getWinId());
+        return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", result);
+    }
 }

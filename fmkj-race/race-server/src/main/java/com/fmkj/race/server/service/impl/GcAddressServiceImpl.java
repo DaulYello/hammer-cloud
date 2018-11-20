@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
 * @Description: GcAddress Service实现
 * @Author: yangshengbin
@@ -58,5 +60,10 @@ public class GcAddressServiceImpl extends BaseServiceImpl<GcAddressMapper, GcAdd
             throw new RuntimeException("修改异常：" + e.getMessage());
         }
         return  true;
+    }
+
+    @Override
+    public List<GcAddress> selectListByTimeOrder(GcAddress address){
+        return gcAddressMapper.selectListByTimeOrder(address);
     }
 }

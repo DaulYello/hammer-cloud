@@ -1,5 +1,6 @@
 package com.fmkj.race.server.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.fmkj.common.annotation.BaseService;
@@ -255,24 +256,22 @@ public class GcJoinactivityrecordServiceImpl extends BaseServiceImpl<GcJoinactiv
     private boolean saveNoticeInfo(int winId, JoinActivityDto joinActivityDto) {
         LOGGER.info("保存优胜者的记录输入参数winId={},typeId={}", winId, joinActivityDto.getTypeid());
         HcAccount account = hcAccountApi.selectHcAccountById(winId);
+        LOGGER.info("发给用户中锤的消息准备开始---------------------start");
+        LOGGER.info("查看用户account是否为"+ JSON.toJSONString(account));
         GcActivitytype gcActivitytype = gcActivitytypeMapper.selectById(joinActivityDto.getTypeid());
         GcNotice notice = new GcNotice();
         notice.setUid(winId);
         notice.setFlag(1);
-        StringBuilder sb = new StringBuilder();
-        String head = new String("恭喜您");
+        String head = new String("恭喜您获得");
         String message = new String(",请在48小时内及时联系客服QQ：2500702820办理资产转移。");
-        sb.append(head);
-        sb.append(gcActivitytype.getType());
-        sb.append("—" + joinActivityDto.getPname());
-        sb.append(message);
         String messageStr =head+gcActivitytype.getType()+"—" + joinActivityDto.getPname() + message;
         GcMessage gcMessage = new GcMessage();
         gcMessage.setMessage(messageStr);
         gcMessage.setType(0);
         gcMessage.setTime(new Date());
         int mid = gcMessageMapper.insert(gcMessage);
-        LOGGER.info("发给用户中锤的消息"+mid);
+        LOGGER.info("发给用户中锤的消息结束---------------------end,返回影响的行数："+mid);
+        LOGGER.info("发中锤的公告消息准备开始---------------------start");
         GcMessage gcMes = new GcMessage();
         gcMes.setMessage("恭喜"+account.getNickname()+"获得活动商品 — "+joinActivityDto.getPname());
         gcMes.setType(2);
