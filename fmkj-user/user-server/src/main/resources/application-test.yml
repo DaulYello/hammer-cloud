@@ -118,7 +118,7 @@ userPayImageIpPath: http://192.168.10.218:8080/payImages/
 
 
 #审核图片
-auditImagePath: E:\\apache-tomcat-8.5.32\\webapps\\taskimage
+auditImagePath: D:\\apache-tomcat-8.5.34\\webapps\\taskimage
 
 auditImageIpPath: http://192.168.10.218:8080/taskimage/
 
