@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.PmPartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.PmPart">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="tid" property="tid" />
+        <result column="audit_status" property="auditStatus" />
+        <result column="audit_option" property="auditOption" />
+        <result column="telephone" property="telephone" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+    </resultMap>
+
+    <select id="queryPartDynamic" resultType="java.util.HashMap">
+        SELECT
+          t.id,
+          t.uid,
+          h.nickname,
+          h.logo,
+          t.tid,
+          p.title,
+          p.reward,
+          t.update_date as updateDate
+        FROM
+          pm_part t
+          LEFT JOIN hc_account h
+            ON h.id = t.uid
+          LEFT JOIN pm_task p
+            ON p.id = t.tid
+        WHERE t.audit_status = 2
+        ORDER BY t.update_date DESC
+        LIMIT 0, 100
+    </select>
+
+    <select id="queryPartByUid" resultType="java.util.HashMap">
+
+       SELECT
+          t.id as partId,
+          t.audit_status AS auditStatus
+        FROM
+          pm_part t
+        WHERE 1 = 1
+          AND t.uid = #{uid}
+          AND t.tid = #{tid}
+
+    </select>
+
+    <select id="queryAuditByPartId" resultType="java.util.HashMap">
+        SELECT
+          t.id,
+          t.tid,
+          t.audit_status AS auditStatus,
+          t.audit_option AS auditOption,
+          t.telephone,
+          t.update_date AS updateDate,
+          (SELECT
+            GROUP_CONCAT(image_url)
+          FROM
+            pm_image
+          WHERE part_id = t.id) AS imageUrl
+        FROM
+          pm_part t
+        WHERE t.id = #{id}
+    </select>
+
+</mapper>

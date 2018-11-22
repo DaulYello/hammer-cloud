@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.PmImageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.PmImage">
+        <id column="id" property="id" />
+        <result column="path" property="path" />
+        <result column="image_url" property="imageUrl" />
+        <result column="create_date" property="createDate" />
+        <result column="part_id" property="partId" />
+    </resultMap>
+
+</mapper>

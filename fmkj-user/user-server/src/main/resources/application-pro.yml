@@ -117,3 +117,11 @@ userCodeImageIpPath: http://47.101.52.173:8080/cardImages/
 userPayImageIpPath: http://47.101.52.173:8080/payImages/
 
 
+#审核图片
+auditImagePath: C:\\Program Files\\apache-tomcat-8.5.24\\webapps\\taskImages
+
+auditImageIpPath: http://47.101.52.173:8080/taskImages/
+
+auditdefuatFileName: 123456789audit77777part8888889999999999defualt.jpg
+
+
