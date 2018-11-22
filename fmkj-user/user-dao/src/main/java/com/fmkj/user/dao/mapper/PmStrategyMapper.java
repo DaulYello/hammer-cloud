@@ -18,4 +18,6 @@ import java.util.List;
 public interface PmStrategyMapper extends BaseMapper<PmStrategy> {
 
     List queryStrategyByTid(@Param("tid") Integer tid);
+
+    List queryPromptByTid(@Param("tid") Integer tid);
 }

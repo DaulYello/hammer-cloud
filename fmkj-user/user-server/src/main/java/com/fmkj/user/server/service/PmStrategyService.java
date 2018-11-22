@@ -15,4 +15,6 @@ import java.util.List;
 public interface PmStrategyService extends BaseService<PmStrategy> {
 
     List queryStrategyByTid(Integer tid);
+
+    List queryPromptByTid(Integer tid);
 }

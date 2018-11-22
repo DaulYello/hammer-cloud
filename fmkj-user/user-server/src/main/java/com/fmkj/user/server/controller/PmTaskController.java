@@ -109,6 +109,8 @@ public class PmTaskController {
         resultMap.put("taskInfo", taskMap);
         List strategyList = pmStrategyService.queryStrategyByTid(queryVo.getId());
         resultMap.put("strategyList", strategyList);
+        List promptList = pmStrategyService.queryPromptByTid(queryVo.getId());
+        resultMap.put("promptList", promptList);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", resultMap);
     }
 

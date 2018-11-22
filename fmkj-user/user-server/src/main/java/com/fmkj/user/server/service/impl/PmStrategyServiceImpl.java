@@ -35,4 +35,9 @@ public class PmStrategyServiceImpl extends BaseServiceImpl<PmStrategyMapper, PmS
     public List queryStrategyByTid(Integer tid) {
         return pmStrategyMapper.queryStrategyByTid(tid);
     }
+
+    @Override
+    public List queryPromptByTid(Integer tid) {
+        return pmStrategyMapper.queryPromptByTid(tid);
+    }
 }

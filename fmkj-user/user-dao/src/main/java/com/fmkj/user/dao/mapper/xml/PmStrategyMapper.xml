@@ -31,4 +31,16 @@
 
     </select>
 
+    <select id="queryPromptByTid" resultType="java.util.HashMap">
+        SELECT
+          id,
+          tid,
+          prompt_text AS promptText,
+          order_num AS orderNum
+        FROM
+          pm_prompt
+          WHERE tid = #{tid}
+         ORDER BY orderNum ASC
+    </select>
+
 </mapper>
