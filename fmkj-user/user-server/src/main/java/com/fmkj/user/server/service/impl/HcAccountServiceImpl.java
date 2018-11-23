@@ -177,6 +177,15 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                         hcAccount.setMyP(hcAccount.getMyP() + 5);
                         hcAccount.setCnt(hcAccount.getCnt() + 1);
                         int update = hcAccountMapper.updateById(hcAccount);
+                        LOGGER.info("邀请1个伙伴完成注册，给【"+uid+"】账户添加1CNT返回结果：" + update);
+
+                        HcAccount superAccount = hcAccountMapper.selectSuperAccount();
+                        if(StringUtils.isNotNull(superAccount)){
+                            superAccount.setCnt(superAccount.getCnt() + 1);
+                            int updateSuperAccount = hcAccountMapper.updateById(superAccount);
+                            LOGGER.info("邀请1个伙伴，公司账户增加1CNT返回结果：" + updateSuperAccount);
+                        }
+
                         if(update > 0){
                             /*不需要用户等级
                             GradeDto gradeDto = hcPointsRecordMapper.selectGrandByUid(hcAccount.getId());
@@ -188,13 +197,13 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
                             if(recodeRow > 0){
                                 //自动成为好友
                                 addFriend(resultHc.getId(), uid);
-                                addRecyleLog(resultHc.getId(), uid);//插入日志表
+                                addRecyleLog(resultHc.getId(), uid, superAccount);//插入日志表
                                 return ha.getId();
                             }else
                                 throw new RuntimeException("生成邀请码失败！");
                         }
                         else
-                            throw new RuntimeException("给邀请人1P失败！");
+                            throw new RuntimeException("给邀请人1CNT失败！");
                     }
                     else
                         throw new RuntimeException("插入邀请人注册的积分奖励记录失败！");
@@ -399,7 +408,7 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         return num;
     }
 
-    private void addRecyleLog(Integer userId, Integer uid) {
+    private void addRecyleLog(Integer userId, Integer uid, HcAccount superAcconut) {
         List<FmRecyleLog> logList = new ArrayList<>();
         Date now = new Date();
         FmRecyleLog fmRecyleLog = new FmRecyleLog();
@@ -421,6 +430,19 @@ public class HcAccountServiceImpl extends BaseServiceImpl<HcAccountMapper, HcAcc
         recyleLog.setTakeType(TakeEnum.INVITE_FRIEND.status);
         recyleLog.setTakeMsg("邀请用户【"+userId+"】完成注册，获得1CNT奖励");
         logList.add(recyleLog);
+
+        if(StringUtils.isNotNull(superAcconut)){
+            FmRecyleLog rewardLog = new FmRecyleLog();
+            rewardLog.setUid(superAcconut.getId());
+            rewardLog.setFriendId(superAcconut.getId());
+            rewardLog.setRecyleType(RecyleEnum.TYPE_CNT.status);
+            rewardLog.setTakeDate(now);
+            rewardLog.setTakeNum(1D);
+            rewardLog.setTakeMsg("【" + uid +"】邀请用户【"+userId+"】完成注册，同时公司账户增加1CNT");
+            rewardLog.setTakeType(TakeEnum.AUTO_NUM.status);
+            logList.add(rewardLog);
+
+        }
         fmRecyleLogMapper.batchAddRecyleLog(logList);
     }
 

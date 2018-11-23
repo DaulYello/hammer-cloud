@@ -50,6 +50,12 @@
 		ORDER BY TIME DESC
 		LIMIT 0, 1
 	</select>
+	
+	<select id="selectSuperAccount" resultType="com.fmkj.user.dao.domain.HcAccount">
+
+		select * from hc_account where  grade_id = 9999
+
+	</select>
 
 	<select id="getAccountInfoByUid" resultType="java.util.HashMap">
 		SELECT

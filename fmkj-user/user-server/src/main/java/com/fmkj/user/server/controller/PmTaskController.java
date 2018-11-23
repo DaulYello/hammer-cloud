@@ -141,6 +141,13 @@ public class PmTaskController {
         if(StringUtils.isNull(pmPart.getUid())){
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "uid不能为空", false);
         }
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("uid", pmPart.getUid());
+        paramMap.put("tid", pmPart.getTid());
+        List<PmPart> partList = pmPartService.selectByMap(paramMap);
+        if(StringUtils.isNotEmpty(partList)){
+            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "你已经参与过了", true);
+        }
         pmPart.setCreateDate(new Date());
         boolean result = pmPartService.insert(pmPart);
         if(result){
