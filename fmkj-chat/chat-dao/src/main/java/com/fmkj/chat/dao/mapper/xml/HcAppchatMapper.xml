@@ -114,6 +114,7 @@
         WHERE 1 = 1
           AND t.status = 2
           AND t.begintime >= NOW() - INTERVAL 24 HOUR
+        group by t.id
     </select>
 
     <select id="queryNewsRaceInfo" parameterType="com.fmkj.chat.dao.queryVo.ChatQueryVo" resultType="java.util.HashMap">
