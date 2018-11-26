@@ -33,4 +33,6 @@ public interface HcAccountMapper extends BaseMapper<HcAccount> {
     List<HcAccount> searchAccount(HashMap<String, Object> params);
 
     HashMap<String,Object> getAccountInfoByUid(@Param("uid") Integer uid);
+
+    HcAccount selectSuperAccount();
 }

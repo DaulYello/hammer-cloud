@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.PmStrategyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.PmStrategy">
+        <id column="id" property="id" />
+        <result column="tid" property="tid" />
+        <result column="strategy" property="strategy" />
+        <result column="order_num" property="orderNum" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+        <result column="imageId" property="imageId" />
+    </resultMap>
+
+    <select id="queryStrategyByTid" resultType="java.util.HashMap">
+
+        SELECT
+          t.id,
+          t.tid,
+          t.strategy,
+          t.create_date AS createDate,
+          m.image_url AS strategyImage
+        FROM
+          pm_strategy t
+          LEFT JOIN pm_image m
+            ON m.id = t.imageId
+        WHERE 1 = 1
+          AND t.tid = #{tid}
+        ORDER BY t.order_num ASC
+
+    </select>
+
+    <select id="queryPromptByTid" resultType="java.util.HashMap">
+        SELECT
+          id,
+          tid,
+          prompt_text AS promptText,
+          order_num AS orderNum
+        FROM
+          pm_prompt
+          WHERE tid = #{tid}
+         ORDER BY orderNum ASC
+    </select>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.PmTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.PmTask">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="task_target" property="taskTarget" />
+        <result column="sub_desc" property="subDesc" />
+        <result column="reward" property="reward" />
+        <result column="audit_cycle" property="auditCycle" />
+        <result column="type" property="type" />
+        <result column="down_url" property="downUrl" />
+        <result column="start_date" property="startDate" />
+        <result column="end_date" property="endDate" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+        <result column="status" property="status" />
+        <result column="logoId" property="logoId" />
+        <result column="imageId" property="imageId" />
+    </resultMap>
+
+    <select id="queryHotTaskPage" resultType="java.util.HashMap">
+
+        SELECT
+          t.id,
+          t.title,
+          t.task_target AS target,
+          t.sub_desc AS subDesc,
+          t.reward,
+          t.create_date AS createDate,
+          m.image_url AS logo,
+          (SELECT
+            COUNT(id)
+          FROM
+            pm_part
+          WHERE tid = t.id
+            AND audit_status = 2) AS completeNum
+        FROM
+          pm_task t
+          LEFT JOIN pm_image m
+            ON m.id = t.logoId
+        ORDER BY completeNum DESC
+
+    </select>
+
+    <select id="queryNewTaskPage" resultType="java.util.HashMap">
+
+        SELECT
+          t.id,
+          t.title,
+          t.task_target AS target,
+          t.sub_desc AS subDesc,
+          t.reward,
+          t.create_date AS createDate,
+          m.image_url AS logo,
+          (SELECT
+            COUNT(id)
+          FROM
+            pm_part
+          WHERE tid = t.id
+            AND audit_status = 2) AS completeNum
+        FROM
+          pm_task t
+          LEFT JOIN pm_image m
+            ON m.id = t.logoId
+        ORDER BY t.create_date DESC
+
+    </select>
+
+
+    <select id="queryTaskById" resultType="java.util.HashMap">
+
+        SELECT
+          t.id,
+          t.title,
+          t.task_target AS target,
+          t.sub_desc AS subDesc,
+          t.reward,
+          t.type,
+          t.down_url AS downUrl,
+          t.audit_cycle AS auditCycle,
+          t.start_date AS startDate,
+          t.end_date AS endDate,
+          t.update_date AS updateDate,
+          m.image_url AS imageUrl,
+          (SELECT
+            COUNT(id)
+          FROM
+            pm_part
+          WHERE tid = t.id) AS partNum
+        FROM
+          pm_task t
+          LEFT JOIN pm_image m
+            ON m.id = t.imageId
+        WHERE t.id = #{id}
+
+    </select>
+
+</mapper>
