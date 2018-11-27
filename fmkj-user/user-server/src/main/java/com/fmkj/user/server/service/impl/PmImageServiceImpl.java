@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
 * @Description: PmImage Service实现
 * @Author: youxun
@@ -24,4 +26,12 @@ public class PmImageServiceImpl extends BaseServiceImpl<PmImageMapper, PmImage> 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PmImageServiceImpl.class);
 
+    @Autowired
+    private PmImageMapper pmImageMapper;
+
+
+    @Override
+    public List<PmImage> selectImageListByPartId(Integer partId) {
+        return pmImageMapper.selectImageListByPartId(partId);
+    }
 }

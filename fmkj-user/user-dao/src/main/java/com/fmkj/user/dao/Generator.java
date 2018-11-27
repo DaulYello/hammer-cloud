@@ -15,7 +15,7 @@ public class Generator {
     // 根据命名规范，只修改此常量值即可
     private static String MODULE = "fmkj-user";
     private static String DATABASE = "hammerchain";
-    private static String TABLE_NAME = "pm_part";
+    private static String TABLE_NAME = "pm_extend";
     private static String PACKAGE_NAME = "com.fmkj.user";
     private static String DAO_NAME = "user-dao";
     private static String SERVICE_NAME = "user-server";
@@ -26,7 +26,7 @@ public class Generator {
     // 需要insert后返回主键的表配置，key:表名,value:主键名
     private static Map<String, String> LAST_INSERT_ID_TABLES = new HashMap<>();
     static {
-        LAST_INSERT_ID_TABLES.put("pm_part", "id");
+        LAST_INSERT_ID_TABLES.put("pm_extend", "id");
     }
 
     /**

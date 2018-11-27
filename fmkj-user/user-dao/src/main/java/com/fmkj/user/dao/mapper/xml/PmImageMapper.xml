@@ -9,6 +9,18 @@
         <result column="image_url" property="imageUrl" />
         <result column="create_date" property="createDate" />
         <result column="part_id" property="partId" />
+        <result column="image_type" property="imageType" />
     </resultMap>
 
+    <select id="selectImageListByPartId" resultMap="BaseResultMap">
+        SELECT
+          *
+        FROM
+          pm_image
+        WHERE 1 = 1
+        and image_type = 2
+        and part_id = #{partId}
+        ORDER BY create_date ASC
+
+    </select>
 </mapper>

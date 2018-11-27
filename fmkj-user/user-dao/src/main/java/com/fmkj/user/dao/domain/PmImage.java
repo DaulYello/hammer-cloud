@@ -35,17 +35,28 @@ public class PmImage extends Model<PmImage> {
      */
     @TableField("image_url")
     private String imageUrl;
+
+    @TableField("image_type")
+    private Integer imageType;
     /**
      * 上传时间
      */
     @TableField("create_date")
     private Date createDate;
     /**
-     * 参与记录图片
+     * 外键
      */
     @TableField("part_id")
     private Integer partId;
 
+
+    public Integer getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(Integer imageType) {
+        this.imageType = imageType;
+    }
 
     public Integer getId() {
         return id;

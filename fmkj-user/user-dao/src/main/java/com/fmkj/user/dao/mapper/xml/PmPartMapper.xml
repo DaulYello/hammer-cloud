@@ -60,7 +60,7 @@
             GROUP_CONCAT(image_url)
           FROM
             pm_image
-          WHERE part_id = t.id) AS imageUrl
+          WHERE part_id = t.id and image_type = 1) AS imageUrl
         FROM
           pm_part t
         WHERE t.id = #{id}

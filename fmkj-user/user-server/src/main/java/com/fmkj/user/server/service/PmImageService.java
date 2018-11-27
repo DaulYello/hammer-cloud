@@ -3,6 +3,8 @@ package com.fmkj.user.server.service;
 import com.fmkj.common.base.BaseService;
 import com.fmkj.user.dao.domain.PmImage;
 
+import java.util.List;
+
 /**
 * @Description: PmImage Service接口
 * @Author: youxun
@@ -11,4 +13,5 @@ import com.fmkj.user.dao.domain.PmImage;
 **/
 public interface PmImageService extends BaseService<PmImage> {
 
+    List<PmImage> selectImageListByPartId(Integer partId);
 }
