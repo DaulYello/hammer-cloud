@@ -59,7 +59,9 @@ public class GcAddressController extends BaseController<GcAddress,GcAddressServi
                 return new BaseResult(BaseResultEnum.BLANK.getStatus(), "UID不能为空", "UID不能为空");
             }
             LOGGER.info("新增地址之前，先查询该用户是否已经有地址了，如果有了，直接插入，如果没有，将这条地址设为默认地址。");
-            EntityWrapper<GcAddress> entityWrapper = new EntityWrapper<GcAddress>(gcAddress);
+            GcAddress address = new GcAddress();
+            address.setUid(gcAddress.getUid());
+            EntityWrapper<GcAddress> entityWrapper = new EntityWrapper<GcAddress>(address);
             List<GcAddress> addresses=gcAddressService.selectList(entityWrapper);
             if(addresses.size()>0){
                 LOGGER.info("已有旧地址！");
