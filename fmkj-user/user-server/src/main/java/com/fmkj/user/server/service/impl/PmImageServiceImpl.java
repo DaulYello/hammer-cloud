@@ -31,7 +31,7 @@ public class PmImageServiceImpl extends BaseServiceImpl<PmImageMapper, PmImage> 
 
 
     @Override
-    public List<PmImage> selectImageListByPartId(Integer partId) {
-        return pmImageMapper.selectImageListByPartId(partId);
+    public List<PmImage> selectImageListByPartId(Integer partId, Integer imageType) {
+        return pmImageMapper.selectImageListByPartId(partId, imageType);
     }
 }

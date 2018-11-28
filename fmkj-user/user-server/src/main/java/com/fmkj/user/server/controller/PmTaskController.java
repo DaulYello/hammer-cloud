@@ -119,7 +119,7 @@ public class PmTaskController {
                 HashMap<String, Object> strategyMap = (HashMap<String, Object>) strategyList.get(i);
                 strategyMap.put("step", i+1);
                 Integer strategyId = (Integer) strategyMap.get("id");
-                List<PmImage> imageList = pmImageService.selectImageListByPartId(strategyId);
+                List<PmImage> imageList = pmImageService.selectImageListByPartId(strategyId, 2);
                 for(PmImage image : imageList){
                     HashMap<String, Object> copyMap = new HashMap<>();
                     copyMap.putAll(strategyMap);

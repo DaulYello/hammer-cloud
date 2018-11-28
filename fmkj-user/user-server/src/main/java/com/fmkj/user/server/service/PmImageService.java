@@ -13,5 +13,5 @@ import java.util.List;
 **/
 public interface PmImageService extends BaseService<PmImage> {
 
-    List<PmImage> selectImageListByPartId(Integer partId);
+    List<PmImage> selectImageListByPartId(Integer strategyId, Integer imageType);
 }

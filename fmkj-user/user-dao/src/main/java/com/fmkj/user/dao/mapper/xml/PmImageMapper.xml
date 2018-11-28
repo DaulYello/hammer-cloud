@@ -18,7 +18,7 @@
         FROM
           pm_image
         WHERE 1 = 1
-        and image_type = 2
+        and image_type = #{imageType}
         and part_id = #{partId}
         ORDER BY create_date ASC
 

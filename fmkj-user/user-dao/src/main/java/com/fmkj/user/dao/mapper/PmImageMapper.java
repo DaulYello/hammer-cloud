@@ -1,7 +1,7 @@
 package com.fmkj.user.dao.mapper;
 
-import com.fmkj.user.dao.domain.PmImage;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.fmkj.user.dao.domain.PmImage;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface PmImageMapper extends BaseMapper<PmImage> {
 
-    List<PmImage> selectImageListByPartId(@Param("partId") Integer partId);
+    List<PmImage> selectImageListByPartId(@Param("partId") Integer partId, @Param("imageType") Integer imageType);
 }
