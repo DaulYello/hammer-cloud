@@ -22,7 +22,7 @@
           h.logo,
           t.tid,
           p.title,
-          p.reward,
+          p.reward * p.proportion / 100 AS reward,
           t.update_date as updateDate
         FROM
           pm_part t
