@@ -1,6 +1,7 @@
 package com.fmkj.user.server.service;
 
 import com.fmkj.common.base.BaseService;
+import com.fmkj.user.dao.domain.PmExtend;
 import com.fmkj.user.dao.domain.PmPart;
 
 import java.util.HashMap;
@@ -19,4 +20,8 @@ public interface PmPartService extends BaseService<PmPart> {
     HashMap queryPartByUid(Integer uid, Integer tid);
 
     HashMap queryAuditByPartId(Integer id);
+
+    boolean partImmediately(PmPart pmPart, List<PmExtend> pmExtendList);
+
+    boolean submitAudit(PmPart pmPart, String extendJsonStr);
 }

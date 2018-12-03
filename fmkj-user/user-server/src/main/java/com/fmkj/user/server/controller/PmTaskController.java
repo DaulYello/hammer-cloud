@@ -1,18 +1,18 @@
 package com.fmkj.user.server.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fmkj.common.base.BaseResult;
 import com.fmkj.common.base.BaseResultEnum;
 import com.fmkj.common.constant.LogConstant;
 import com.fmkj.common.util.PropertiesUtil;
 import com.fmkj.common.util.StringUtils;
+import com.fmkj.user.dao.domain.PmExtend;
 import com.fmkj.user.dao.domain.PmImage;
 import com.fmkj.user.dao.domain.PmPart;
 import com.fmkj.user.dao.queryVo.TaskQueryVo;
-import com.fmkj.user.server.service.PmImageService;
-import com.fmkj.user.server.service.PmPartService;
-import com.fmkj.user.server.service.PmStrategyService;
-import com.fmkj.user.server.service.PmTaskService;
+import com.fmkj.user.server.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
@@ -26,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  *  任务中心
@@ -52,6 +49,12 @@ public class PmTaskController {
 
     @Autowired
     private PmImageService pmImageService;
+
+    @Autowired
+    private PmExtendService pmExtendService;
+
+    @Autowired
+    private PmExtendValueService pmExtendValueService;
 
 
     @Value("${auditImageIpPath}")
@@ -108,17 +111,40 @@ public class PmTaskController {
         }
         resultMap.put("taskInfo", taskMap);
         List strategyList = pmStrategyService.queryStrategyByTid(queryVo.getId());
-        resultMap.put("strategyList", strategyList);
+        HashMap<String, Object> strategyData = new HashMap<>();
+        if(StringUtils.isNotEmpty(strategyList)){
+            strategyData.put("totalSteps", strategyList.size());
+            List<HashMap<String, Object>> mapList = new ArrayList();
+            for(int i = 0; i < strategyList.size(); i++){
+                HashMap<String, Object> strategyMap = (HashMap<String, Object>) strategyList.get(i);
+                strategyMap.put("step", i+1);
+                Integer strategyId = (Integer) strategyMap.get("id");
+                List<PmImage> imageList = pmImageService.selectImageListByPartId(strategyId, 2);
+                for(PmImage image : imageList){
+                    HashMap<String, Object> copyMap = new HashMap<>();
+                    copyMap.putAll(strategyMap);
+                    copyMap.put("strategyImage", image.getImageUrl());
+                    mapList.add(copyMap);
+                }
+
+            }
+            strategyData.put("strategyList", mapList);
+        }
+        resultMap.put("strategyData", strategyData);
         List promptList = pmStrategyService.queryPromptByTid(queryVo.getId());
         resultMap.put("promptList", promptList);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", resultMap);
     }
 
-    @ApiOperation(value="查询驳回详情", notes="参数：partId")
+    @ApiOperation(value="查询参与记录详情", notes="参数：partId")
     @PutMapping("/queryAuditByPartId")
     public BaseResult queryAuditByPartId(@RequestBody TaskQueryVo queryVo) {
         if(StringUtils.isNull(queryVo) || StringUtils.isNull(queryVo.getPartId())){
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "partId不能为空", false);
+        }
+        List extendList = pmExtendValueService.queryExtendList(queryVo.getPartId());
+        if(StringUtils.isEmpty(extendList)){
+            return new BaseResult(BaseResultEnum.ERROR.getStatus(), "任务未初始化提交信息字段相关内容，不能参与！", false);
         }
         HashMap resultMap = pmPartService.queryAuditByPartId(queryVo.getPartId());
         //imageUrl
@@ -129,6 +155,7 @@ public class PmTaskController {
             List<String> imageList = Arrays.asList(imageArry);
             resultMap.put("imageList", imageList);
         }
+        resultMap.put("extendList", extendList);
         return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "查询成功", resultMap);
     }
 
@@ -149,7 +176,13 @@ public class PmTaskController {
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "你已经参与过了", true);
         }
         pmPart.setCreateDate(new Date());
-        boolean result = pmPartService.insert(pmPart);
+        HashMap<String, Object> paramExtend = new HashMap<>();
+        paramExtend.put("tid", pmPart.getTid());
+        List<PmExtend> pmExtendList = pmExtendService.selectByMap(paramExtend);
+        if(StringUtils.isEmpty(pmExtendList)){
+            return new BaseResult(BaseResultEnum.ERROR.getStatus(), "任务未初始化提交信息，不能参与！", false);
+        }
+        boolean result = pmPartService.partImmediately(pmPart, pmExtendList);
         if(result){
             return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "参与成功", pmPart);
         }
@@ -157,24 +190,24 @@ public class PmTaskController {
     }
 
 
-    @ApiOperation(value="提交审核", notes="参数:telephone, partId")
+    @ApiOperation(value="提交审核", notes="参数:extendJsonStr, partId")
     @PostMapping(value = "/submitAudit")
-    public  BaseResult submitAudit(@PathParam(value = "telephone") String telephone,
+    public  BaseResult submitAudit(@PathParam(value = "extendJsonStr") String extendJsonStr,
                                    @PathParam(value = "partId") Integer partId,
                                    @RequestParam MultipartFile[] file){
 
-        if(StringUtils.isEmpty(telephone)){
-            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "电话不能为空", false);
+        if(StringUtils.isEmpty(extendJsonStr)){
+            return new BaseResult(BaseResultEnum.BLANK.getStatus(), "提交信息不能为空", false);
         }
         if(StringUtils.isNull(partId)){
             return new BaseResult(BaseResultEnum.BLANK.getStatus(), "partId不能为空", false);
         }
+
        PmPart pmPart = new PmPart();
-       pmPart.setTelephone(telephone);
        pmPart.setAuditStatus(1);
        pmPart.setUpdateDate(new Date());
        pmPart.setId(partId);
-       boolean result = pmPartService.updateById(pmPart);
+       boolean result = pmPartService.submitAudit(pmPart, extendJsonStr);
        if(result){
            excuteUpload(partId, file);
            return new BaseResult(BaseResultEnum.SUCCESS.getStatus(), "提交审核成功", true);
@@ -203,6 +236,7 @@ public class PmTaskController {
                 PmImage image = new PmImage();
                 image.setCreateDate(new Date());
                 image.setPartId(partId);
+                image.setImageType(1);
                 image.setPath(auditImagePath);
                 if(fileName == null){
                     image.setImageUrl(auditImageIpPath + auditdefuatFileName);

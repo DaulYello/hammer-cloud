@@ -19,12 +19,9 @@
           t.id,
           t.tid,
           t.strategy,
-          t.create_date AS createDate,
-          m.image_url AS strategyImage
+          t.create_date AS createDate
         FROM
           pm_strategy t
-          LEFT JOIN pm_image m
-            ON m.id = t.imageId
         WHERE 1 = 1
           AND t.tid = #{tid}
         ORDER BY t.order_num ASC

@@ -28,7 +28,7 @@
           t.title,
           t.task_target AS target,
           t.sub_desc AS subDesc,
-          t.reward,
+          t.reward * t.proportion / 100 AS reward,
           t.create_date AS createDate,
           m.image_url AS logo,
           (SELECT
@@ -41,6 +41,8 @@
           pm_task t
           LEFT JOIN pm_image m
             ON m.id = t.logoId
+        WHERE 1 = 1
+        AND t.status = 1
         ORDER BY completeNum DESC
 
     </select>
@@ -52,7 +54,7 @@
           t.title,
           t.task_target AS target,
           t.sub_desc AS subDesc,
-          t.reward,
+          t.reward * t.proportion / 100 AS reward,
           t.create_date AS createDate,
           m.image_url AS logo,
           (SELECT
@@ -65,6 +67,8 @@
           pm_task t
           LEFT JOIN pm_image m
             ON m.id = t.logoId
+        WHERE 1 = 1
+        AND t.status = 1
         ORDER BY t.create_date DESC
 
     </select>
@@ -77,7 +81,7 @@
           t.title,
           t.task_target AS target,
           t.sub_desc AS subDesc,
-          t.reward,
+          t.reward * t.proportion / 100 AS reward,
           t.type,
           t.down_url AS downUrl,
           t.audit_cycle AS auditCycle,

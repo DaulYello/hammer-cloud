@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.PmExtendMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.PmExtend">
+        <id column="id" property="id" />
+        <result column="tid" property="tid" />
+        <result column="clounm_key" property="clounmKey" />
+        <result column="clounm_name" property="clounmName" />
+        <result column="clounm_tip" property="clounmTip" />
+        <result column="is_empty" property="isEmpty" />
+        <result column="empty_hint" property="emptyHint" />
+        <result column="order_num" property="orderNum" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+    </resultMap>
+
+</mapper>

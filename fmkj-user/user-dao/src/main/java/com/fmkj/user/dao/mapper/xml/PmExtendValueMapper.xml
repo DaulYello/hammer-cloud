@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fmkj.user.dao.mapper.PmExtendValueMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fmkj.user.dao.domain.PmExtendValue">
+        <id column="id" property="id" />
+        <result column="pid" property="pid" />
+        <result column="xid" property="xid" />
+        <result column="xvalue" property="xvalue" />
+        <result column="create_date" property="createDate" />
+    </resultMap>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+
+      INSERT INTO pm_extend_value(pid, xid, create_date) VALUES
+        <foreach collection ="list" item="item" index= "index" separator =",">
+            (
+            #{item.pid},
+            #{item.xid},
+            #{item.createDate}
+            )
+        </foreach >
+    </insert>
+
+    <select id="queryExtendList" resultType="java.util.HashMap">
+
+       SELECT
+          p.id,
+          IFNULL(d.clounm_key, '') AS clounmKey,
+          IFNULL(d.clounm_name, '') AS clounmName,
+          IFNULL(d.clounm_tip, '') AS clounmHint,
+          IFNULL(p.xvalue, '') AS clounmValue,
+          d.is_empty AS isEmpty,
+          IFNULL(d.empty_hint, '') AS emptyHint,
+          d.order_num AS orderNum
+        FROM
+          pm_extend_value p
+          LEFT JOIN pm_extend d
+            ON p.xid = d.id
+        WHERE 1 = 1
+          AND p.pid = #{pid}
+        ORDER BY orderNum ASC
+
+    </select>
+
+</mapper>
