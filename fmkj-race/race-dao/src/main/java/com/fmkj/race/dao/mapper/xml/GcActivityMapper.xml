@@ -222,8 +222,7 @@
         ON go.aid = gc.id
         WHERE gc.getid IS NOT NULL
         AND gc.status = 3
-        AND ga.status = 1
-        AND gc.Id = #{id} ORDER BY gp.id;
+        AND gc.Id = #{id} GROUP BY gc.id;;
     </select>
 
 
